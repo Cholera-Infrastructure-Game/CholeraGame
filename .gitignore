@@ -1,2 +1,9 @@
-# OS X Files
 .DS_Store
+bin/*
+node_modules/*
+obj/*
+*.csproj
+*.csproj.user
+*.sln
+*.suo
+.idea/*
