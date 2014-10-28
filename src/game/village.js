@@ -1,10 +1,12 @@
-INFECTION_RATE_SEED = 0
+INFECTION_RATE_SEED = 0;
+INFECTED_SEED = 0;
 
 function Village(population) {
 	this.nearby_list = [];
 	this.total_population = population;
 	this.people_dead = 0;
-	this.people_alive = total_population - people_dead;
+	this.people_infected = INFECTED_SEED;
+	this.people_alive = total_population - people_infected - people_dead;
 
 	// TODO
 	function nextDay() {
