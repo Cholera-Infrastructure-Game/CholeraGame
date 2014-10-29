@@ -11,6 +11,7 @@ count = 0;
 var state = {
     init: function() {
         // TODO: put in actual village factors
+
 	all_villages_percent_infected = [0,0,0,0,0,0];
 	temp_villages_percent_infected = [0,0,0,0,0,0];
 	villages = [
@@ -43,6 +44,8 @@ var state = {
 			villages[i].incrementDay();
 		}
     }
+
+    // Don't you need to update temp to actual? Confused here
 };
 
 var game = new Phaser.Game(
