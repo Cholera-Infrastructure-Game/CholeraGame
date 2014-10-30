@@ -32,6 +32,10 @@ function Village(population, village_factors, village_number) {
     function educate(education_action) {
         this.education_measures[education_action] = 1.5;
 	}
+
+	function prevent(prevent_action) {
+		this.prevention_measures[prevent_action] = 1;
+	}
     
 	// TODO
 	function incrementDay() {
