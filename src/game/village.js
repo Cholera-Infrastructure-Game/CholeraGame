@@ -1,4 +1,6 @@
 
+var DEATH_RATE = .02;
+
 var BASE_FACTOR = 0.1;
 var SOAP_FACTOR = -5.
 var VACC_ONE_FACTOR = -10;
@@ -29,7 +31,8 @@ function Village(population, village_factors, village_number) {
     this.education_measures["waste"] = 1;
     this.education_measures["sanitize"] = 1;
 
-    // Initialize all prevention measures to 0 (i.e. not implemented)
+    // Initialize all prevention measures to 0 (i.e. not implemented).
+    // When a measure is put into place, the factor is put as the value in the map.
     this.soap_days_left = 0;
     this.prevention_measures = {};
     this.prevention_measures["soap"] = 0;
@@ -47,6 +50,10 @@ function Village(population, village_factors, village_number) {
     }
 
     function incrementDay() {
+        people_newly_dead = Math.random() * people_infected * DEATH_RATE;
+        this.people_dead += people_newly_dead;
+        this.people_infected -= people_newly_dead;
+
         var infected_rate = 1;
         for (i = 0; i < village_factors.length; i++) {
             infected_rate += all_villages_percent_infected[i] * BASE_FACTOR * village_factors[i];
@@ -64,7 +71,7 @@ function Village(population, village_factors, village_number) {
             this.prevention_measures["vacc"] = 0;
         }
 
-        this.people_infected = this.people_infected + (this.population - this.people_infected) * Math.random() * (infected_rate) / 100;
+        this.people_infected += (this.population - this.people_dead - this.people_infected) * Math.random() * (infected_rate) * .01;
         // update the temp amount here, when done updating all the villages move the temp to all_villages_people_infected
         temp_villages_percent_infected[village_number] =  this.people_infected / this.population;
     }
@@ -138,6 +145,10 @@ function Village(population, village_factors, village_number) {
 
     function educateAboutWashingFacilities() {
         this.education_measures["washFacility"] = 1.5;
+    }
+
+    function getHowManyDead() {
+        return this.people_dead;
     }
 
 }
