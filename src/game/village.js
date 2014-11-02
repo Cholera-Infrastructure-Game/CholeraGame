@@ -2,6 +2,8 @@
 var DEATH_RATE = .02;
 
 var BASE_FACTOR = 0.1;
+
+// The additive factor to the infection rate the measure has over time.
 var SOAP_FACTOR = -5.
 var VACC_ONE_FACTOR = -10;
 var VACC_TWO_FACTOR = -5;
@@ -11,9 +13,21 @@ var CONTAINER_FACTOR = -2;
 var MOVE_WASTE_FACTOR = -2;
 var WASTE_FACILITY_FACTOR = -10;
 var WASH_FACILITY_FACTOR = -8;
-var SOAP_DURATION = 14;  //Days
-var VACC_ONE_DURATION = 14 //Days
-var VACC_TWO_DURATION = 30 //Days
+
+// The multiplicative factor applied to the infected population immediately when the measure is applied.
+var SOAP_IMMEDIATE_EFFECT = .98;
+var VACC_ONE_IMMEDIATE_EFFECT = .95;
+var VACC_TWO_IMMEDIATE_EFFECT = .99;
+var CHEM_IMMEDIATE_EFFECT = .98;
+var BOIL_IMMEDIATE_EFFECT = .99;
+var CONTAINER_IMMEDIATE_EFFECT = .99;
+var MOVE_WASTE_IMMEDIATE_EFFECT = .99;
+var WASTE_FACILITY_IMMEDIATE_EFFECT = .95;
+var WASH_FACILITY_IMMEDIATE_EFFECT = .94;
+
+var SOAP_DURATION = 14;  // in days
+var VACC_ONE_DURATION = 14 // in days
+var VACC_TWO_DURATION = 30 // in days
 
 
 function Village(population, village_factors, village_number) {
@@ -76,45 +90,75 @@ function Village(population, village_factors, village_number) {
         temp_villages_percent_infected[village_number] =  this.people_infected / this.population;
     }
 
+    // These functions are to be called when a prevention measure is added to a village.
     function addSoap() {
+        if (this.prevention_measures["soap"] === 0) {
+            this.people_infected = Math.floor(SOAP_IMMEDIATE_EFFECT * this.people_infected);
+        }
         this.prevention_measures["soap"] = SOAP_FACTOR;
         this.soap_days_left += SOAP_DURATION;
     }
 
+    // ***Something to consider:  this makes it possible to alternate between the two vaccine types, causing a flat reduction in # of people infected every time.  Maybe we don't want this exploit to be possible?  Maybe its too expensive to be doable in game anyway?
     function addVaccineOne() {
-        this.prevention_measures["vacc"] = VACC_ONE_FACTOR;
+        if (this.prevention_measures["vacc"] != VACC_ONE_FACTOR) {
+            this.people_infected = Math.floor(VACC_ONE_IMMEDIATE_EFFECT * this.people_infected);
+        }
+        this.prevention_measures[""] = VACC_ONE_FACTOR;
         this.vacc_days_left = VACC_ONE_DURATION;
     }
 
     function addVaccineTwo() {
+        if (this.prevention_measures["vacc"] != VACC_TWO_FACTOR) {
+            this.people_infected = Math.floor(VACC_TWO_IMMEDIATE_EFFECT * this.people_infected);
+        }
         this.prevention_measures["vacc"] = VACC_TWO_FACTOR;
         this.vacc_days_left = VACC_TWO_DURATION;
     }
 
     function addChemicalTreatment() {
+        if (this.prevention_measures["chem"] === 0) {
+            this.people_infected = Math.floor(CHEM_IMMEDIATE_EFFECT * this.people_infected);
+        }
         this.prevention_measures["chem"] = CHEM_FACTOR;
     }
 
     function addBoilingWater() {
+        if (this.prevention_measures["boil"] === 0) {
+            this.people_infected = Math.floor(BOIL_IMMEDIATE_EFFECT * this.people_infected);
+        }
         this.prevention_measures["boil"] = BOIL_FACTOR;
     }
 
     function addWaterContainers() {
+        if (this.prevention_measures["container"] === 0) {
+            this.people_infected = Math.floor(CONTAINER_IMMEDIATE_EFFECT * this.people_infected);
+        }
         this.prevention_measures["container"] = CONTAINER_FACTOR;
     }
 
     function addMovingWaste() {
+        if (this.prevention_measures["moveWaste"] === 0) {
+            this.people_infected = Math.floor(MOVE_WASTE_IMMEDIATE_EFFECT * this.people_infected);
+        }
         this.prevention_measures["moveWaste"] = MOVE_WASTE_FACTOR;
     }
 
     function addWasteFacilities() {
+        if (this.prevention_measures["wasteFacility"] === 0) {
+            this.people_infected = Math.floor(WASTE_FACILITY_IMMEDIATE_EFFECT * this.people_infected);
+        }
         this.prevention_measures["wasteFacility"] = WASTE_FACILITY_FACTOR;
     }
 
     function addWashingFacilities() {
+        if (this.prevention_measures["washFacility"] === 0) {
+            this.people_infected = Math.floor(WASH_FACILITY_IMMEDIATE_EFFECT * this.people_infected);
+        }
         this.prevention_measures["washFacility"] = WASH_FACILITY_FACTOR;
     }
 
+    // These functions are to be called when an education measure is added to a village.  Note that these have no immediate effect (maybe they should?) and do nothing when the corresponding prevention measure is not in effect.
     function educateAboutSoap() {
         this.education_measures["soap"] = 1.5;
     }
