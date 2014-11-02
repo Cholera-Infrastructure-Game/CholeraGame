@@ -43,6 +43,7 @@ var state = {
             for (i = 0; i < villages.length; i++) {
                 villages[i].incrementDay();
             }
+            all_villages_percent_infected = temp_villages_percent_infected.slice();
         }
     }
 
