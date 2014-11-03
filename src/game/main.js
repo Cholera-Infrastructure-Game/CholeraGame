@@ -30,9 +30,18 @@ var state = {
 
     },
     preload: function() {
-        // STate preload logic goes here
+        this.load.image("map", "/assets/images/Map.png");
+
+        this.load.image("city", "/assets/images/TempCityIcon.png");
     },
-    create: function(){
+    create: function() {
+
+        // TODO:
+        // sprite.events.onInputUp.add(yourFunction, this)
+
+
+
+
       // State create logic goes here
     },
     update: function() {
@@ -50,6 +59,7 @@ var state = {
     // Don't you need to update temp to actual? Confused here
 };
 
+function 
 var game = new Phaser.Game(
     800,
     480,
