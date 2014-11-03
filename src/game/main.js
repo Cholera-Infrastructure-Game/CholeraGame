@@ -22,11 +22,6 @@ var state = {
             Village(200, [1,1,1,1,1,1], 4),
             Village(100, [1,1,1,1,1,1], 5)
         ];
-        // Create simple text display for current Phaser version
-        var text = "Phaser Version "+Phaser.DEV_VERSION + " works! Hallelujah!";
-        var style = { font: "24px Arial", fill: "#fff", align: "center" };
-        var t = game.add.text(this.world.centerX, this.world.centerY, text, style);
-        t.anchor.setTo(0.5, 0.5);
 
     },
     preload: function() {
@@ -35,6 +30,9 @@ var state = {
         this.load.image("city", "/assets/images/TempCityIcon.png");
     },
     create: function() {
+
+        game.add.sprite(0, 0, "map");
+
 
         // TODO:
         // sprite.events.onInputUp.add(yourFunction, this)
