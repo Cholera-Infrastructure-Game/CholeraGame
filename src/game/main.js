@@ -6,6 +6,15 @@
  *
  */
 
+VILLAGE_POSITIONS = [
+    [187,127],
+    [131,356],
+    [337,525],
+    [439,120],
+    [540,431],
+    [712,225]
+];
+
 count = 0;
 villageTextBox = null;
 currently_selected_village = 0;
@@ -20,7 +29,7 @@ var populateVillageInfoBox = function () {
     text += "\nPeople Infected: " + selected_village.getHowManyInfected();
     text += "\nPeople Dead: " + selected_village.getHowManyDead();
     var style = { font: "12px Arial", fill: "#ff0044", align: "left" };
-    villageTextBox = game.add.text(0, game.world._height-200, text, style);
+    villageTextBox = game.add.text(768, 0, text, style);
 };
 
 var generateListenerForVillage = function(index) {
@@ -57,7 +66,7 @@ var state = {
         game.add.sprite(0, 0, "map");
         var villageImages = [];
         for (i = 0; i < villages.length; i++) {
-            var villageImage = game.add.sprite(100*(i+1), game.world.centerY, 'village');
+            var villageImage = game.add.sprite(VILLAGE_POSITIONS[i][0], VILLAGE_POSITIONS[i][1], 'village');
             villageImage.anchor.set(0.5);
             villageImage.inputEnabled = true;
             var iCopy = i+0;
@@ -82,8 +91,8 @@ var state = {
 };
 
 var game = new Phaser.Game(
-    1024,
-    1224,
+    968,
+    768,
     Phaser.AUTO,
     'game',
     state
