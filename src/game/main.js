@@ -67,11 +67,11 @@ var state = {
     },
     update: function() {
         populateVillageInfoBox();
-        money += 1;
         // Called 60 times per second
         count += 1;
         if (count == 60) {
             count = 0;
+            money += 25;
             for (i = 0; i < villages.length; i++) {
                 villages[i].incrementDay();
             }
