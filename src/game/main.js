@@ -26,7 +26,7 @@ var populateVillageInfoBox = function () {
         villageTextBox.destroy();
     }
     var selected_village = villages[currently_selected_village];
-    var text = "Village " + currently_selected_village
+    var text = "Village " + currently_selected_village;
     text += "\nPopulation: " + (selected_village.getPopulation() - selected_village.getHowManyDead());
     text += "\nPeople Infected: " + selected_village.getHowManyInfected();
     text += "\nPeople Dead: " + selected_village.getHowManyDead();
@@ -37,14 +37,14 @@ var populateVillageInfoBox = function () {
 var moneyTextBox = function () {
     var style = { font: "16px Arial", fill: "#ff0044", align: "left" };
     if(moneyText == null){
-        moneyText = game.add.text(0, 1100, "Your income: " + money, style);
+        moneyText = game.add.text(768, 100, "Your income: " + money, style);
     }
 }
 
 var dateTextBox = function () {
     var style = { font: "16px Arial", fill: "#ff0044", align: "left" };
     if(dateText == null){
-        dateText = game.add.text(0, 1120, "Time left: " + timeLeft, style);
+        dateText = game.add.text(768, 120, "Time left: " + timeLeft, style);
     }
 
 }
@@ -80,8 +80,8 @@ var createPopUp = function(popup_text) {
 var state = {
     init: function() {
         // TODO: decide on actual money amounts
-        money = 1000
-        timeLeft = 600
+        money = 1000;
+        timeLeft = 600;
         // TODO: put in actual village factors
 
         all_villages_percent_infected = [0,0,0,0,0,0];
@@ -128,7 +128,10 @@ var state = {
             money += 25;
             timeLeft -= 1;
             moneyText.setText("Your income: " + money);
-            dateText.setText("Time left: " + timeLeft);
+            if (timeLeft >= 0)
+                dateText.setText("Time left: " + timeLeft);
+            if (timeLeft == 0)
+                game.state.add('end', EndStage, true);
             for (i = 0; i < villages.length; i++) {
                 villages[i].incrementDay();
             }
@@ -145,3 +148,4 @@ var game = new Phaser.Game(
     'game',
     state
 );
+game.state.add('main',state);
