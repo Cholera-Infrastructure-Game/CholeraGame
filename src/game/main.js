@@ -18,6 +18,7 @@ VILLAGE_POSITIONS = [
 count = 0;
 villageTextBox = null;
 moneyText = null;
+dateText = null;
 currently_selected_village = 0;
 
 var populateVillageInfoBox = function () {
@@ -36,8 +37,16 @@ var populateVillageInfoBox = function () {
 var moneyTextBox = function () {
     var style = { font: "16px Arial", fill: "#ff0044", align: "left" };
     if(moneyText == null){
-        moneyText = game.add.text(0, 1100, "Your income: " + money, style);
+        moneyText = game.add.text(768, 100, "Your income: " + money, style);
     }
+}
+
+var dateTextBox = function () {
+    var style = { font: "16px Arial", fill: "#ff0044", align: "left" };
+    if(dateText == null){
+        dateText = game.add.text(768, 120, "Time left: " + timeLeft, style);
+    }
+
 }
 var generateListenerForVillage = function(index) {
     return function() {
@@ -45,10 +54,34 @@ var generateListenerForVillage = function(index) {
     };
 }
 
+var createPopUp = function(popup_text) {
+    // a transparent black background to catch mouse events while the popup is up
+    // need to draw it first and then convert it to a sprite
+    var temp = game.add.graphics(0, 0);
+    temp.beginFill(0x000000, 0.6);
+    temp.drawRect(0, 0, 768+20, 768+20);
+    temp.endFill();
+    fullScreenBg = game.add.sprite(-20, -20, temp.generateTexture());
+    fullScreenBg.inputEnabled = true;
+    temp.destroy();
+
+    // should be put in the center of the screen
+    var background = game.add.sprite(320, 300, "TestButton");
+    background.scale.setTo(0.72, 0.86);
+    background.anchor.setTo(0.5, 0.5);
+    fullScreenBg.addChild(background);
+
+	fullScreenBg.bringToTop();
+	background.bringToTop();
+
+	console.log("Foobar");
+};
+
 var state = {
     init: function() {
         // TODO: decide on actual money amounts
-        money = 1000
+        money = 1000;
+        timeLeft = 600;
         // TODO: put in actual village factors
 
         all_villages_number_of_people_infected = [0,0,0,0,0,0];
@@ -63,11 +96,13 @@ var state = {
         ];
         populateVillageInfoBox();
         moneyTextBox();
+        dateTextBox();
     },
     preload: function() {
         // STate preload logic goes here
         game.load.image('map', 'assets/images/Map.png');
         game.load.image('village', 'assets/images/TempCityIcon.png');
+		game.load.spritesheet('TestButton', 'assets/images/TestButton.png');
     },
     create: function() {
         // State create logic goes here
@@ -87,10 +122,17 @@ var state = {
     update: function() {
         // Called 60 times per second
         count += 1;
-        if (count == 60) {
-            count = 0;
+		if (count == 100)
+			createPopUp("Hello, world!");
+
+        if (count % 60 == 0) {
             money += 25;
+            timeLeft -= 1;
             moneyText.setText("Your income: " + money);
+            if (timeLeft >= 0)
+                dateText.setText("Time left: " + timeLeft);
+            if (timeLeft == 0)
+                game.state.add('end', EndStage, true);
             for (var i = 0; i < villages.length; i++) {
                 villages[i].incrementDay();
             }
@@ -108,3 +150,4 @@ var game = new Phaser.Game(
     'game',
     state
 );
+game.state.add('main',state);
