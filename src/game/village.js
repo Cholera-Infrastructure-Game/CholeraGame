@@ -35,7 +35,7 @@ Village = function(population, village_factors, village_number) {
     var village_number = village_number;
     var total_population = population;
     var people_dead = 0;
-    var people_infected = 0;
+    var people_infected = 10;
     // Initialize Education measures to 1 (so no increase in prevention measure effect)
     var education_measures = {};
     education_measures["vacc"] = 1;
