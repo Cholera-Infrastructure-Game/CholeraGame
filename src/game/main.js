@@ -149,7 +149,6 @@ var state = {
 
 };
 
-function 
 var game = new Phaser.Game(
     968,
     768,
