@@ -6,9 +6,19 @@
  *
  */
 
+VILLAGE_POSITIONS = [
+    [187,127],
+    [131,356],
+    [337,525],
+    [439,120],
+    [540,431],
+    [712,225]
+];
+
 count = 0;
 villageTextBox = null;
 moneyText = null;
+dateText = null;
 currently_selected_village = 0;
 
 var populateVillageInfoBox = function () {
@@ -21,7 +31,7 @@ var populateVillageInfoBox = function () {
     text += "\nPeople Infected: " + selected_village.getHowManyInfected();
     text += "\nPeople Dead: " + selected_village.getHowManyDead();
     var style = { font: "12px Arial", fill: "#ff0044", align: "left" };
-    villageTextBox = game.add.text(0, game.world._height-200, text, style);
+    villageTextBox = game.add.text(768, 0, text, style);
 };
 
 var moneyTextBox = function () {
@@ -29,6 +39,14 @@ var moneyTextBox = function () {
     if(moneyText == null){
         moneyText = game.add.text(0, 1100, "Your income: " + money, style);
     }
+}
+
+var dateTextBox = function () {
+    var style = { font: "16px Arial", fill: "#ff0044", align: "left" };
+    if(dateText == null){
+        dateText = game.add.text(0, 1120, "Time left: " + timeLeft, style);
+    }
+
 }
 var generateListenerForVillage = function(index) {
     return function() {
@@ -63,6 +81,7 @@ var state = {
     init: function() {
         // TODO: decide on actual money amounts
         money = 1000
+        timeLeft = 600
         // TODO: put in actual village factors
 
         all_villages_percent_infected = [0,0,0,0,0,0];
@@ -77,6 +96,7 @@ var state = {
         ];
         populateVillageInfoBox();
         moneyTextBox();
+        dateTextBox();
     },
     preload: function() {
         // STate preload logic goes here
@@ -89,7 +109,7 @@ var state = {
         game.add.sprite(0, 0, "map");
         var villageImages = [];
         for (i = 0; i < villages.length; i++) {
-            var villageImage = game.add.sprite(100*(i+1), game.world.centerY, 'village');
+            var villageImage = game.add.sprite(VILLAGE_POSITIONS[i][0], VILLAGE_POSITIONS[i][1], 'village');
             villageImage.anchor.set(0.5);
             villageImage.inputEnabled = true;
             var iCopy = i+0;
@@ -106,7 +126,9 @@ var state = {
 
         if (count % 60 == 0) {
             money += 25;
+            timeLeft -= 1;
             moneyText.setText("Your income: " + money);
+            dateText.setText("Time left: " + timeLeft);
             for (i = 0; i < villages.length; i++) {
                 villages[i].incrementDay();
             }
@@ -117,8 +139,8 @@ var state = {
 };
 
 var game = new Phaser.Game(
-    1024,
-    1224,
+    968,
+    768,
     Phaser.AUTO,
     'game',
     state
