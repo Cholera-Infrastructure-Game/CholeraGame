@@ -49,7 +49,7 @@ var state = {
     },
     preload: function() {
         // STate preload logic goes here
-        game.load.image('map', 'assets/images/map.png');
+        game.load.image('map', 'assets/images/Map.png');
         game.load.image('village', 'assets/images/TempCityIcon.png');
     },
     create: function() {
