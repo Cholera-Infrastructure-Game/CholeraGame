@@ -120,8 +120,12 @@ var state = {
             var style = { font: "12px Arial", fill: "#ffffff", align: "left" };
             game.add.text(VILLAGE_POSITIONS[i][0] - 20, VILLAGE_POSITIONS[i][1] + 10, text, style);
         }
-        game.add.sprite(768, 500, "EducateButton");
-        game.add.sprite(768, 600, "PreventButton");
+        var eduButton = game.add.sprite(780, 300, "EducateButton");
+        eduButton.inputEnabled = true;
+        eduButton.events.onInputDown.add(createPopUp, this);
+        var prevButton = game.add.sprite(780, 400, "PreventButton");
+        prevButton.inputEnabled = true;
+        prevButton.events.onInputDown.add(createPopUp, this);
         
     },
     update: function() {
