@@ -18,6 +18,7 @@ VILLAGE_POSITIONS = [
 count = 0;
 villageTextBox = null;
 moneyText = null;
+dateText = null;
 currently_selected_village = 0;
 
 var populateVillageInfoBox = function () {
@@ -39,6 +40,14 @@ var moneyTextBox = function () {
         moneyText = game.add.text(0, 1100, "Your income: " + money, style);
     }
 }
+
+var dateTextBox = function () {
+    var style = { font: "16px Arial", fill: "#ff0044", align: "left" };
+    if(dateText == null){
+        dateText = game.add.text(0, 1120, "Time left: " + timeLeft, style);
+    }
+
+}
 var generateListenerForVillage = function(index) {
     return function() {
         currently_selected_village = index;
@@ -49,6 +58,7 @@ var state = {
     init: function() {
         // TODO: decide on actual money amounts
         money = 1000
+        timeLeft = 600
         // TODO: put in actual village factors
 
         all_villages_percent_infected = [0,0,0,0,0,0];
@@ -63,6 +73,7 @@ var state = {
         ];
         populateVillageInfoBox();
         moneyTextBox();
+        dateTextBox();
     },
     preload: function() {
         // STate preload logic goes here
@@ -89,7 +100,9 @@ var state = {
         if (count == 60) {
             count = 0;
             money += 25;
+            timeLeft -= 1;
             moneyText.setText("Your income: " + money);
+            dateText.setText("Time left: " + timeLeft);
             for (i = 0; i < villages.length; i++) {
                 villages[i].incrementDay();
             }
