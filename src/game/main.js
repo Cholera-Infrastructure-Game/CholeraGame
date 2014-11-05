@@ -92,6 +92,50 @@ var createEducatePopUp = function() {
     }, this);
 };
 
+var createPreventPopUp = function() {
+    // a transparent black background to catch mouse events while the popup is up
+    // need to draw it first and then convert it to a sprite
+    var temp = game.add.graphics(0, 0);
+    temp.beginFill(0x000000, 0.6);
+    temp.drawRect(0, 0, 768+20, 768+20);
+    temp.endFill();
+    fullScreenBg = game.add.sprite(-20, -20, temp.generateTexture());
+    fullScreenBg.inputEnabled = true;
+    temp.destroy();
+
+    // should be put in the center of the screen
+    var style = { font: "30px Arial", fill: "#ff0044", align: "left" };
+    var prevention_texts = ["Add soap", "Add vaccine 1", "Add vaccine 2", "Add chemical treatment",
+                           "Add boiling water", "Add water containers", "Add moving waste",
+                           "Add waste facilities", "Add washing facilities"];
+    
+    var prevention_text_GUIs = []
+    for (i = 0; i < prevention_texts.length; i++) {
+        var text_box = game.add.text(150, 50 + 30 * i, prevention_texts[i], style);
+        text_box.inputEnabled = true;
+        prevention_text_GUIs.push(text_box)
+    }
+
+    fullScreenBg.bringToTop;
+
+    prevention_text_GUIs[0].events.onInputDown.add(villages[currently_selected_village].addSoap, this);
+    prevention_text_GUIs[1].events.onInputDown.add(villages[currently_selected_village].addVaccineOne, this);
+    prevention_text_GUIs[2].events.onInputDown.add(villages[currently_selected_village].addVaccineTwo, this);
+    prevention_text_GUIs[3].events.onInputDown.add(villages[currently_selected_village].addChemicalTreatment, this);
+    prevention_text_GUIs[4].events.onInputDown.add(villages[currently_selected_village].addBoilingWater, this);
+    prevention_text_GUIs[5].events.onInputDown.add(villages[currently_selected_village].addWaterContainers, this);
+    prevention_text_GUIs[6].events.onInputDown.add(villages[currently_selected_village].addMovingWaste, this);
+    prevention_text_GUIs[7].events.onInputDown.add(villages[currently_selected_village].addWasteFacilities, this);
+    prevention_text_GUIs[8].events.onInputDown.add(villages[currently_selected_village].addWashingFacilities, this);
+    fullScreenBg.events.onInputDown.add(function() {
+        console.log("click registered");
+        fullScreenBg.destroy();
+        for (i = 0; i < prevention_text_GUIs.length; i++) {
+            prevention_text_GUIs[i].destroy();
+        }
+    }, this);
+};
+
 var state = {
     init: function() {
         // TODO: decide on actual money amounts
@@ -138,7 +182,7 @@ var state = {
         eduButton.events.onInputDown.add(createEducatePopUp, this);
         var prevButton = game.add.sprite(780, 400, "PreventButton");
         prevButton.inputEnabled = true;
-        prevButton.events.onInputDown.add(createEducatePopUp, this);
+        prevButton.events.onInputDown.add(createPreventPopUp, this);
     },
     update: function() {
         // Called 60 times per second

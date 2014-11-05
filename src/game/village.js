@@ -156,6 +156,7 @@ Village = function(population, village_factors, village_number) {
         },
 
         addMovingWaste: function() {
+            console.log("adding moving waste");
             if (prevention_measures["moveWaste"] === 0) {
                 people_infected = Math.floor((1-(MOVE_WASTE_FACTOR * .1)) * people_infected);
             }
