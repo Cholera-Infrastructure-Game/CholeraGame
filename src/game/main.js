@@ -14,9 +14,13 @@ var populateVillageInfoBox = function () {
     if (villageTextBox != null) {
         villageTextBox.destroy();
     }
-    var text = "Village " + currently_selected_village + "\nPercent Infected: " + all_villages_percent_infected[currently_selected_village] + "%";
+    var selected_village = villages[currently_selected_village];
+    var text = "Village " + currently_selected_village
+    text += "\nPopulation: " + (selected_village.getPopulation() - selected_village.getHowManyDead());
+    text += "\nPeople Infected: " + selected_village.getHowManyInfected();
+    text += "\nPeople Dead: " + selected_village.getHowManyDead();
     var style = { font: "12px Arial", fill: "#ff0044", align: "left" };
-    villageTextBox = game.add.text(0, game.world._height-25, text, style);
+    villageTextBox = game.add.text(0, game.world._height-200, text, style);
 };
 
 var generateListenerForVillage = function(index) {
@@ -56,7 +60,6 @@ var state = {
             var villageImage = game.add.sprite(100*(i+1), game.world.centerY, 'village');
             villageImage.anchor.set(0.5);
             villageImage.inputEnabled = true;
-            console.log(i);
             var iCopy = i+0;
             villageImage.events.onInputDown.add(generateListenerForVillage(i), this);
             villageImages.push(villageImage);
@@ -70,7 +73,7 @@ var state = {
         if (count == 60) {
             count = 0;
             for (i = 0; i < villages.length; i++) {
-                // villages[i].incrementDay();
+                villages[i].incrementDay();
             }
             all_villages_percent_infected = temp_villages_percent_infected.slice();
         }
@@ -80,7 +83,7 @@ var state = {
 
 var game = new Phaser.Game(
     1024,
-    1056,
+    1224,
     Phaser.AUTO,
     'game',
     state
