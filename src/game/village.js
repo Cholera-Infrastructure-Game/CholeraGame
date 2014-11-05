@@ -232,7 +232,7 @@ Village = function(population, village_factors, village_number) {
         getActiveMeasures: function() {
             var activeMeasures = [];
             for (var key in prevention_measures) {
-                if (prevention_measures[key] > 0) {
+                if (prevention_measures[key] != 0) {
                     activeMeasures.push(key);
                 }
             }
