@@ -113,6 +113,15 @@ var state = {
             if (daysLeft == 0) {
                 game.state.add('end', EndStage, true);
             }
+            var allDead = true;
+            for (var i = 0; i < villages.length; i++) {
+                if (villages[i].getPopulation != villages[i].getHowManyDead){
+                    allDead = false;
+                }
+            }
+            if (allDead) {
+                game.state.add('end',EndStage,true);
+            }
             for (var i = 0; i < villages.length; i++) {
                 villages[i].incrementDay();
             }
