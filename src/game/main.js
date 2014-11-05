@@ -17,8 +17,6 @@ VILLAGE_POSITIONS = [
 
 count = 0;
 villageTextBox = null;
-moneyText = null;
-dateText = null;
 currently_selected_village = 0;
 
 var populateVillageInfoBox = function () {
@@ -30,24 +28,12 @@ var populateVillageInfoBox = function () {
     text += "\nPopulation: " + (selected_village.getPopulation() - selected_village.getHowManyDead());
     text += "\nPeople Infected: " + selected_village.getHowManyInfected();
     text += "\nPeople Dead: " + selected_village.getHowManyDead();
+    text += "\n\nMoney: " + money;
+    text += "\nDays Left: " + daysLeft;
     var style = { font: "12px Arial", fill: "#ff0044", align: "left" };
     villageTextBox = game.add.text(768, 0, text, style);
 };
 
-var moneyTextBox = function () {
-    var style = { font: "16px Arial", fill: "#ff0044", align: "left" };
-    if(moneyText == null){
-        moneyText = game.add.text(768, 100, "Your income: " + money, style);
-    }
-}
-
-var dateTextBox = function () {
-    var style = { font: "16px Arial", fill: "#ff0044", align: "left" };
-    if(dateText == null){
-        dateText = game.add.text(768, 120, "Time left: " + timeLeft, style);
-    }
-
-}
 var generateListenerForVillage = function(index) {
     return function() {
         currently_selected_village = index;
@@ -81,7 +67,7 @@ var state = {
     init: function() {
         // TODO: decide on actual money amounts
         money = 1000;
-        timeLeft = 600;
+        daysLeft = 365;
         // TODO: put in actual village factors
 
         all_villages_number_of_people_infected = [0,0,0,0,0,0];
@@ -95,8 +81,6 @@ var state = {
             Village(100000, [.9,0,0,.9,0,1], 5)
         ];
         populateVillageInfoBox();
-        moneyTextBox();
-        dateTextBox();
     },
     preload: function() {
         // STate preload logic goes here
@@ -131,23 +115,22 @@ var state = {
     update: function() {
         // Called 60 times per second
         count += 1;
-        counting = 0;
-
-        if (count % 60 == 0) {
+        if (count % 90 == 0) {
+            // This happens once every 1.5 seconds, so total game length is about 9 minutes.
             money += 25;
-            timeLeft -= 1;
-            moneyText.setText("Your income: " + money);
-            if (timeLeft >= 0)
-                dateText.setText("Time left: " + timeLeft);
-            if (timeLeft == 0)
+            daysLeft -= 1;
+            if (daysLeft == 0) {
                 game.state.add('end', EndStage, true);
-            for(d = 0; d < villages.length; d++) {
-                if (villages[d].getPopulation == villages[d].getHowManyDead){
-                    counting+=1;
+            }
+            var allDead = true;
+            for (var i = 0; i < villages.length; i++) {
+                if (villages[i].getPopulation != villages[i].getHowManyDead){
+                    allDead = false;
                 }
             }
-            if (counting == villages.length)
+            if (allDead) {
                 game.state.add('end',EndStage,true);
+            }
             for (var i = 0; i < villages.length; i++) {
                 villages[i].incrementDay();
             }
