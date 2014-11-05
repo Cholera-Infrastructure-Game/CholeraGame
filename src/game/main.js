@@ -25,7 +25,7 @@ var populateVillageInfoBox = function () {
         villageTextBox.destroy();
     }
     var selected_village = villages[currently_selected_village];
-    var text = "Village " + currently_selected_village
+    var text = "Village " + (currently_selected_village + 1) + " Selected";
     text += "\nPopulation: " + (selected_village.getPopulation() - selected_village.getHowManyDead());
     text += "\nPeople Infected: " + selected_village.getHowManyInfected();
     text += "\nPeople Dead: " + selected_village.getHowManyDead();
@@ -51,15 +51,15 @@ var state = {
         money = 1000
         // TODO: put in actual village factors
 
-        all_villages_percent_infected = [0,0,0,0,0,0];
-        temp_villages_percent_infected = [0,0,0,0,0,0];
+        all_villages_number_of_people_infected = [0,0,0,0,0,0];
+        temp_villages_number_of_people_infected = [0,0,0,0,0,0];
         villages = [
-            Village(100, [1,1,1,1,1,1], 0),
-            Village(200, [1,1,1,1,1,1], 1),
-            Village(300, [1,1,1,1,1,1], 2),
-            Village(300, [1,1,1,1,1,1], 3),
-            Village(200, [1,1,1,1,1,1], 4),
-            Village(100, [1,1,1,1,1,1], 5)
+            Village(100000, [1,0,0,.5,0,0], 0),
+            Village(200000, [0,1,0,0,0,0], 1),
+            Village(300000, [0,.9,1,0,.5,0], 2),
+            Village(300000, [1,0,0,1,0,0], 3),
+            Village(200000, [.9,0,.5,.9,1,0], 4),
+            Village(100000, [.9,0,0,.9,0,1], 5)
         ];
         populateVillageInfoBox();
         moneyTextBox();
@@ -77,23 +77,25 @@ var state = {
             var villageImage = game.add.sprite(VILLAGE_POSITIONS[i][0], VILLAGE_POSITIONS[i][1], 'village');
             villageImage.anchor.set(0.5);
             villageImage.inputEnabled = true;
-            var iCopy = i+0;
             villageImage.events.onInputDown.add(generateListenerForVillage(i), this);
             villageImages.push(villageImage);
+            var text = "Village " + (i + 1);
+            var style = { font: "12px Arial", fill: "#ffffff", align: "left" };
+            game.add.text(VILLAGE_POSITIONS[i][0] - 20, VILLAGE_POSITIONS[i][1] + 10, text, style);
         }
     },
     update: function() {
-        populateVillageInfoBox();
         // Called 60 times per second
         count += 1;
         if (count == 60) {
             count = 0;
             money += 25;
             moneyText.setText("Your income: " + money);
-            for (i = 0; i < villages.length; i++) {
+            for (var i = 0; i < villages.length; i++) {
                 villages[i].incrementDay();
             }
-            all_villages_percent_infected = temp_villages_percent_infected.slice();
+            all_villages_number_of_people_infected = temp_villages_number_of_people_infected.slice();
+            populateVillageInfoBox();
         }
     }
 
