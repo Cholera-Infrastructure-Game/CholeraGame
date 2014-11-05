@@ -127,8 +127,7 @@ var state = {
     update: function() {
         // Called 60 times per second
         count += 1;
-		if (count == 100)
-			createPopUp("Hello, world!");
+        counting = 0;
 
         if (count % 60 == 0) {
             money += 25;
@@ -138,6 +137,13 @@ var state = {
                 dateText.setText("Time left: " + timeLeft);
             if (timeLeft == 0)
                 game.state.add('end', EndStage, true);
+            for(d = 0; d < villages.length; d++) {
+                if (villages[d].getPopulation == villages[d].getHowManyDead){
+                    counting+=1;
+                }
+            }
+            if (counting == villages.length)
+                game.state.add('end',EndStage,true);
             for (var i = 0; i < villages.length; i++) {
                 villages[i].incrementDay();
             }
