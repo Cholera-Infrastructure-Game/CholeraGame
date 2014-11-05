@@ -9,3 +9,4 @@ obj/*
 .idea/*
 # This file keeps causing trouble.
 deploy/js/game.js
+*.swp
