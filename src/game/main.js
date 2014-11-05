@@ -59,9 +59,9 @@ var createPopUp = function(popup_text) {
     // need to draw it first and then convert it to a sprite
     var temp = game.add.graphics(0, 0);
     temp.beginFill(0x000000, 0.6);
-    temp.drawRect(0, 0, 768, 768);
+    temp.drawRect(0, 0, 768+20, 768+20);
     temp.endFill();
-    fullScreenBg = game.add.sprite(0, 0, temp.generateTexture());
+    fullScreenBg = game.add.sprite(-20, -20, temp.generateTexture());
     fullScreenBg.inputEnabled = true;
     temp.destroy();
 
