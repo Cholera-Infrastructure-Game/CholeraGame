@@ -181,42 +181,42 @@ Village = function(population, village_factors, village_number) {
 
         // These functions are to be called when an education measure is added to a village.  Note that these have no immediate effect (maybe they should?) and do nothing when the corresponding prevention measure is not in effect.
         educateAboutSoap: function() {
-            education_measures["soap"] = 1.5;
+            education_measures["soap"] = 2 - (education_measures["soap"] * .5);
             money -= education_measure_costs["soap"];
         },
 
         educateAboutVaccine: function() {
-            education_measures["vacc"] = 1.5;
+            education_measures["vacc"] = 2 - (education_measures["vacc"] * .5);
             money -= education_measure_costs["vacc"];
         },
 
         educateAboutChemicalTreatment: function() {
-            education_measures["chem"] = 1.5;
+            education_measures["chem"] = 2 - (education_measures["chem"] * .5);
             money -= education_measure_costs["chem"];
         },
 
         educateAboutBoilingWater: function() {
-            education_measures["boil"] = 1.5;
+            education_measures["boil"] = 2 - (education_measures["boil"] * .5);
             money -= education_measure_costs["boil"];
         },
 
         educateAboutWaterContainers: function() {
-            education_measures["container"] = 1.5;
+            education_measures["container"] = 2 - (education_measures["container"] * .5);
             money -= education_measure_costs["container"];
         },
 
         educateAboutMovingWaste: function() {
-            education_measures["moveWaste"] = 1.5;
+            education_measures["moveWaste"] = 2 - (education_measures["moveWaste"] * .5);
             money -= education_measure_costs["moveWaste"];
         },
 
         educateAboutWasteFacilities: function() {
-            education_measures["wasteFacility"] = 1.5;
+            education_measures["wasteFacility"] = 2 - (education_measures["wasteFacility"] * .5);
             money -= education_measure_costs["wasteFacility"];
         },
 
         educateAboutWashingFacilities: function() {
-            education_measures["washFacility"] = 1.5;
+            education_measures["washFacility"] = 2 - (education_measures["washFacility"] * .5);
             money -= education_measure_costs["washFacility"];
         },
 
@@ -230,13 +230,8 @@ Village = function(population, village_factors, village_number) {
         
         getActiveMeasures: function() {
             var activeMeasures = [];
-            for (var key in education_measures) {
-                if (education_measures.hasOwnProperty(key) && education_measures[key] > 1) {
-                    activeMeasures.push(key);
-                }
-            }
             for (var key in prevention_measures) {
-                if (prevention_measures.hasOwnProperty(key) && prevention_measures[key] > 0) {
+                if (prevention_measures[key] > 0) {
                     activeMeasures.push(key);
                 }
             }
