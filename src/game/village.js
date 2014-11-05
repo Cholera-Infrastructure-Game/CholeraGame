@@ -33,7 +33,7 @@ Village = function(population, village_factors, village_number) {
     education_measures["boil"] = 1;
     education_measures["container"] = 1;
     education_measures["moveWaste"] = 1;
-    education_measures["wasteFacility"] = 1;
+    education_measures["wasteFacility"] = 2;//For testing purposes, should also be 1
     education_measures["sanitizer"] = 1;
     education_measures["washFacility"] = 1;
 
@@ -194,6 +194,21 @@ Village = function(population, village_factors, village_number) {
 
         getHowManyInfected: function() {
             return people_infected;
+        },
+        
+        getActiveMeasures: function() {
+            var activeMeasures = [];
+            for (var key in education_measures) {
+                if (education_measures.hasOwnProperty(key) && education_measures[key] > 1) {
+                    activeMeasures.push(key);
+                }
+            }
+            for (var key in prevention_measures) {
+                if (prevention_measures.hasOwnProperty(key) && prevention_measures[key] > 0) {
+                    activeMeasures.push(key);
+                }
+            }
+            return activeMeasures;
         }
     };
 }

@@ -30,6 +30,13 @@ var populateVillageInfoBox = function () {
     text += "\nPeople Dead: " + selected_village.getHowManyDead();
     text += "\n\nMoney: " + money;
     text += "\nDays Left: " + daysLeft;
+    
+    var selectedVillageActiveMethods = selected_village.getActiveMeasures();
+    console.log(selectedVillageActiveMethods);
+    text += "\n\nCurrent Active Measures:"
+    for (var i = 0; i < selectedVillageActiveMethods.length; i++) {
+        text += "\n" + selectedVillageActiveMethods[i];
+    }
     var style = { font: "12px Arial", fill: "#ff0044", align: "left" };
     villageTextBox = game.add.text(768, 0, text, style);
 };
