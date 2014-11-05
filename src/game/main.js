@@ -25,9 +25,8 @@ var populateVillageInfoBox = function () {
     }
     var selected_village = villages[currently_selected_village];
     var text = "Village " + (currently_selected_village + 1) + " Selected";
-    text += "\nPopulation: " + (selected_village.getPopulation() - selected_village.getHowManyDead());
+    text += "\nPopulation: " + selected_village.getPopulation();
     text += "\nPeople Infected: " + selected_village.getHowManyInfected();
-    text += "\nPeople Dead: " + selected_village.getHowManyDead();
     text += "\n\nMoney: " + money;
     text += "\nDays Left: " + daysLeft;
     
@@ -129,13 +128,13 @@ var state = {
             if (daysLeft == 0) {
                 game.state.add('end', EndStage, true);
             }
-            var allDead = true;
+            var allInfected = true;
             for (var i = 0; i < villages.length; i++) {
-                if (villages[i].getPopulation != villages[i].getHowManyDead){
-                    allDead = false;
+                if (villages[i].getPopulation() != villages[i].getHowManyInfected()){
+                    allInfected = false;
                 }
             }
-            if (allDead) {
+            if (allInfected) {
                 game.state.add('end',EndStage,true);
             }
             for (var i = 0; i < villages.length; i++) {
