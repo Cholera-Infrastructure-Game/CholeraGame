@@ -36,6 +36,29 @@ var generateListenerForVillage = function(index) {
     };
 }
 
+var createPopUp = function(popup_text) {
+    // a transparent black background to catch mouse events while the popup is up
+    // need to draw it first and then convert it to a sprite
+    var temp = game.add.graphics(0, 0);
+    temp.beginFill(0x000000, 0.6);
+    temp.drawRect(0, 0, 768, 768);
+    temp.endFill();
+    fullScreenBg = game.add.sprite(0, 0, temp.generateTexture());
+    fullScreenBg.inputEnabled = true;
+    temp.destroy();
+
+    // should be put in the center of the screen
+    var background = game.add.sprite(320, 300, "TestButton");
+    background.scale.setTo(0.72, 0.86);
+    background.anchor.setTo(0.5, 0.5);
+    fullScreenBg.addChild(background);
+
+	fullScreenBg.bringToTop();
+	background.bringToTop();
+
+	console.log("Foobar");
+};
+
 var state = {
     init: function() {
         // TODO: decide on actual money amounts
@@ -59,6 +82,7 @@ var state = {
         // STate preload logic goes here
         game.load.image('map', 'assets/images/Map.png');
         game.load.image('village', 'assets/images/TempCityIcon.png');
+		game.load.spritesheet('TestButton', 'assets/images/TestButton.png');
     },
     create: function() {
         // State create logic goes here
@@ -77,8 +101,10 @@ var state = {
         populateVillageInfoBox();
         // Called 60 times per second
         count += 1;
-        if (count == 60) {
-            count = 0;
+		if (count == 100)
+			createPopUp("Hello, world!");
+
+        if (count % 60 == 0) {
             money += 25;
             moneyText.setText("Your income: " + money);
             for (i = 0; i < villages.length; i++) {
