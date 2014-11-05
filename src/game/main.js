@@ -49,7 +49,7 @@ var generateListenerForVillage = function(index) {
     };
 }
 
-var createPopUp = function(popup_text) {
+var createEducatePopUp = function() {
     // a transparent black background to catch mouse events while the popup is up
     // need to draw it first and then convert it to a sprite
     var temp = game.add.graphics(0, 0);
@@ -61,15 +61,35 @@ var createPopUp = function(popup_text) {
     temp.destroy();
 
     // should be put in the center of the screen
-    var background = game.add.sprite(320, 300, "TestButton");
-    background.scale.setTo(0.72, 0.86);
-    background.anchor.setTo(0.5, 0.5);
-    fullScreenBg.addChild(background);
+    var style = { font: "30px Arial", fill: "#ff0044", align: "left" };
+    var education_texts = ["Educate about soap", "Educate about vaccines", "Educate about chemical treatments",
+                           "Educate about boiling water", "Educate about water containers", "Educate about moving waste",
+                           "Educate about waste facilities", "Educate about washing facilities"];
+    
+    var education_text_GUIs = []
+    for (i = 0; i < education_texts.length; i++) {
+        var text_box = game.add.text(150, 50 + 30 * i, education_texts[i], style);
+        text_box.inputEnabled = true;
+        education_text_GUIs.push(text_box)
+    }
 
-	fullScreenBg.bringToTop();
-	background.bringToTop();
+	fullScreenBg.bringToTop;
 
-	console.log("Foobar");
+    education_text_GUIs[0].events.onInputDown.add(villages[currently_selected_village].educateAboutSoap, this);
+    education_text_GUIs[1].events.onInputDown.add(villages[currently_selected_village].educateAboutVaccine, this);
+    education_text_GUIs[2].events.onInputDown.add(villages[currently_selected_village].educateAboutChemicalTreatment, this);
+    education_text_GUIs[3].events.onInputDown.add(villages[currently_selected_village].educateAboutBoilingWater, this);
+    education_text_GUIs[4].events.onInputDown.add(villages[currently_selected_village].educateAboutWaterContainers, this);
+    education_text_GUIs[5].events.onInputDown.add(villages[currently_selected_village].educateAboutMovingWaste, this);
+    education_text_GUIs[6].events.onInputDown.add(villages[currently_selected_village].educateAboutWasteFacilities, this);
+    education_text_GUIs[7].events.onInputDown.add(villages[currently_selected_village].educateAboutWashingFacilities, this);
+    fullScreenBg.events.onInputDown.add(function() {
+        console.log("click registered");
+        fullScreenBg.destroy();
+        for (i = 0; i < education_text_GUIs.length; i++) {
+            education_text_GUIs[i].destroy();
+        }
+    }, this);
 };
 
 var state = {
@@ -115,10 +135,10 @@ var state = {
         }
         var eduButton = game.add.sprite(780, 300, "EducateButton");
         eduButton.inputEnabled = true;
-        eduButton.events.onInputDown.add(createPopUp, this);
+        eduButton.events.onInputDown.add(createEducatePopUp, this);
         var prevButton = game.add.sprite(780, 400, "PreventButton");
         prevButton.inputEnabled = true;
-        prevButton.events.onInputDown.add(createPopUp, this);
+        prevButton.events.onInputDown.add(createEducatePopUp, this);
     },
     update: function() {
         // Called 60 times per second
