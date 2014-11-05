@@ -17,6 +17,29 @@ var SOAP_DURATION = 14;  // in days
 var VACC_ONE_DURATION = 14 // in days
 var VACC_TWO_DURATION = 30 // in days
 
+var prevention_measure_costs = {
+        soap: 20,
+        vacc: 1000,
+        chem: 200,
+        boil: 100,
+        container: 100,
+        moveWaste: 50,
+        wasteFacility: 800,
+        washFacility: 700
+};
+
+var education_measure_costs = {
+        soap: 10,
+        vacc: 200,
+        chem: 150,
+        boil: 50,
+        container: 10,
+        moveWaste: 10,
+        wasteFacility: 100,
+        washFacility: 30
+};
+
+
 
 Village = function(population, village_factors, village_number) {
     var village_factors = village_factors;
@@ -24,30 +47,30 @@ Village = function(population, village_factors, village_number) {
     var total_population = population;
     var people_infected = 10;
     // Initialize Education measures to 1 (so no increase in prevention measure effect)
-    var education_measures = {};
-    education_measures["soap"] = 1;
-    education_measures["vacc"] = 1;
-    education_measures["chem"] = 1;
-    education_measures["boil"] = 1;
-    education_measures["container"] = 1;
-    education_measures["moveWaste"] = 1;
-    education_measures["wasteFacility"] = 1;
-    education_measures["sanitizer"] = 1;
-    education_measures["washFacility"] = 1;
+    var education_measures = {
+        soap: 1,
+        vacc: 1,
+        chem: 1,
+        boil: 1,
+        container: 1,
+        moveWaste: 1,
+        wasteFacility: 1,
+        washFacility: 1
+    };
 
     // Initialize all prevention measures to 0 (i.e. not implemented).
     // When a measure is put into place, the factor is put as the value in the map.
     var soap_days_left = 0;
-    var prevention_measures = {};
-    prevention_measures["soap"] = 0;
-    prevention_measures["vacc"] = 0;
-    prevention_measures["chem"] = 0;
-    prevention_measures["boil"] = 0;
-    prevention_measures["container"] = 0;
-    prevention_measures["moveWaste"] = 0;
-    prevention_measures["wasteFacility"] = 0;
-    prevention_measures["sanitizer"] = 0;
-    prevention_measures["washFacility"] = 0;
+    var prevention_measures = {
+        soap: 0,
+        vacc: 0,
+        chem: 0,
+        boil: 0,
+        container: 0,
+        moveWaste: 0,
+        wasteFacility: 0,
+        washFacility: 0
+    }
 
     var vacc_days_left = 0;
 
@@ -83,6 +106,7 @@ Village = function(population, village_factors, village_number) {
                 people_infected = Math.floor((1-(SOAP_FACTOR * .1)) * people_infected);
             }
             prevention_measures["soap"] = SOAP_FACTOR;
+            money -= prevention_measure_costs["soap"];
             soap_days_left += SOAP_DURATION;
         },
 
@@ -91,7 +115,8 @@ Village = function(population, village_factors, village_number) {
             if (prevention_measures["vacc"] != VACC_ONE_FACTOR) {
                 people_infected = Math.floor((1-(VACC_ONE_FACTOR/10)) * people_infected);
             }
-            prevention_measures[""] = VACC_ONE_FACTOR;
+            prevention_measures["vacc"] = VACC_ONE_FACTOR;
+            money -= prevention_measure_costs["vacc"];
             vacc_days_left = VACC_ONE_DURATION;
         },
 
@@ -100,6 +125,7 @@ Village = function(population, village_factors, village_number) {
                 people_infected = Math.floor((1-(VACC_TWO_FACTOR * .1)) * people_infected);
             }
             prevention_measures["vacc"] = VACC_TWO_FACTOR;
+            money -= prevention_measure_costs["vacc"];
             vacc_days_left = VACC_TWO_DURATION;
         },
 
@@ -108,6 +134,7 @@ Village = function(population, village_factors, village_number) {
                 people_infected = Math.floor((1-(CHEM_FACTOR * .1)) * people_infected);
             }
             prevention_measures["chem"] = CHEM_FACTOR;
+            money -= prevention_measure_costs["chem"];
         },
 
         addBoilingWater: function() {
@@ -115,6 +142,7 @@ Village = function(population, village_factors, village_number) {
                 people_infected = Math.floor((1-(BOIL_FACTOR * .1)) * people_infected);
             }
             prevention_measures["boil"] = BOIL_FACTOR;
+            money -= prevention_measure_costs["boil"];
         },
 
         addWaterContainers: function() {
@@ -122,6 +150,7 @@ Village = function(population, village_factors, village_number) {
                 people_infected = Math.floor((1-(CONTAINER_FACTOR * .1)) * people_infected);
             }
             prevention_measures["container"] = CONTAINER_FACTOR;
+            money -= prevention_measure_costs["container"];
         },
 
         addMovingWaste: function() {
@@ -129,6 +158,7 @@ Village = function(population, village_factors, village_number) {
                 people_infected = Math.floor((1-(MOVE_WASTE_FACTOR * .1)) * people_infected);
             }
             prevention_measures["moveWaste"] = MOVE_WASTE_FACTOR;
+            money -= prevention_measure_costs["moveWaste"];
         },
 
         addWasteFacilities: function() {
@@ -136,6 +166,7 @@ Village = function(population, village_factors, village_number) {
                 people_infected = Math.floor((1-(WASTE_FACILITY_FACTOR * .1)) * people_infected);
             }
             prevention_measures["wasteFacility"] = WASTE_FACILITY_FACTOR;
+            money -= prevention_measure_costs["wasteFacility"];
         },
 
         addWashingFacilities: function() {
@@ -143,39 +174,48 @@ Village = function(population, village_factors, village_number) {
                 people_infected = Math.floor((1-(WASH_FACILITY_FACTOR * .1)) * people_infected);
             }
             prevention_measures["washFacility"] = WASH_FACILITY_FACTOR;
+            money -= prevention_measure_costs["washFacility"];
         },
 
         // These functions are to be called when an education measure is added to a village.  Note that these have no immediate effect (maybe they should?) and do nothing when the corresponding prevention measure is not in effect.
         educateAboutSoap: function() {
             education_measures["soap"] = 1.5;
+            money -= education_measure_costs["soap"];
         },
 
         educateAboutVaccine: function() {
             education_measures["vacc"] = 1.5;
+            money -= education_measure_costs["vacc"];
         },
 
         educateAboutChemicalTreatment: function() {
             education_measures["chem"] = 1.5;
+            money -= education_measure_costs["chem"];
         },
 
         educateAboutBoilingWater: function() {
             education_measures["boil"] = 1.5;
+            money -= education_measure_costs["boil"];
         },
 
         educateAboutWaterContainers: function() {
             education_measures["container"] = 1.5;
+            money -= education_measure_costs["container"];
         },
 
         educateAboutMovingWaste: function() {
             education_measures["moveWaste"] = 1.5;
+            money -= education_measure_costs["moveWaste"];
         },
 
         educateAboutWasteFacilities: function() {
             education_measures["wasteFacility"] = 1.5;
+            money -= education_measure_costs["wasteFacility"];
         },
 
         educateAboutWashingFacilities: function() {
             education_measures["washFacility"] = 1.5;
+            money -= education_measure_costs["washFacility"];
         },
 
         getPopulation: function() {
