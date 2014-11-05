@@ -1,6 +1,5 @@
 
-var DEATH_RATE = .02;
-
+var BASE_INFECTION_RATE = .10;
 var BASE_FACTOR = 0.000000167;
 
 // The additive factor to the infection rate the measure has over time.
@@ -23,7 +22,6 @@ Village = function(population, village_factors, village_number) {
     var village_factors = village_factors;
     var village_number = village_number;
     var total_population = population;
-    var people_dead = 0;
     var people_infected = 10;
     // Initialize Education measures to 1 (so no increase in prevention measure effect)
     var education_measures = {};
@@ -56,11 +54,7 @@ Village = function(population, village_factors, village_number) {
 
     return {
         incrementDay: function() {
-            people_newly_dead = Math.floor(Math.random() * people_infected * DEATH_RATE);
-            people_dead += people_newly_dead;
-            people_infected -= people_newly_dead;
-
-            var infected_rate = .01; //from .00 to 1.00, the maximum percentage of people healthy that could become infected
+            var infected_rate = BASE_INFECTION_RATE; //from .00 to 1.00, the maximum percentage of people healthy that could become infected
             for (var i = 0; i < village_factors.length; i++) {
                 // sort of balanced so it is at most an increase of .05
                 infected_rate += all_villages_number_of_people_infected[i] * BASE_FACTOR * village_factors[i];
@@ -77,7 +71,7 @@ Village = function(population, village_factors, village_number) {
             if (vacc_days_left === 0) {
                 prevention_measures["vacc"] = 0;
             }
-            people_infected += Math.floor((total_population - people_dead - people_infected) * Math.random() * (infected_rate));
+            people_infected = Math.min(people_infected + Math.ceil(people_infected * Math.random() * (infected_rate)), total_population);
             // update the temp amount here, when done updating all the villages move the temp to all_villages_people_infected
             temp_villages_number_of_people_infected[village_number] =  people_infected;
         },
@@ -182,10 +176,6 @@ Village = function(population, village_factors, village_number) {
 
         educateAboutWashingFacilities: function() {
             education_measures["washFacility"] = 1.5;
-        },
-
-        getHowManyDead: function() {
-            return people_dead;
         },
 
         getPopulation: function() {
