@@ -103,6 +103,8 @@ var state = {
         game.load.image('map', 'assets/images/Map.png');
         game.load.image('village', 'assets/images/TempCityIcon.png');
 		game.load.spritesheet('TestButton', 'assets/images/TestButton.png');
+        game.load.spritesheet('EducateButton', 'assets/images/EducateButton.png');
+        game.load.spritesheet('PreventButton', 'assets/images/PreventButton.png');
     },
     create: function() {
         // State create logic goes here
@@ -118,6 +120,9 @@ var state = {
             var style = { font: "12px Arial", fill: "#ffffff", align: "left" };
             game.add.text(VILLAGE_POSITIONS[i][0] - 20, VILLAGE_POSITIONS[i][1] + 10, text, style);
         }
+        game.add.sprite(768, 500, "EducateButton");
+        game.add.sprite(768, 600, "PreventButton");
+        
     },
     update: function() {
         // Called 60 times per second
