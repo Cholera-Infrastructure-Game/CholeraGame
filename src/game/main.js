@@ -194,13 +194,13 @@ var state = {
             if (daysLeft == 0) {
                 game.state.add('end', EndStage, true);
             }
-            var allInfected = true;
+            var total_population = 0;
+            var total_infected = 0;
             for (var i = 0; i < villages.length; i++) {
-                if (villages[i].getPopulation() != villages[i].getHowManyInfected()){
-                    allInfected = false;
-                }
+                total_population += village.getPopulation();
+                total_infected += village.getHowManyInfected();
             }
-            if (allInfected) {
+            if (total_infected >= total_population * 0.6) {
                 game.state.add('end',EndStage,true);
             }
             for (var i = 0; i < villages.length; i++) {

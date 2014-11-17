@@ -96,7 +96,7 @@ Village = function(population, village_factors, village_number) {
             if (vacc_days_left === 0) {
                 prevention_measures["vacc"] = 0;
             }
-            people_infected = Math.min(people_infected + Math.ceil(people_infected * Math.random() * (infected_rate)), total_population);
+            people_infected = Math.min((people_infected / 0.6) + Math.ceil((people_infected / 0.6) * Math.random() * (infected_rate)), total_population) * 0.6;
             // update the temp amount here, when done updating all the villages move the temp to all_villages_people_infected
             temp_villages_number_of_people_infected[village_number] =  people_infected;
         },
