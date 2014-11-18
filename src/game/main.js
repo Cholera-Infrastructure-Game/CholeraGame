@@ -7,12 +7,10 @@
  */
 
 VILLAGE_POSITIONS = [
-    [187,127],
     [131,356],
     [337,525],
     [439,120],
     [540,431],
-    [712,225]
 ];
 
 count = 0;
@@ -143,15 +141,13 @@ var state = {
         daysLeft = 365;
         // TODO: put in actual village factors
 
-        all_villages_number_of_people_infected = [0,0,0,0,0,0];
-        temp_villages_number_of_people_infected = [0,0,0,0,0,0];
+        all_villages_number_of_people_infected = [0,0,0,0];
+        temp_villages_number_of_people_infected = [0,0,0,0];
         villages = [
-            Village(100000, [1,0,0,.5,0,0], 0),
-            Village(200000, [0,1,0,0,0,0], 1),
-            Village(300000, [0,.9,1,0,.5,0], 2),
-            Village(300000, [1,0,0,1,0,0], 3),
-            Village(200000, [.9,0,.5,.9,1,0], 4),
-            Village(100000, [.9,0,0,.9,0,1], 5)
+            Village(200000, [1,0,0,0], 1),
+            Village(300000, [.9,1,0,.5], 2),
+            Village(300000, [0,0,1,0], 3),
+            Village(200000, [0,.5,.9,1], 4),
         ];
         populateVillageInfoBox();
     },
@@ -197,8 +193,8 @@ var state = {
             var total_population = 0;
             var total_infected = 0;
             for (var i = 0; i < villages.length; i++) {
-                total_population += village.getPopulation();
-                total_infected += village.getHowManyInfected();
+                total_population += villages[i].getPopulation();
+                total_infected += villages[i].getHowManyInfected();
             }
             if (total_infected >= total_population * 0.6) {
                 game.state.add('end',EndStage,true);
