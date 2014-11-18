@@ -150,9 +150,19 @@ var state = {
             Village(200000, [0,.5,.9,1], 4),
         ];
         populateVillageInfoBox();
+        healthBars = [];
+        base = 'health';
+
     },
     preload: function() {
         // STate preload logic goes here
+        game.load.image('health0','assets/images/health_bar0.png');
+        game.load.image('health1','assets/images/health_bar1.png');
+        game.load.image('health2','assets/images/health_bar2.png');
+        game.load.image('health3','assets/images/health_bar3.png');
+        game.load.image('health4','assets/images/health_bar4.png');
+        game.load.image('health5','assets/images/health_bar5.png');
+        game.load.image('health_back','assets/images/health_bar_background.png');
         game.load.image('map', 'assets/images/Map.png');
         game.load.image('village', 'assets/images/TempCityIcon.png');
 		game.load.spritesheet('TestButton', 'assets/images/TestButton.png');
@@ -165,6 +175,10 @@ var state = {
         var villageImages = [];
         for (i = 0; i < villages.length; i++) {
             var villageImage = game.add.sprite(VILLAGE_POSITIONS[i][0], VILLAGE_POSITIONS[i][1], 'village');
+            var healthbar_back = game.add.image(VILLAGE_POSITIONS[i][0], VILLAGE_POSITIONS[i][1]-30,'health_back');
+            var healthbar = game.add.image(VILLAGE_POSITIONS[i][0], VILLAGE_POSITIONS[i][1]-30,base.concat(i.toString()));
+            healthbar.cropEnabled = true;
+            healthBars.push(healthbar);
             villageImage.anchor.set(0.5);
             villageImage.inputEnabled = true;
             villageImage.events.onInputDown.add(generateListenerForVillage(i), this);
@@ -184,6 +198,16 @@ var state = {
         // Called 60 times per second
         count += 1;
         if (count % 90 == 0) {
+            for(var i = 0; i <villages.length; i++){
+                width = (villages[i].getPopulation() - villages[i].getHowManyInfected())/(villages[i].getPopulation())*healthBars[i].width;
+                cropRect = new Phaser.Rectangle(0, 0, width, 9);
+            if (i==0){
+                console.log(width)
+            }
+                healthBars[i].crop(cropRect);
+                healthBars[i].updateCrop();
+            }
+
             // This happens once every 1.5 seconds, so total game length is about 9 minutes.
             money += 25;
             daysLeft -= 1;
