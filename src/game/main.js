@@ -13,6 +13,58 @@ VILLAGE_POSITIONS = [
     [540,431],
 ];
 
+/**
+*I realize there is also a dict in village.js we really should make a file with
+*all the global variables in it but not right now.
+*/
+var prevention_costs = [
+        20,
+        1000,
+        1000,
+        200,
+        100,
+        100,
+        50,
+        800,
+        700
+];
+
+var education_costs = [
+        10,
+        200,
+        150,
+        50,
+        10,
+        10,
+        100,
+        30
+]; 
+
+var prevention_descript = [
+    "Lather and rinse for thorough handwashing. Cheap and simple but eventually runs out.",
+    "Very effective at preventing cholera, though the immunity ends a little sooner. Moderately expensive.",
+    "Less effective at preventing cholera, though the immunity lasts a while. Moderately expensive.",
+    "Disinfect water with fancy kits. Quick to use and quite effective, but also moderately expensive.",
+    "Pots, pots for everyone! A cheap, easy way for anyone to disinfect water. ",
+    "Take waste away from drinking water and put it someplace else. Quick and cheap to implement, but not always efficient.",
+    "Specific containers for storing clean water. Not too expensive and moderately helpful assuming they’re clean.",
+    "A specific place for waste to be deposited. Pricey and takes time to build, but very effective.",
+    "A specific place for handwashing. Pricey and takes time to build, but very effective."
+];
+
+var education_descript = [
+    "Soap’s only good when you use it. Wash before handling food and water and after using the toilet.",
+    "No one likes needles, but at risk groups need to be brought in for immunizations.",
+    "Kits can be a little complicated to use. Learn proper usage to maximize efficiency.",
+    "Boiling takes time but it’s worth it. Get into the habit of boiling water before using.",
+    "Leave waste in designated areas, not where they can get washed into the drinking water.",
+    "Stored contaminated water is still contaminated. Keep containers covered and regularly clean them.",
+    "Encourage people to actually use the waste facility.",
+    "Encourage people to actually wash their hands at the wash facility."
+];
+
+var flavorTextBox = null;
+    
 count = 0;
 villageTextBox = null;
 currently_selected_village = 0;
@@ -50,6 +102,19 @@ var generateListenerForVillage = function(index) {
     };
 }
 
+var displayFlavorText = function(flavorText, flavorStyle) {
+    return function() {
+        flavorTextBox = game.add.text(150, 550, flavorText, flavorStyle);
+        flavorTextBox.wordWrap = true;
+        flavorTextBox.wordWrapWidth = 600;
+    };
+};
+
+var destroyFlavorText = function() {
+    return function() {
+        flavorTextBox.destroy();
+    }
+}
 
 var createEducatePopUp = function() {
 	// Block double popups.
@@ -75,8 +140,10 @@ var createEducatePopUp = function() {
     var education_text_GUIs = []
     var number_of_ed_options = Math.floor(count / 60 / SECONDS_UNTIL_NEW_OPTIONS) + 1
     for (i = 0; i < number_of_ed_options; i++) {
-        var text_box = game.add.text(150, 50 + 30 * i, education_texts[i], style);
+        var text_box = game.add.text(150, 50 + 30 * i, education_texts[i].concat(": ", education_costs[i]), style);
         text_box.inputEnabled = true;
+        text_box.events.onInputOver.add(displayFlavorText(education_descript[i], style), this);
+        text_box.events.onInputOut.add(destroyFlavorText(), this);
         education_text_GUIs.push(text_box)
     }
 
@@ -139,8 +206,10 @@ var createPreventPopUp = function() {
         number_of_prevention_options++;
     }
     for (i = 0; i < number_of_prevention_options; i++) {
-        var text_box = game.add.text(150, 50 + 30 * i, prevention_texts[i], style);
+        var text_box = game.add.text(150, 50 + 30 * i, prevention_texts[i].concat(": ", prevention_costs[i]), style);
         text_box.inputEnabled = true;
+        text_box.events.onInputOver.add(displayFlavorText(prevention_descript[i], style), this);
+        text_box.events.onInputOut.add(destroyFlavorText(), this);
         prevention_text_GUIs.push(text_box);
     }
 
@@ -286,7 +355,7 @@ var game = new Phaser.Game(
     968,
     768,
     Phaser.AUTO,
-    'game',
-    state
+    'help',
+    HelpStage
 );
 game.state.add('main',state);
