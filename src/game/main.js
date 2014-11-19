@@ -156,7 +156,7 @@ var createPreventPopUp = function() {
         number_of_prevention_options++;
     }
     for (i = 0; i < number_of_prevention_options; i++) {
-        var text_box = game.add.text(150, 50 + 30 * i, prevention_texts[i], style);
+        var text_box = game.add.text(150, 50 + 30 * i, prevention_texts[i].concat(": ", prevention_costs[i]), style);
         text_box.inputEnabled = true;
         prevention_text_GUIs.push(text_box);
     }
@@ -302,7 +302,7 @@ var game = new Phaser.Game(
     968,
     768,
     Phaser.AUTO,
-    'game',
-    state
+    'help',
+    HelpStage
 );
 game.state.add('main',state);
