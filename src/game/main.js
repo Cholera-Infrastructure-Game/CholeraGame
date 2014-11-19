@@ -138,7 +138,7 @@ var state = {
     init: function() {
         // TODO: decide on actual money amounts
         money = 1000;
-        daysLeft = 365;
+        daysLeft = 1365;
         // TODO: put in actual village factors
 
         all_villages_number_of_people_infected = [0,0,0,0];
@@ -197,13 +197,16 @@ var state = {
     update: function() {
         // Called 60 times per second
         count += 1;
-        if (count % 90 == 0) {
+        if (count == 60*60/90) { // 1 minute into the game
+            BASE_INFECTION_RATE = .03;
+        }
+        if (count == 2*60*60/90) { // 2 minutes into the game
+            BASE_INFECTION_RATE = .05;
+        }
+        if (count % 1 == 0) {
             for(var i = 0; i <villages.length; i++){
                 width = (villages[i].getPopulation() - villages[i].getHowManyInfected())/(villages[i].getPopulation())*healthBars[i].width;
                 cropRect = new Phaser.Rectangle(0, 0, width, 9);
-            if (i==0){
-                console.log(width)
-            }
                 healthBars[i].crop(cropRect);
                 healthBars[i].updateCrop();
             }

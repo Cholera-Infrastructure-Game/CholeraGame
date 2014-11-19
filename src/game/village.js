@@ -1,17 +1,17 @@
 
-var BASE_INFECTION_RATE = .10;
-var BASE_FACTOR = 0.000000167;
+var BASE_INFECTION_RATE = .00;
+var BASE_FACTOR = 0.000005;
 
 // The additive factor to the infection rate the measure has over time.
-var SOAP_FACTOR = -.003;
-var VACC_ONE_FACTOR = -.01;
-var VACC_TWO_FACTOR = -.005;
-var CHEM_FACTOR = -.003;
-var BOIL_FACTOR = -.002;
-var CONTAINER_FACTOR = -.001;
-var MOVE_WASTE_FACTOR = -.001;
-var WASTE_FACILITY_FACTOR = -.008;
-var WASH_FACILITY_FACTOR = -.007;
+var SOAP_FACTOR = -.03;
+var VACC_ONE_FACTOR = -.1;
+var VACC_TWO_FACTOR = -.05;
+var CHEM_FACTOR = -.03;
+var BOIL_FACTOR = -.02;
+var CONTAINER_FACTOR = -.01;
+var MOVE_WASTE_FACTOR = -.01;
+var WASTE_FACILITY_FACTOR = -.06;
+var WASH_FACILITY_FACTOR = -.05;
 
 var SOAP_DURATION = 14;  // in days
 var VACC_ONE_DURATION = 14 // in days
@@ -55,7 +55,7 @@ Village = function(population, village_factors, village_number) {
         boil: 1,
         container: 1,
         moveWaste: 1,
-        wasteFacility: 2,//For testing purposes, should also be 1
+        wasteFacility: 1,
         washFacility: 1
     };
 
@@ -82,7 +82,7 @@ Village = function(population, village_factors, village_number) {
             var infected_rate = BASE_INFECTION_RATE; //from .00 to 1.00, the maximum percentage of people healthy that could become infected
             for (var i = 0; i < village_factors.length; i++) {
                 // sort of balanced so it is at most an increase of .05
-                infected_rate += all_villages_number_of_people_infected[i] * BASE_FACTOR * village_factors[i];
+                infected_rate += Math.min(all_villages_number_of_people_infected[i] * BASE_FACTOR, 10000 * BASE_FACTOR) * village_factors[i];
             }
             for (var key in prevention_measures) {
                 infected_rate += prevention_measures[key] * education_measures[key];
@@ -96,7 +96,8 @@ Village = function(population, village_factors, village_number) {
             if (vacc_days_left === 0) {
                 prevention_measures["vacc"] = 0;
             }
-            people_infected = Math.min((people_infected / 0.6) + Math.ceil((people_infected / 0.6) * Math.random() * (infected_rate)), total_population) * 0.6;
+            console.log(infected_rate);
+            people_infected = Math.min(Math.ceil(people_infected + Math.ceil((people_infected / 0.6) * Math.random() * infected_rate)), total_population);
             // update the temp amount here, when done updating all the villages move the temp to all_villages_people_infected
             temp_villages_number_of_people_infected[village_number] =  people_infected;
         },
