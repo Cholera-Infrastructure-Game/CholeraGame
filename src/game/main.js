@@ -32,14 +32,27 @@ var prevention_costs = [
 var education_costs = [
         10,
         200,
-        200,
         150,
         50,
         10,
         10,
         100,
         30
-];    
+]; 
+
+var prevention_descript = [
+    "Lather and rinse for thorough handwashing. Cheap and simple but eventually runs out.",
+    "Very effective at preventing cholera, though the immunity ends a little sooner. Moderately expensive.",
+    "Less effective at preventing cholera, though the immunity lasts a while. Moderately expensive.",
+    "Disinfect water with fancy kits. Quick to use and quite effective, but also moderately expensive.",
+    "Pots, pots for everyone! A cheap, easy way for anyone to disinfect water. ",
+    "Take waste away from drinking water and put it someplace else. Quick and cheap to implement, but not always efficient.",
+    "Specific containers for storing clean water. Not too expensive and moderately helpful assuming they’re clean.",
+    "A specific place for waste to be deposited. Pricey and takes time to build, but very effective.",
+    "A specific place for handwashing. Pricey and takes time to build, but very effective."
+];
+
+var flavorTextBox = null;
     
 count = 0;
 villageTextBox = null;
@@ -75,6 +88,20 @@ var generateListenerForVillage = function(index) {
     return function() {
         currently_selected_village = index;
     };
+}
+
+var displayFlavorText = function(flavorText, flavorStyle) {
+    return function() {
+        flavorTextBox = game.add.text(150, 550, flavorText, flavorStyle);
+        flavorTextBox.wordWrap = true;
+        flavorTextBox.wordWrapWidth = 600;
+    };
+};
+
+var destroyFlavorText = function() {
+    return function() {
+        flavorTextBox.destroy();
+    }
 }
 
 var createEducatePopUp = function() {
@@ -158,6 +185,8 @@ var createPreventPopUp = function() {
     for (i = 0; i < number_of_prevention_options; i++) {
         var text_box = game.add.text(150, 50 + 30 * i, prevention_texts[i].concat(": ", prevention_costs[i]), style);
         text_box.inputEnabled = true;
+        text_box.events.onInputOver.add(displayFlavorText(prevention_descript[i], style), this);
+        text_box.events.onInputOut.add(destroyFlavorText(), this);
         prevention_text_GUIs.push(text_box);
     }
 
