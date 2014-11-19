@@ -17,6 +17,8 @@ count = 0;
 villageTextBox = null;
 currently_selected_village = 0;
 
+SECONDS_UNTIL_NEW_OPTIONS = 30;
+
 var populateVillageInfoBox = function () {
     if (villageTextBox != null) {
         villageTextBox.destroy();
@@ -65,7 +67,8 @@ var createEducatePopUp = function() {
                            "Educate about waste facilities", "Educate about washing facilities"];
     
     var education_text_GUIs = []
-    for (i = 0; i < education_texts.length; i++) {
+    var number_of_ed_options = count / 60 / SECONDS_UNTIL_NEW_OPTIONS + 1
+    for (i = 0; i < number_of_ed_options; i++) {
         var text_box = game.add.text(150, 50 + 30 * i, education_texts[i], style);
         text_box.inputEnabled = true;
         education_text_GUIs.push(text_box)
@@ -73,14 +76,26 @@ var createEducatePopUp = function() {
 
 	fullScreenBg.bringToTop;
 
-    education_text_GUIs[0].events.onInputDown.add(villages[currently_selected_village].educateAboutSoap, this);
-    education_text_GUIs[1].events.onInputDown.add(villages[currently_selected_village].educateAboutVaccine, this);
-    education_text_GUIs[2].events.onInputDown.add(villages[currently_selected_village].educateAboutChemicalTreatment, this);
-    education_text_GUIs[3].events.onInputDown.add(villages[currently_selected_village].educateAboutBoilingWater, this);
-    education_text_GUIs[4].events.onInputDown.add(villages[currently_selected_village].educateAboutWaterContainers, this);
-    education_text_GUIs[5].events.onInputDown.add(villages[currently_selected_village].educateAboutMovingWaste, this);
-    education_text_GUIs[6].events.onInputDown.add(villages[currently_selected_village].educateAboutWasteFacilities, this);
-    education_text_GUIs[7].events.onInputDown.add(villages[currently_selected_village].educateAboutWashingFacilities, this);
+    switch (number_of_ed_options) {
+        default:
+            education_text_GUIs[7].events.onInputDown.add(villages[currently_selected_village].educateAboutWashingFacilities, this);
+        case 7:
+            education_text_GUIs[6].events.onInputDown.add(villages[currently_selected_village].educateAboutWasteFacilities, this);
+        case 6:
+            education_text_GUIs[5].events.onInputDown.add(villages[currently_selected_village].educateAboutMovingWaste, this);
+        case 5:
+            education_text_GUIs[4].events.onInputDown.add(villages[currently_selected_village].educateAboutWaterContainers, this);
+        case 4:
+            education_text_GUIs[3].events.onInputDown.add(villages[currently_selected_village].educateAboutBoilingWater, this);
+        case 3:
+            education_text_GUIs[2].events.onInputDown.add(villages[currently_selected_village].educateAboutChemicalTreatment, this);
+        case 2:
+            education_text_GUIs[1].events.onInputDown.add(villages[currently_selected_village].educateAboutVaccine, this);
+        case 1:
+            education_text_GUIs[0].events.onInputDown.add(villages[currently_selected_village].educateAboutSoap, this);
+            break;
+    }
+
     fullScreenBg.events.onInputDown.add(function() {
         console.log("click registered");
         fullScreenBg.destroy();
@@ -107,24 +122,42 @@ var createPreventPopUp = function() {
                            "Add boiling water", "Add water containers", "Add moving waste",
                            "Add waste facilities", "Add washing facilities"];
     
-    var prevention_text_GUIs = []
-    for (i = 0; i < prevention_texts.length; i++) {
+    var prevention_text_GUIs = [];
+    var number_of_prevention_options = count / 60 / SECONDS_UNTIL_NEW_OPTIONS + 1;
+    if (number_of_prevention_options > 1) {
+        number_of_prevention_options++;
+    }
+    for (i = 0; i < number_of_prevention_options; i++) {
         var text_box = game.add.text(150, 50 + 30 * i, prevention_texts[i], style);
         text_box.inputEnabled = true;
-        prevention_text_GUIs.push(text_box)
+        prevention_text_GUIs.push(text_box);
     }
 
     fullScreenBg.bringToTop;
 
-    prevention_text_GUIs[0].events.onInputDown.add(villages[currently_selected_village].addSoap, this);
-    prevention_text_GUIs[1].events.onInputDown.add(villages[currently_selected_village].addVaccineOne, this);
-    prevention_text_GUIs[2].events.onInputDown.add(villages[currently_selected_village].addVaccineTwo, this);
-    prevention_text_GUIs[3].events.onInputDown.add(villages[currently_selected_village].addChemicalTreatment, this);
-    prevention_text_GUIs[4].events.onInputDown.add(villages[currently_selected_village].addBoilingWater, this);
-    prevention_text_GUIs[5].events.onInputDown.add(villages[currently_selected_village].addWaterContainers, this);
-    prevention_text_GUIs[6].events.onInputDown.add(villages[currently_selected_village].addMovingWaste, this);
-    prevention_text_GUIs[7].events.onInputDown.add(villages[currently_selected_village].addWasteFacilities, this);
-    prevention_text_GUIs[8].events.onInputDown.add(villages[currently_selected_village].addWashingFacilities, this);
+    switch (number_of_prevention_options) {
+        default:
+            prevention_text_GUIs[8].events.onInputDown.add(villages[currently_selected_village].addWashingFacilities, this);
+        case 8:
+            prevention_text_GUIs[7].events.onInputDown.add(villages[currently_selected_village].addWasteFacilities, this);
+        case 7:
+            prevention_text_GUIs[6].events.onInputDown.add(villages[currently_selected_village].addMovingWaste, this);
+        case 6:
+            prevention_text_GUIs[5].events.onInputDown.add(villages[currently_selected_village].addWaterContainers, this);
+        case 5:
+            prevention_text_GUIs[4].events.onInputDown.add(villages[currently_selected_village].addBoilingWater, this);
+        case 4:
+            prevention_text_GUIs[3].events.onInputDown.add(villages[currently_selected_village].addChemicalTreatment, this);
+        case 3:
+            prevention_text_GUIs[2].events.onInputDown.add(villages[currently_selected_village].addVaccineTwo, this);
+        case 2:
+            prevention_text_GUIs[1].events.onInputDown.add(villages[currently_selected_village].addVaccineOne, this);
+        case 1:
+            prevention_text_GUIs[0].events.onInputDown.add(villages[currently_selected_village].addSoap, this);
+            break;
+
+    }
+
     fullScreenBg.events.onInputDown.add(function() {
         console.log("click registered");
         fullScreenBg.destroy();
