@@ -16,6 +16,7 @@ VILLAGE_POSITIONS = [
 count = 0;
 villageTextBox = null;
 currently_selected_village = 0;
+popUpCurrentlyShown = false;
 
 SECONDS_UNTIL_NEW_OPTIONS = 30;
 
@@ -49,7 +50,12 @@ var generateListenerForVillage = function(index) {
     };
 }
 
+
 var createEducatePopUp = function() {
+	// Block double popups.
+    if (popUpCurrentlyShown)
+		return;
+	popUpCurrentlyShown = true;
     // a transparent black background to catch mouse events while the popup is up
     // need to draw it first and then convert it to a sprite
     var temp = game.add.graphics(0, 0);
@@ -99,6 +105,7 @@ var createEducatePopUp = function() {
     fullScreenBg.events.onInputDown.add(function() {
         console.log("click registered");
         fullScreenBg.destroy();
+		popUpCurrentlyShown = false;
         for (i = 0; i < education_text_GUIs.length; i++) {
             education_text_GUIs[i].destroy();
         }
@@ -106,6 +113,10 @@ var createEducatePopUp = function() {
 };
 
 var createPreventPopUp = function() {
+	// Block double pop ups.
+    if (popUpCurrentlyShown)
+		return;
+	popUpCurrentlyShown = true;
     // a transparent black background to catch mouse events while the popup is up
     // need to draw it first and then convert it to a sprite
     var temp = game.add.graphics(0, 0);
@@ -121,7 +132,7 @@ var createPreventPopUp = function() {
     var prevention_texts = ["Add soap", "Add vaccine 1", "Add vaccine 2", "Add chemical treatment",
                            "Add boiling water", "Add water containers", "Add moving waste",
                            "Add waste facilities", "Add washing facilities"];
-    
+
     var prevention_text_GUIs = [];
     var number_of_prevention_options = Math.floor(count / 60 / SECONDS_UNTIL_NEW_OPTIONS) + 1;
     if (number_of_prevention_options > 1) {
@@ -159,6 +170,7 @@ var createPreventPopUp = function() {
     }
 
     fullScreenBg.events.onInputDown.add(function() {
+		popUpCurrentlyShown = false;
         console.log("click registered");
         fullScreenBg.destroy();
         for (i = 0; i < prevention_text_GUIs.length; i++) {
