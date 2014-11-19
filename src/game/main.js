@@ -13,6 +13,34 @@ VILLAGE_POSITIONS = [
     [540,431],
 ];
 
+/**
+*I realize there is also a dict in village.js we really should make a file with
+*all the global variables in it but not right now.
+*/
+var prevention_costs = [
+        20,
+        1000,
+        1000,
+        200,
+        100,
+        100,
+        50,
+        800,
+        700
+];
+
+var education_costs = [
+        10,
+        200,
+        200,
+        150,
+        50,
+        10,
+        10,
+        100,
+        30
+];    
+    
 count = 0;
 villageTextBox = null;
 currently_selected_village = 0;
@@ -69,7 +97,7 @@ var createEducatePopUp = function() {
     var education_text_GUIs = []
     var number_of_ed_options = Math.floor(count / 60 / SECONDS_UNTIL_NEW_OPTIONS) + 1
     for (i = 0; i < number_of_ed_options; i++) {
-        var text_box = game.add.text(150, 50 + 30 * i, education_texts[i], style);
+        var text_box = game.add.text(150, 50 + 30 * i, education_texts[i].concat(": ", education_costs[i]), style);
         text_box.inputEnabled = true;
         education_text_GUIs.push(text_box)
     }
