@@ -52,6 +52,17 @@ var prevention_descript = [
     "A specific place for handwashing. Pricey and takes time to build, but very effective."
 ];
 
+var education_descript = [
+    "Soap’s only good when you use it. Wash before handling food and water and after using the toilet.",
+    "No one likes needles, but at risk groups need to be brought in for immunizations.",
+    "Kits can be a little complicated to use. Learn proper usage to maximize efficiency.",
+    "Boiling takes time but it’s worth it. Get into the habit of boiling water before using.",
+    "Leave waste in designated areas, not where they can get washed into the drinking water.",
+    "Stored contaminated water is still contaminated. Keep containers covered and regularly clean them.",
+    "Encourage people to actually use the waste facility.",
+    "Encourage people to actually wash their hands at the wash facility."
+];
+
 var flavorTextBox = null;
     
 count = 0;
@@ -126,6 +137,8 @@ var createEducatePopUp = function() {
     for (i = 0; i < number_of_ed_options; i++) {
         var text_box = game.add.text(150, 50 + 30 * i, education_texts[i].concat(": ", education_costs[i]), style);
         text_box.inputEnabled = true;
+        text_box.events.onInputOver.add(displayFlavorText(education_descript[i], style), this);
+        text_box.events.onInputOut.add(destroyFlavorText(), this);
         education_text_GUIs.push(text_box)
     }
 
