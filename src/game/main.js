@@ -138,7 +138,7 @@ var state = {
     init: function() {
         // TODO: decide on actual money amounts
         money = 1000;
-        daysLeft = 1365;
+        daysLeft = 365;
         // TODO: put in actual village factors
 
         all_villages_number_of_people_infected = [0,0,0,0];
