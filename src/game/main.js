@@ -67,7 +67,7 @@ var createEducatePopUp = function() {
                            "Educate about waste facilities", "Educate about washing facilities"];
     
     var education_text_GUIs = []
-    var number_of_ed_options = count / 60 / SECONDS_UNTIL_NEW_OPTIONS + 1
+    var number_of_ed_options = Math.floor(count / 60 / SECONDS_UNTIL_NEW_OPTIONS) + 1
     for (i = 0; i < number_of_ed_options; i++) {
         var text_box = game.add.text(150, 50 + 30 * i, education_texts[i], style);
         text_box.inputEnabled = true;
@@ -123,7 +123,7 @@ var createPreventPopUp = function() {
                            "Add waste facilities", "Add washing facilities"];
     
     var prevention_text_GUIs = [];
-    var number_of_prevention_options = count / 60 / SECONDS_UNTIL_NEW_OPTIONS + 1;
+    var number_of_prevention_options = Math.floor(count / 60 / SECONDS_UNTIL_NEW_OPTIONS) + 1;
     if (number_of_prevention_options > 1) {
         number_of_prevention_options++;
     }
@@ -230,13 +230,13 @@ var state = {
     update: function() {
         // Called 60 times per second
         count += 1;
-        if (count == 60*60/90) { // 1 minute into the game
+        if (count == 60*60) { // 1 minute into the game
             BASE_INFECTION_RATE = .03;
         }
-        if (count == 2*60*60/90) { // 2 minutes into the game
+        if (count == 2*60*60) { // 2 minutes into the game
             BASE_INFECTION_RATE = .05;
         }
-        if (count % 1 == 0) {
+        if (count % 60 == 0) {
             for(var i = 0; i <villages.length; i++){
                 width = (villages[i].getPopulation() - villages[i].getHowManyInfected())/(villages[i].getPopulation())*healthBars[i].width;
                 cropRect = new Phaser.Rectangle(0, 0, width, 9);
@@ -248,6 +248,7 @@ var state = {
             money += 25;
             daysLeft -= 1;
             if (daysLeft == 0) {
+                console.log("hi");
                 game.state.add('end', EndStage, true);
             }
             var total_population = 0;
