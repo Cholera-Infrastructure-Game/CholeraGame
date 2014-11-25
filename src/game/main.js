@@ -67,6 +67,8 @@ var flavorTextBox = null;
     
 count = 0;
 villageTextBox = null;
+moneyBox = null;
+timeBox = null;
 currently_selected_village = 0;
 popUpCurrentlyShown = false;
 
@@ -90,11 +92,26 @@ var populateVillageInfoBox = function () {
     }
 
     text += "\n\nMoney: " + money;
-    text += "\nDays Left: " + daysLeft;
+    text += "\nDay: " + day;
     
     var style = { font: "12px Arial", fill: "#ff0044", align: "left" };
     villageTextBox = game.add.text(768, 0, text, style);
 };
+
+var populateGlobalInfoBar = function () {
+    if (moneyBox != null){
+        moneyBox.destroy();
+    }
+    if (timeBox != null){
+        timeBox.destroy();
+    }
+    text = "Money: " + money; 
+    var style = { font: "28px Arial", fill: "#00ff00", align: "left" };
+    moneyBox = game.add.text(0,0, text, style);
+    text = "Day: " + day;
+    var style = { font: "28px Arial", fill: "#ffffff", align: "left" };    
+    timeBox = game.add.text(200,0,text,style);
+}
 
 var generateListenerForVillage = function(index) {
     return function() {
@@ -252,7 +269,7 @@ var state = {
     init: function() {
         // TODO: decide on actual money amounts
         money = 1000;
-        daysLeft = 365;
+        day = 0;
         // TODO: put in actual village factors
 
         all_villages_number_of_people_infected = [0,0,0,0];
@@ -264,6 +281,7 @@ var state = {
             Village(200000, [0,.5,.9,1], 4),
         ];
         populateVillageInfoBox();
+        populateGlobalInfoBar();
         healthBars = [];
         base = 'health';
 
@@ -285,7 +303,7 @@ var state = {
     },
     create: function() {
         // State create logic goes here
-        game.add.sprite(0, 0, "map");
+        game.add.sprite(0, 40, "map");
         var villageImages = [];
         for (i = 0; i < villages.length; i++) {
             var villageImage = game.add.sprite(VILLAGE_POSITIONS[i][0], VILLAGE_POSITIONS[i][1], 'village');
@@ -327,8 +345,8 @@ var state = {
 
             // This happens once every 1.5 seconds, so total game length is about 9 minutes.
             money += 25;
-            daysLeft -= 1;
-            if (daysLeft == 0) {
+            day += 1;
+            if (day == 300) {
                 console.log("hi");
                 game.state.add('end', EndStage, true);
             }
@@ -346,6 +364,7 @@ var state = {
             }
             all_villages_number_of_people_infected = temp_villages_number_of_people_infected.slice();
             populateVillageInfoBox();
+            populateGlobalInfoBar();
         }
     }
 
