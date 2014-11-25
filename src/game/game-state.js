@@ -1,6 +1,11 @@
 //Static values
+var GAME_WIDTH = 968;
+var GAME_HEIGHT = 768;
+
 var BASE_INFECTION_RATE = .00;
 var BASE_FACTOR = 0.000005;
+
+
 
 // The additive factor to the infection rate the measure has over time.
 var prevention_measure_values = { //TODO balance these numbers
