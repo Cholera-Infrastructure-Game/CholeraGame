@@ -33,7 +33,7 @@ HelpStage.prototype = {
 
 	playGame: function() {
 		// Is this enough to restart the game - we'll see!
-		this.game.state.start('main');
+		this.game.state.start('map_state');
 
 	}
 }
