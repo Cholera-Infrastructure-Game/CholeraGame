@@ -350,12 +350,3 @@ var state = {
     }
 
 };
-
-var game = new Phaser.Game(
-    968,
-    768,
-    Phaser.AUTO,
-    'help',
-    HelpStage
-);
-game.state.add('main',state);
