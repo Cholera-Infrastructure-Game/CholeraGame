@@ -1,9 +1,10 @@
 //Static values
 var BASE_INFECTION_RATE = .00;
 var BASE_FACTOR = 0.000005;
+var INFECTION_RATE_POPULATION_CAP = 10000;
 
 // The additive factor to the infection rate the measure has over time.
-var prevention_measure_values = { //TODO balance these numbers
+var PREVENTION_MEASURE_VALUES = { //TODO balance these numbers
     washing_hands: {
         infection_rate_reduction: .05,
         percent_cured: .05,
@@ -26,7 +27,8 @@ var prevention_measure_values = { //TODO balance these numbers
         infection_rate_reduction: .01,
         percent_cured: 0,
         duration: 14,
-        cost: 20
+        cost: 20,
+        upstream_effect_reduction: .5
     }
 }
 
@@ -49,7 +51,7 @@ var prevention_descript = [ // TODO update this text
     "A specific place for handwashing. Pricey and takes time to build, but very effective."
 ];
 
-var generateGameState = function () {
+var GameState = function () {
     villages = [
         Village(100000, [1,0,0,.9], 1),
         Village(200000, [0,1,.9,.9], 2),
