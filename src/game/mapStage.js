@@ -1,11 +1,11 @@
-var MapState = function (game) {};
+var MapStage = function (game) {};
 
-MapState.prototype = {
+MapStage.prototype = {
 	init: function() {
+        var game_state = new GameState();
 
     },
     preload: function() {
-        // STate preload logic goes here
         this.load.image('health0','assets/images/health_bar0.png');
         this.load.image('health1','assets/images/health_bar1.png');
         this.load.image('health2','assets/images/health_bar2.png');
@@ -20,8 +20,10 @@ MapState.prototype = {
         this.load.spritesheet('PreventButton', 'assets/images/PreventButton.png');
     },
     create: function() {
-        // State create logic goes here
         game.add.sprite(0, 0, "map");
+
+        var top_bar_group = game.add.group();
+        
     },
     update: function() {
     }
