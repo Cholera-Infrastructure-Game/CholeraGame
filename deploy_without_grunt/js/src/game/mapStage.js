@@ -1,6 +1,7 @@
 var MapStage = function (game) {
     this.money_text_object;
     this.time_text_object;
+    this.village_groups;
 };
 
 MapStage.prototype = {
@@ -27,15 +28,19 @@ MapStage.prototype = {
         this.game.add.sprite(0, 0, 'homeBackground');
         this.game.add.sprite(0, 40  , 'map');
 
-        var villageImages = [];
+        this.village_groups = [];
         for (i = 0; i < villages.length; i++) {
-            var villageImage = this.game.add.sprite(VILLAGE_POSITIONS[i][0], VILLAGE_POSITIONS[i][1], 'village');
-            villageImage.anchor.set(0.5);
-            villageImage.inputEnabled = true;
-            villageImages.push(villageImage);
+            var village_group = this.game.add.group()
+            var village_sprite = this.game.add.sprite(VILLAGE_POSITIONS[i][0], VILLAGE_POSITIONS[i][1], 'village');
+            village_sprite.anchor.set(0.5);
+            village_sprite.inputEnabled = true;
+            village_group.add(village_sprite);
             var text = "Village " + (i + 1);
             var style = { font: "12px Arial", fill: "#ffffff", align: "left" };
-            this.game.add.text(VILLAGE_POSITIONS[i][0] - 20, VILLAGE_POSITIONS[i][1] + 10, text, style);
+            var village_text = this.game.add.text(VILLAGE_POSITIONS[i][0] - 20, VILLAGE_POSITIONS[i][1] + 10, text, style);
+            village_group.add(village_text);
+            village_group.visible = false;
+            this.village_groups.push(village_group);
         }
 
         this.createScoreBar();
@@ -44,6 +49,10 @@ MapStage.prototype = {
     update: function() {
         this.money_text_object.text = "Money: " + game_state.money;
         this.time_text_object.text = "Day: " + game_state.day;
+
+        for (var i = 0; i < game_state.available_villages; i++) {
+            this.village_groups[i].visible = true;
+        }
 
 
     },

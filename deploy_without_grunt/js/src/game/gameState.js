@@ -68,5 +68,6 @@ var GameState = function () {
         money: 1000, //TODO figure out how much you should start with
         selected_village: null,
         villages: villages,
+        available_villages: 1,
     };
 }
