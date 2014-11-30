@@ -35,7 +35,7 @@ MapStage.prototype = {
             village_sprite.village_index = i;
             village_sprite.anchor.set(0.5);
             village_sprite.inputEnabled = true;
-            village_sprite.events.onInputUp.add(function() {this.createVillagePopup(i)} ,this)
+            village_sprite.events.onInputUp.add(this.createVillagePopup , {selected_village_index: i})
             village_group.add(village_sprite);
             var text = "Village " + (i + 1);
             var style = { font: "12px Arial", fill: "#ffffff", align: "left" };
@@ -77,9 +77,9 @@ MapStage.prototype = {
         return;
     },
 
-    createVillagePopup: function(village_index) {
+    createVillagePopup: function() {
         // TODO: make pop up
-        console.log("TODO: Make village popup for village index " + village_index);
+        console.log("TODO: Make village popup for village index " + this.selected_village_index);
 
     }
 
