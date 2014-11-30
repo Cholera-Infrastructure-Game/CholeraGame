@@ -27,6 +27,17 @@ MapStage.prototype = {
         this.game.add.sprite(0, 0, 'homeBackground');
         this.game.add.sprite(0, 40  , 'map');
 
+        var villageImages = [];
+        for (i = 0; i < villages.length; i++) {
+            var villageImage = this.game.add.sprite(VILLAGE_POSITIONS[i][0], VILLAGE_POSITIONS[i][1], 'village');
+            villageImage.anchor.set(0.5);
+            villageImage.inputEnabled = true;
+            villageImages.push(villageImage);
+            var text = "Village " + (i + 1);
+            var style = { font: "12px Arial", fill: "#ffffff", align: "left" };
+            this.game.add.text(VILLAGE_POSITIONS[i][0] - 20, VILLAGE_POSITIONS[i][1] + 10, text, style);
+        }
+
         this.createScoreBar();
         
     },
