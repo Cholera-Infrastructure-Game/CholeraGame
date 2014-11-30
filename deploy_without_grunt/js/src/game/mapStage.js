@@ -32,8 +32,10 @@ MapStage.prototype = {
         for (i = 0; i < villages.length; i++) {
             var village_group = this.game.add.group()
             var village_sprite = this.game.add.sprite(VILLAGE_POSITIONS[i][0], VILLAGE_POSITIONS[i][1], 'village');
+            village_sprite.village_index = i;
             village_sprite.anchor.set(0.5);
             village_sprite.inputEnabled = true;
+            village_sprite.events.onInputUp.add(function() {this.createVillagePopup(i)} ,this)
             village_group.add(village_sprite);
             var text = "Village " + (i + 1);
             var style = { font: "12px Arial", fill: "#ffffff", align: "left" };
@@ -73,6 +75,12 @@ MapStage.prototype = {
         // TODO: Make pause menu
         console.log("TODO: need to make pause menu");
         return;
+    },
+
+    createVillagePopup: function(village_index) {
+        // TODO: make pop up
+        console.log("TODO: Make village popup for village index " + village_index);
+
     }
 
 }
