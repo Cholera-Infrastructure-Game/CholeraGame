@@ -1,4 +1,7 @@
-var MapStage = function (game) {};
+var MapStage = function (game) {
+    this.money_text_object;
+    this.time_text_object;
+};
 
 MapStage.prototype = {
 	init: function() {
@@ -28,15 +31,18 @@ MapStage.prototype = {
         
     },
     update: function() {
+        this.money_text_object.text = "Money: " + game_state.money;
+        this.time_text_object.text = "Day: " + game_state.day;
+
 
     },
 
     createScoreBar: function() {
         var money_text = "Money: " + game_state.money;
-        this.game.add.text(10, 10, money_text, SCORE_BAR_STYLE);
+        this.money_text_object = this.game.add.text(10, 10, money_text, SCORE_BAR_STYLE);
 
-        var time_text = "Days: " + game_state.day;
-        this.game.add.text(300, 10, time_text, SCORE_BAR_STYLE);
+        var time_text = "Day: " + game_state.day;
+        this.time_text_object = this.game.add.text(300, 10, time_text, SCORE_BAR_STYLE);
 
         var pause = this.game.add.text(this.game.world.width - 300, 10, "PAUSE", SCORE_BAR_STYLE);
         pause.inputEnabled = true;
