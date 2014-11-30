@@ -6,6 +6,8 @@ var BASE_INFECTION_RATE = .00;
 var BASE_FACTOR = 0.000005;
 var INFECTION_RATE_POPULATION_CAP = 10000;
 
+var SCORE_BAR_STYLE = { font: "24px Arial", fill: "#ff0044", align: "center" };
+
 // The additive factor to the infection rate the measure has over time.
 var PREVENTION_MEASURE_VALUES = { //TODO balance these numbers
     washing_hands: {

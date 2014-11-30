@@ -21,18 +21,32 @@ MapStage.prototype = {
     },
     create: function() {
 
-        this.game.add.sprite(0, 0, 'map');
+        this.game.add.sprite(0, 0, 'homeBackground');
+        this.game.add.sprite(0, 40  , 'map');
 
         this.createScoreBar();
         
     },
     update: function() {
+
     },
 
     createScoreBar: function() {
         var money_text = "Money: " + game_state.money;
-        var style = { font: "65px Arial", fill: "#ff0044", align: "center" };
-        this.game.add.text(10, 10, money_text, style);
+        this.game.add.text(10, 10, money_text, SCORE_BAR_STYLE);
+
+        var time_text = "Days: " + game_state.day;
+        this.game.add.text(300, 10, time_text, SCORE_BAR_STYLE);
+
+        var pause = this.game.add.text(this.game.world.width - 300, 10, "PAUSE", SCORE_BAR_STYLE);
+        pause.inputEnabled = true;
+        pause.events.onInputUp.add(this.createPauseMenu, this);
+    },
+
+    createPauseMenu: function() {
+        // TODO: Make pause menu
+        console.log("TODO: need to make pause menu");
+        return;
     }
 
 }
