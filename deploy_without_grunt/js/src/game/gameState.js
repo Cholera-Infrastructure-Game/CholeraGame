@@ -68,6 +68,3 @@ var GameState = function () {
         villages: villages,
     };
 }
-
-
-var game_state = new GameState();

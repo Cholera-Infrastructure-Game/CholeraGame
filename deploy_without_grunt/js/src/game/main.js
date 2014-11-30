@@ -1,4 +1,4 @@
-
+var game_state = new GameState();
 window.onload = function() {
     var cholera_game = new Phaser.Game(GAME_WIDTH, GAME_HEIGHT, Phaser.AUTO, "cholera_game", HelpStage);
 

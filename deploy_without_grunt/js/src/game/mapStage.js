@@ -21,7 +21,9 @@ MapStage.prototype = {
     },
     create: function() {
 
-        createScoreBar();
+        this.game.add.sprite(0, 0, 'map');
+
+        this.createScoreBar();
         
     },
     update: function() {
@@ -30,7 +32,7 @@ MapStage.prototype = {
     createScoreBar: function() {
         var money_text = "Money: " + game_state.money;
         var style = { font: "65px Arial", fill: "#ff0044", align: "center" };
-        game.add.text(10, 10, text, style);
+        this.game.add.text(10, 10, money_text, style);
     }
 
 }
