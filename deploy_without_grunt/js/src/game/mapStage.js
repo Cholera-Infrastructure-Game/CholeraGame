@@ -23,9 +23,6 @@ MapStage.prototype = {
         this.load.image('container', 'assets/images/NewIcons/WaterContainerIcon.png');
         
         this.load.spritesheet('village', 'assets/images/NewIcons/CitySpriteSheet.png', 128, 128);
-        this.load.spritesheet('TestButton', 'assets/images/TestButton.png');
-        this.load.spritesheet('EducateButton', 'assets/images/EducateButton.png');
-        this.load.spritesheet('PreventButton', 'assets/images/PreventButton.png');
     },
     create: function() {
 
