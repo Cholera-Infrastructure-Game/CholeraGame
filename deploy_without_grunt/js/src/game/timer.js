@@ -46,6 +46,7 @@ PieProgress.prototype.updateProgress = function() {
     progress = Phaser.Math.clamp(progress, 0.00001, 0.99999);
     
     this.bmp.clear();
+    this.bmp.circle(this._radius, this._radius, this._radius, "#000");
     this.bmp.ctx.fillStyle = this.color;
     this.bmp.ctx.beginPath();
     this.bmp.ctx.arc(this._radius, this._radius, this._radius, 0, (Math.PI * 2) * progress, true);

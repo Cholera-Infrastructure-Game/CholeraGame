@@ -18,7 +18,11 @@ MapStage.prototype = {
         this.load.image('health5','assets/images/health_bar5.png');
         this.load.image('health_back','assets/images/health_bar_background.png');
         this.load.image('map', 'assets/images/Map.png');
-        this.load.image('village', 'assets/images/TempCityIcon.png');
+        this.load.image('boil', 'assets/images/NewIcons/BoilingWaterIcon.png');
+        this.load.image('soap', 'assets/images/NewIcons/SoapIcon.png');
+        this.load.image('container', 'assets/images/NewIcons/WaterContainerIcon.png');
+        
+        this.load.spritesheet('village', 'assets/images/NewIcons/CitySpriteSheet.png', 128, 128);
         this.load.spritesheet('TestButton', 'assets/images/TestButton.png');
         this.load.spritesheet('EducateButton', 'assets/images/EducateButton.png');
         this.load.spritesheet('PreventButton', 'assets/images/PreventButton.png');
@@ -31,7 +35,8 @@ MapStage.prototype = {
         this.village_groups = [];
         for (i = 0; i < villages.length; i++) {
             var village_group = this.game.add.group()
-            var village_sprite = this.game.add.sprite(VILLAGE_POSITIONS[i][0], VILLAGE_POSITIONS[i][1], 'village');
+            var village_sprite = this.game.add.button(VILLAGE_POSITIONS[i][0], VILLAGE_POSITIONS[i][1], 'village', this.createPauseMenu, this, 1, 0);
+            Timer(this.game, VILLAGE_POSITIONS[i][0]+50, VILLAGE_POSITIONS[i][1]+50, 40, 2000, true);
             village_sprite.village_index = i;
             village_sprite.anchor.set(0.5);
             village_sprite.inputEnabled = true;
