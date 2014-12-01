@@ -17,7 +17,7 @@ MapStage.prototype = {
         this.load.image('health4','assets/images/health_bar4.png');
         this.load.image('health5','assets/images/health_bar5.png');
         this.load.image('health_back','assets/images/health_bar_background.png');
-        this.load.image('map', 'assets/images/Map.png');
+        this.load.image('map', 'assets/images/NewMap.png');//Need to rearrange villages for NewMap
         this.load.image('boil', 'assets/images/NewIcons/BoilingWaterIcon.png');
         this.load.image('soap', 'assets/images/NewIcons/SoapIcon.png');
         this.load.image('container', 'assets/images/NewIcons/WaterContainerIcon.png');
