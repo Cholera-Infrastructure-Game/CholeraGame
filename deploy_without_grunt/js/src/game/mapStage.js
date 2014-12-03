@@ -15,8 +15,10 @@ MapStage.prototype = {
         this.load.image('health2','assets/images/health_bar2.png');
         this.load.image('health3','assets/images/health_bar3.png');
         this.load.image('health4','assets/images/health_bar4.png');
-        this.load.image('health5','assets/images/health_bar5.png');
-        this.load.image('health_back','assets/images/health_bar_background.png');
+        this.load.image('healthbar','assets/images/health_bar.png');
+        this.load.image('health_back','assets/images/health_background.png');
+        this.load.image('left','assets/images/Left_arrow.svg');
+        this.load.image('right','assets/images/Right_arrow.svg');
         this.load.image('map', 'assets/images/NewMap.png');//Need to rearrange villages for NewMap
         this.load.image('boil', 'assets/images/NewIcons/BoilingWaterIcon.png');
         this.load.image('soap', 'assets/images/NewIcons/SoapIcon.png');
@@ -42,6 +44,14 @@ MapStage.prototype = {
         for (i = 0; i < villages.length; i++) {
             var village_group = this.game.add.group()
             var village_sprite = this.game.add.button(VILLAGE_POSITIONS[i][0], VILLAGE_POSITIONS[i][1], 'village', function() {}, {}, 1, 0);
+            var health_bar_back = this.game.add.sprite(VILLAGE_POSITIONS[i][0]-60, VILLAGE_POSITIONS[i][1]-90, 'health_back');
+            var health_bar = this.game.add.sprite(VILLAGE_POSITIONS[i][0]-60, VILLAGE_POSITIONS[i][1]-90, 'healthbar');
+            var left = this.game.add.sprite(VILLAGE_POSITIONS[i][0]-5, VILLAGE_POSITIONS[i][1]-105,'left');
+            left.scale.x = 0.03;
+            left.scale.y = 0.03;
+            var right = this.game.add.sprite(VILLAGE_POSITIONS[i][0]-5, VILLAGE_POSITIONS[i][1]-95,'right');
+            left.visible = false;
+            right.visible = false;
 //            Timer(this.game, VILLAGE_POSITIONS[i][0]+50, VILLAGE_POSITIONS[i][1]+50, 40, 2000, true);
             village_sprite.village_index = i;
             village_sprite.anchor.set(0.5);
@@ -75,10 +85,17 @@ MapStage.prototype = {
 				});
 			}());
             village_group.add(village_sprite);
+            village_group.add(health_bar_back);
+            village_group.add(health_bar);
+            village_group.add(left);
+            village_group.add(right);
             var text = "Village " + (i + 1);
             var style = { font: "12px Arial", fill: "#ffffff", align: "left" };
+            var population_style = { font: "12px Arial", fill: "#000000", align: "left"};
             var village_text = this.game.add.text(VILLAGE_POSITIONS[i][0] - 20, VILLAGE_POSITIONS[i][1] + 10, text, style);
+            var population = this.game.add.text(VILLAGE_POSITIONS[i][0]-60, VILLAGE_POSITIONS[i][1]-100, game_state.villages[i].getPopulation(), population_style);
             village_group.add(village_text);
+            village_group.add(population);
             village_group.visible = false;
             this.village_groups.push(village_group);
         }
@@ -96,6 +113,15 @@ MapStage.prototype = {
 
         for (var i = 0; i < game_state.available_villages; i++) {
             this.village_groups[i].visible = true;
+            this.village_groups[i].getChildAt(2).width = 128 * (game_state.villages[i].getPopulation() - game_state.villages[i].getHowManyInfected()) / game_state.villages[i].getPopulation();
+            if(game_state.villages[i].isInfectedRatePositive()){
+                this.village_groups[i].getChildAt(4).visible = false;
+                this.village_groups[i].getChildAt(3).visible = true;
+            }
+            else{
+                this.village_groups[i].getChildAt(3).visible = false;
+                this.village_groups[i].getChildAt(4).visible = true;
+            }
         }
     },
 
