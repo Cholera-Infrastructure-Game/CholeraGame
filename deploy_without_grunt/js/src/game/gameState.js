@@ -7,7 +7,15 @@ var BASE_FACTOR = 0.000005;
 var INFECTION_RATE_POPULATION_CAP = 10000;
 
 var SCORE_BAR_STYLE = { font: "24px Arial", fill: "#ff0044", align: "center" };
-var POPUP_TEXT_STYLE = { font: "24px Arial", fill: "#000000", align: "center" };
+var POPUP_TEXT_STYLE = { font: "32px Arial", fill: "#000000", align: "center" };
+var POPUP_ACTION_NAME_STYLE = { font: "28px Arial", fill: "#000000", align: "center" };
+var POPUP_DESC_HEADER_STYLE = { font: "24px Arial", fill: "#000000", align: "left" };
+var POPUP_DESC_STYLE = { font: "20px Arial", fill: "#000000", align: "left" };
+var POPUP_GAME_PAUSED_TEXT_STYLE = { font: "20px Arial", fill: "#606060" };
+// Time in milliseconds over which the popup window tweens out.
+var POPUP_TIME = 500;
+// Time in milliseconds over which the tweening occurs for making text get larger when moused over.
+var BUTTON_POP_TIME = 100;
 
 // Height in pixels of the top bar in the main game.
 var TOP_BAR_HEIGHT = 40;
@@ -46,6 +54,27 @@ VILLAGE_POSITIONS = [ //TODO update these positions
     [337,525],
     [439,120],
     [540,431],
+];
+
+ACTION_NAMES = [
+	"Hand washing",
+	"Rehydration",
+	"Waste management",
+	"Boil water"
+];
+
+ACTION_COSTS = [
+	10,
+	25,
+	120,
+	145,
+];
+
+ACTION_DESCRIPTIONS = [
+	"Washing your hands is straight-up legit OP IRL, so it is here too.",
+	"Rehydrating is delicious, or something.",
+	"Because I'm sure we all hate unmanaged waste as much as the next guy.",
+	"Raise to 373 K to be free of pathogens."
 ];
 
 var prevention_descript = [ // TODO update this text

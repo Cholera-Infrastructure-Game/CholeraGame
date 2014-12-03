@@ -5,7 +5,6 @@ window.onload = function() {
     cholera_game.state.add("map_stage", MapStage);
     cholera_game.state.add("end_stage", EndStage);
     cholera_game.state.add("help_stage", HelpStage);
-	cholera_game.state.add("popup_stage", PopupStage);
 //    cholera_game.state.start("help_stage");
 	// For debugging efficiency, go straight to the map_stage.
 	cholera_game.state.start("map_stage");
