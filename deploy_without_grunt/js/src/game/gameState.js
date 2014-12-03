@@ -7,6 +7,10 @@ var BASE_FACTOR = 0.000005;
 var INFECTION_RATE_POPULATION_CAP = 10000;
 
 var SCORE_BAR_STYLE = { font: "24px Arial", fill: "#ff0044", align: "center" };
+var POPUP_TEXT_STYLE = { font: "24px Arial", fill: "#000000", align: "center" };
+
+// Height in pixels of the top bar in the main game.
+var TOP_BAR_HEIGHT = 40;
 
 // The additive factor to the infection rate the measure has over time.
 var PREVENTION_MEASURE_VALUES = { //TODO balance these numbers

@@ -15,7 +15,6 @@ HelpStage.prototype = {
 	preload: function() {
 		this.load.image('homeBackground', 'assets/images/background.png');
 		this.load.image('startButton', 'assets/images/start_button.png');
-
 	},
 
 	create: function() {
@@ -34,6 +33,5 @@ HelpStage.prototype = {
 	playGame: function() {
 		// Is this enough to restart the game - we'll see!
 		this.game.state.start('map_stage');
-
 	}
 }
