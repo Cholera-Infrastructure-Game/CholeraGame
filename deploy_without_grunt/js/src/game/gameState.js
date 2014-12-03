@@ -6,6 +6,8 @@ var BASE_INFECTION_RATE = .00;
 var BASE_FACTOR = 0.000005;
 var INFECTION_RATE_POPULATION_CAP = 10000;
 
+// This is how many pixels of map are still visible around the edge of the popup.
+var POPUP_SHY_MARGIN = 30;
 var SCORE_BAR_STYLE = { font: "24px Arial", fill: "#ff0044", stroke: "#000000", strokeThickness: 3, align: "center" };
 var POPUP_TEXT_STYLE = { font: "32px Arial", fill: "#000000", align: "center" };
 var POPUP_ACTION_NAME_STYLE = { font: "28px Arial", fill: "#000000", align: "center" };
