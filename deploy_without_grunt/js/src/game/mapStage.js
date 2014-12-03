@@ -219,7 +219,7 @@ MapStage.prototype = {
 						tween.to({angle: -20}, 100, Phaser.Easing.Quadratic.InOut);
 						tween.to({angle: 20}, 100, Phaser.Easing.Quadratic.InOut);
 						tween.to({angle: -20}, 100, Phaser.Easing.Quadratic.InOut);
-						tween.to({angle: 0}, 50, Phaser.Easing.Quadratic.InOut);
+						tween.to({angle: 0}, 52, Phaser.Easing.Quadratic.InOut);
 						tween.start();
 						tween._lastChild.onComplete.add(function() {
 							// Now put everything back.
