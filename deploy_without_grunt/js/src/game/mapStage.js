@@ -118,7 +118,7 @@ MapStage.prototype = {
 
 		// Create the background sprite.
 		// All the other sprites are children of this one.
-		var bmd = this.game.add.bitmapData(GAME_WIDTH, GAME_HEIGHT - TOP_BAR_HEIGHT);
+		var bmd = this.game.add.bitmapData(GAME_WIDTH - POPUP_SHY_MARGIN*2, GAME_HEIGHT - TOP_BAR_HEIGHT - POPUP_SHY_MARGIN*2);
 		// Fill entirely with black
 		bmd.ctx.beginPath();
 		bmd.ctx.rect(0, 0, GAME_WIDTH, GAME_HEIGHT - TOP_BAR_HEIGHT);
@@ -126,7 +126,7 @@ MapStage.prototype = {
 		bmd.ctx.fill();
 		// Fill the center with gray, leaving 2px of margin on all sides.
 		bmd.ctx.beginPath();
-		bmd.ctx.rect(2, 2, GAME_WIDTH - 4, GAME_HEIGHT - TOP_BAR_HEIGHT - 4);
+		bmd.ctx.rect(2, 2, GAME_WIDTH - 4 - POPUP_SHY_MARGIN*2, GAME_HEIGHT - TOP_BAR_HEIGHT - 4 - POPUP_SHY_MARGIN*2);
 		bmd.ctx.fillStyle = '#a0a0a0';
 		bmd.ctx.fill();
 		this.popup_sprite = this.game.add.sprite(0, 0, bmd);
@@ -309,6 +309,7 @@ MapStage.prototype = {
 		console.log(this.popup_sprite.body);
 		this.popup_return_button = button;
 		this.popup_sprite.addChild(button);
+//		this.popup_sprite.alpha = 0.95;
 
 		// Initially the popup is hidden.
 		this.fullyHidePopup();
