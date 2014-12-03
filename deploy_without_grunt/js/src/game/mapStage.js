@@ -21,6 +21,7 @@ MapStage.prototype = {
         this.load.image('boil', 'assets/images/NewIcons/BoilingWaterIcon.png');
         this.load.image('soap', 'assets/images/NewIcons/SoapIcon.png');
         this.load.image('container', 'assets/images/NewIcons/WaterContainerIcon.png');
+		this.load.image('top_bar', 'assets/images/placeholder_top_bar.png');
         
         this.load.spritesheet('village', 'assets/images/NewIcons/CitySpriteSheet.png', 128, 128);
     },
@@ -34,8 +35,7 @@ MapStage.prototype = {
 		// This variable must be checked by the various update routines.
 		this.time_should_progress = true;
 
-		// I'm pretty sure this next line was left-over cruft, so I commented it out.
-//        this.game.add.sprite(0, 0, 'homeBackground');
+        this.game.add.sprite(0, 0, 'top_bar');
         this.game.add.sprite(0, TOP_BAR_HEIGHT, 'map');
 
         this.village_groups = [];
@@ -155,7 +155,7 @@ MapStage.prototype = {
 		}
 
 		// Compute some scaling values.
-		var left_column_center_x = -w/4;
+		var left_column_center_x = -w/4 + 10;
 		var right_column_center_x = w/4;
 		add_text(left_column_center_x, 80-h/2, "Actions");
 		add_text(right_column_center_x, 80-h/2, "Description");
@@ -168,6 +168,10 @@ MapStage.prototype = {
 			var pie = new PieProgress(this.game, left_column_center_x - 120, 200 + i * action_spacing - h/2, 40);
 			this.popup_sprite.addChild(pie);
 			this.popup_pies.push(pie);
+			// Create the cost text below the pie.
+			var cost_text = this.game.add.text(left_column_center_x - 120 - 75, 200 + i * action_spacing - h/2, ACTION_COSTS[i], POPUP_ACTION_NAME_STYLE);
+			cost_text.anchor.setTo(0.5, 0.5);
+			this.popup_sprite.addChild(cost_text);
 			// Create the action text.
 			var obj = this.game.add.text(left_column_center_x - 70, 200 + i * action_spacing - h/2, ACTION_NAMES[i], POPUP_ACTION_NAME_STYLE);
 			obj.anchor.setTo(0.0, 0.5);
@@ -327,12 +331,14 @@ MapStage.prototype = {
 	buyAction: function(action_index, village_index) {
 		// This is the crucial callback, called when the user attempts to buy something.
 		console.log("Triggering action number " + action_index + " on village number " + village_index);
-		// For now we fake it.
-		// Action 1 always fails due to no money, and action 2 fails due to being on cooldown.
-		if (action_index == 1)
-			return "no-money";
+		// Just for convenience of experimenetation action 2 always fails due to being on cooldown.
 		if (action_index == 2)
 			return "on-cooldown";
+		// Don't let the player buy things they can't afford.
+		if (game_state.money < ACTION_COSTS[action_index])
+			return "no-money";
+		// TODO: Actually update game_state to account for the fact that we just bought something.
+		game_state.money -= ACTION_COSTS[action_index];
 		return "good";
 	},
 

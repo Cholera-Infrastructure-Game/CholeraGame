@@ -6,11 +6,12 @@ var BASE_INFECTION_RATE = .00;
 var BASE_FACTOR = 0.000005;
 var INFECTION_RATE_POPULATION_CAP = 10000;
 
-var SCORE_BAR_STYLE = { font: "24px Arial", fill: "#ff0044", align: "center" };
+var SCORE_BAR_STYLE = { font: "24px Arial", fill: "#ff0044", stroke: "#000000", strokeThickness: 3, align: "center" };
 var POPUP_TEXT_STYLE = { font: "32px Arial", fill: "#000000", align: "center" };
 var POPUP_ACTION_NAME_STYLE = { font: "28px Arial", fill: "#000000", align: "center" };
 var POPUP_DESC_HEADER_STYLE = { font: "24px Arial", fill: "#000000", align: "left" };
 var POPUP_DESC_STYLE = { font: "20px Arial", fill: "#000000", align: "left" };
+var POPUP_COST_TEXT_STYLE = { font: "16px Arial", fill: "#000000", align: "center" };
 var POPUP_GAME_PAUSED_TEXT_STYLE = { font: "20px Arial", fill: "#606060" };
 // Time in milliseconds over which the popup window tweens out.
 var POPUP_TIME = 500;
@@ -64,10 +65,10 @@ ACTION_NAMES = [
 ];
 
 ACTION_COSTS = [
-	10,
+	7,
 	25,
 	120,
-	145,
+	455,
 ];
 
 ACTION_DESCRIPTIONS = [
