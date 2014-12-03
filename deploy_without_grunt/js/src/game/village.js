@@ -112,6 +112,11 @@ Village = function(population, village_factors, village_number) {
 
         getHowManyInfected: function() {
             return people_infected;
+        },
+
+        isInfectedRatePositive: function() {
+            return true;
+            //TODO: Implement
         }
     };
 }

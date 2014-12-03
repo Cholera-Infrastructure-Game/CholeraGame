@@ -55,7 +55,7 @@ var PREVENTION_MEASURE_VALUES = { //TODO balance these numbers
 VILLAGE_POSITIONS = [ //TODO update these positions
     [131,356],
     [337,525],
-    [439,120],
+    [439,250],
     [540,431],
 ];
 
