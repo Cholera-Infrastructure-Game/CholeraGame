@@ -60,7 +60,7 @@ VILLAGE_POSITIONS = [ //TODO update these positions
 ACTION_NAMES = [
 	"Hand washing",
 	"Rehydration",
-	"Waste management",
+	"Water Container",
 	"Boil water"
 ];
 
@@ -69,6 +69,20 @@ ACTION_COSTS = [
 	25,
 	120,
 	455,
+];
+    
+ACTION_COLORS = [
+	"#FF00FF",
+	"#FFFF00",
+	"#00FFFF",
+	"#FFA500",
+];
+
+ACTION_ICONS = [
+	"soap",
+	"electrolyte",
+	"container",
+	"boil",
 ];
 
 ACTION_DESCRIPTIONS = [

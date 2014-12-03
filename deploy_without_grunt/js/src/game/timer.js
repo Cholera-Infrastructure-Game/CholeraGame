@@ -25,16 +25,17 @@ Timer = function(game, x, y, r, t, countdown) {
     };
 }
 
-var PieProgress = function(game, x, y, radius, color, angle) {
+var PieProgress = function(game, x, y, radius, color1, color2, icon, angle) {
     this._radius = radius;
     this._progress = 1;
     this.bmp = game.add.bitmapData(radius * 2, radius * 2);
     Phaser.Sprite.call(this, game, x, y, this.bmp);
     
+    this.icon = icon;
     this.anchor.set(0.5);
-    this.angle = angle || -90;
-    this.color = color || "#fff";
-    this.alpha = 0.6
+    this.angle = angle || 0;
+    this.frontcolor = color1 || "#fff";
+    this.backcolor = color2 || "#000";
     this.updateProgress();
 }
 
@@ -46,10 +47,11 @@ PieProgress.prototype.updateProgress = function() {
     progress = Phaser.Math.clamp(progress, 0.00001, 0.99999);
     
     this.bmp.clear();
-    this.bmp.circle(this._radius, this._radius, this._radius, "#000");
-    this.bmp.ctx.fillStyle = this.color;
+    this.bmp.circle(this._radius, this._radius, this._radius, this.backcolor);
+    this.bmp.draw(this.icon, 0, 0, this._radius*2, this._radius*2);
+    this.bmp.ctx.fillStyle = this.frontcolor;
     this.bmp.ctx.beginPath();
-    this.bmp.ctx.arc(this._radius, this._radius, this._radius, 0, (Math.PI * 2) * progress, true);
+    this.bmp.ctx.arc(this._radius, this._radius, this._radius, ((Math.PI * 2) * (-.25)), ((Math.PI * 2) * (progress-.25)), true);
     this.bmp.ctx.lineTo(this._radius, this._radius);
     this.bmp.ctx.closePath();
     this.bmp.ctx.fill();

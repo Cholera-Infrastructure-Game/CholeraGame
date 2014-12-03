@@ -20,6 +20,7 @@ MapStage.prototype = {
         this.load.image('map', 'assets/images/NewMap.png');//Need to rearrange villages for NewMap
         this.load.image('boil', 'assets/images/NewIcons/BoilingWaterIcon.png');
         this.load.image('soap', 'assets/images/NewIcons/SoapIcon.png');
+        this.load.image('electrolyte', 'assets/images/NewIcons/Electrolytes.png');
         this.load.image('container', 'assets/images/NewIcons/WaterContainerIcon.png');
 		this.load.image('top_bar', 'assets/images/placeholder_top_bar.png');
         
@@ -165,7 +166,7 @@ MapStage.prototype = {
 		this.popup_pies = [];
 		for (var i = 0; i < 4; i++) {
 			// Create a pie.
-			var pie = new PieProgress(this.game, left_column_center_x - 120, 200 + i * action_spacing - h/2, 40);
+			var pie = new PieProgress(this.game, left_column_center_x - 120, 200 + i * action_spacing - h/2, 40, "rgba(0,0,0,0.6)", ACTION_COLORS[i], this.game.cache.getImage(ACTION_ICONS[i]));
 			this.popup_sprite.addChild(pie);
 			this.popup_pies.push(pie);
 			// Create the cost text below the pie.
