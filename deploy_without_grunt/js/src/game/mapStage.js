@@ -475,7 +475,8 @@ MapStage.prototype = {
                     return "on-cooldown";
                 }
                 game_state.villages[village_index].implementPreventionMeasure(PREVENTION_MEASURE_NAMES[action_index])
-		return "good";
+		this.popup_pies[action_index].progress = 1;
+        return "good";
 	},
 
 	fullyHidePopup: function() {
