@@ -44,7 +44,7 @@ var PREVENTION_MEASURE_VALUES = { //TODO balance these numbers
         cost: 500,
         color: "#FF00FF",
         display_name: "Soap",
-        description: "Washing your hands is straight-up legit OP IRL, so it is here too."
+        description: "Washing your hands with soap is a simple and cheap but very effective way of wiping out cholera."
     },
     water_containers: {
         infection_rate_reduction: .1,
@@ -53,7 +53,7 @@ var PREVENTION_MEASURE_VALUES = { //TODO balance these numbers
         cost: 1500,
         color: "#FFFF00",
         display_name: "Water Containers",
-        description: "Because I'm sure we all hate unmanaged waste as much as the next guy."
+        description: "Storing water in closed containers drastically reduces the spread of cholera, but does nothing for those already infected."
     },
     electrolytes: {
         infection_rate_reduction: 0,
@@ -62,7 +62,7 @@ var PREVENTION_MEASURE_VALUES = { //TODO balance these numbers
         cost: 2000,
         color: "#00FFFF",
         display_name: "Electrolytes",
-        description: "Rehydrating is delicious, or something."
+        description: "Electrolytes help those infected with cholera get better, but do nothing to stop the spread of infection."
     },
     boil_water: {
         infection_rate_reduction: .01,
@@ -72,7 +72,7 @@ var PREVENTION_MEASURE_VALUES = { //TODO balance these numbers
         upstream_effect_reduction: .9,
         color: "#FFA500",
         display_name: "Boiling Water",
-        description: "Raise to 373 K to be free of pathogens."
+        description: "Boiling water prevents cholera from spreading from villages further upstream."
     }
 }
 

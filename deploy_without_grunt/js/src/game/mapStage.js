@@ -104,8 +104,10 @@ MapStage.prototype = {
             }
             var style = { font: "12px Arial", fill: "#ffffff", align: "left" };
             var population_style = { font: "12px Arial", fill: "#000000", align: "left"};
-            var population = this.game.add.text(VILLAGE_POSITIONS[i][0]-60, VILLAGE_POSITIONS[i][1]-70, game_state.villages[i].getPopulation(), population_style);
-            village_group.add(population);
+            var healthy_population = this.game.add.text(VILLAGE_POSITIONS[i][0]-60, VILLAGE_POSITIONS[i][1]-70, game_state.villages[i].getPopulation()-game_state.villages[i].getHowManyInfected(), population_style);
+            var infected_population = this.game.add.text(VILLAGE_POSITIONS[i][0]+30, VILLAGE_POSITIONS[i][1]-70, game_state.villages[i].getHowManyInfected(), population_style);
+            village_group.add(healthy_population);
+            village_group.add(infected_population);
             village_group.visible = false;
             this.village_groups.push(village_group);
         }
@@ -138,6 +140,7 @@ MapStage.prototype = {
                 }
             }
             else {
+                game_state.days_since_second_village_unlocked += 1;
                 // now unlock the other villages (based on days passed)
                 if (VILLAGE_UNLOCK_DAYS.indexOf(game_state.days_since_second_village_unlocked) != -1) {
                     this.createVillageUI(game_state.available_villages);
@@ -155,6 +158,8 @@ MapStage.prototype = {
                 game_state.villages[i].incrementDay();
                 this.village_groups[i].visible = true;
                 this.village_groups[i].getChildAt(2).width = 128 * (game_state.villages[i].getPopulation() - game_state.villages[i].getHowManyInfected()) / game_state.villages[i].getPopulation();
+                this.village_groups[i].getChildAt(9).text = game_state.villages[i].getPopulation()-game_state.villages[i].getHowManyInfected();
+                this.village_groups[i].getChildAt(10).text = game_state.villages[i].getHowManyInfected();
                 if(game_state.villages[i].isInfectedRatePositive()){
                     this.village_groups[i].getChildAt(4).visible = false;
                     this.village_groups[i].getChildAt(3).visible = true;
@@ -215,13 +220,12 @@ MapStage.prototype = {
         village_group.add(health_bar);
         village_group.add(left);
         village_group.add(right);
-        var text = "Village " + (i + 1);
         var style = { font: "12px Arial", fill: "#ffffff", align: "left" };
         var population_style = { font: "12px Arial", fill: "#000000", align: "left"};
-        var village_text = this.game.add.text(VILLAGE_POSITIONS[i][0] - 20, VILLAGE_POSITIONS[i][1] + 10, text, style);
-        var population = this.game.add.text(VILLAGE_POSITIONS[i][0]-60, VILLAGE_POSITIONS[i][1]-100, game_state.villages[i].getPopulation(), population_style);
-        village_group.add(village_text);
-        village_group.add(population);
+        var healthy_population = this.game.add.text(VILLAGE_POSITIONS[i][0]-60, VILLAGE_POSITIONS[i][1]-70, game_state.villages[i].getPopulation()-game_state.villages[i].getHowManyInfected(), population_style);
+        var infected_population = this.game.add.text(VILLAGE_POSITIONS[i][0]+30, VILLAGE_POSITIONS[i][1]-70, game_state.villages[i].getHowManyInfected(), population_style);
+        village_group.add(healthy_population);
+        village_group.add(infected_population);
         village_group.visible = false;
         this.village_groups.push(village_group);
     },
