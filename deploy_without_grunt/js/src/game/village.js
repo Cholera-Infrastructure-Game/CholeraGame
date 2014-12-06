@@ -37,73 +37,15 @@ Village = function(population, village_factors, village_number, initial_percenta
             people_infected = Math.min(Math.ceil(people_infected + Math.ceil((people_infected / 0.6) * Math.random() * infected_rate)), total_population);
         },
 
-        // These functions are to be called when a prevention measure is added to a village.
-        implementWashingHands: function() {
-            var washing_hands = PREVENTION_MEASURE_VALUES.washing_hands;
-            if (game_state.money < washing_hands.cost) {
-                return  //Ideally tell player that they can't afford it
-            }
-            if (prevention_measures.washing_hands != 0) {
-                return // Ideally tell player that its already implemented
-            }
-            game_state.money -= washing_hands.cost;
-            prevention_measures.washing_hands = washing_hands.duration;
-            people_infected -= people_infected * washing_hands.percent_cured;
+        implementPreventionMeasure: function(prevention_measure) {
+            var measure = PREVENTION_MEASURE_VALUES[prevention_measure];
+            game_state.money -= measure.cost;
+            prevention_measures[prevention_measure] = measure.duration;
+            people_infected -= people_infected * measure.percent_cured;
         },
 
-        getWashingHandsDaysLeft: function() {
-            return prevention_measures.washing_hands;
-        },
-
-        implementWaterContainers: function() {
-            var water_containers = PREVENTION_MEASURE_VALUES.water_containers;
-            if (game_state.money < water_containers.cost) {
-                return  //Ideally tell player that they can't afford it
-            }
-            if (prevention_measures.water_containers != 0) {
-                return // Ideally tell player that its already implemented
-            }
-            game_state.money -= water_containers.cost;
-            prevention_measures.water_containers = water_containers.duration;
-            people_infected -= people_infected * water_containers.percent_cured;
-        },
-
-        getWaterContainersDaysLeft: function() {
-            return prevention_measures.water_containers;
-        },
-
-        implementElectrolytes: function() {
-            var electrolytes = PREVENTION_MEASURE_VALUES.electrolytes;
-            if (game_state.money < electrolytes.cost) {
-                return  //Ideally tell player that they can't afford it
-            }
-            if (prevention_measures.electrolytes != 0) {
-                return // Ideally tell player that its already implemented
-            }
-            game_state.money -= electrolytes.cost;
-            prevention_measures.electrolytes = electrolytes.duration;
-            people_infected -= people_infected * electrolytes.percent_cured;
-        },
-
-        getElectrolytesDaysLeft: function() {
-            return prevention_measures.electrolyes;
-        },
-
-        implementBoilWater: function() {
-            var boil_water = PREVENTION_MEASURE_VALUES.boil_water;
-            if (game_state.money < boil_water.cost) {
-                return  //Ideally tell player that they can't afford it
-            }
-            if (prevention_measures.boil_water != 0) {
-                return // Ideally tell player that its already implemented
-            }
-            game_state.money -= boil_water.cost;
-            prevention_measures.boil_water = boil_water.duration;
-            people_infected -= people_infected * boil_water.percent_cured;
-        },
-
-        getBoilWaterDaysLeft: function() {
-            return prevention_measures.boil_water;
+        getPreventionMeasureDaysLeft: function (prevention_measure) {
+            return prevention_measures[prevention_measure];
         },
 
         getPopulation: function() {

@@ -16,10 +16,10 @@ MapStage.prototype = {
         this.load.image('left','assets/images/Left_arrow.svg');
         this.load.image('right','assets/images/Right_arrow.svg');
         this.load.image('map', 'assets/images/NewMap.png');//Need to rearrange villages for NewMap
-        this.load.image('boil', 'assets/images/NewIcons/BoilingWaterIcon.png');
-        this.load.image('soap', 'assets/images/NewIcons/SoapIcon.png');
-        this.load.image('electrolyte', 'assets/images/NewIcons/Electrolytes.png');
-        this.load.image('container', 'assets/images/NewIcons/WaterContainerIcon.png');
+        this.load.image('boil_water', 'assets/images/NewIcons/BoilingWaterIcon.png');
+        this.load.image('washing_hands', 'assets/images/NewIcons/SoapIcon.png');
+        this.load.image('electrolytes', 'assets/images/NewIcons/Electrolytes.png');
+        this.load.image('water_containers', 'assets/images/NewIcons/WaterContainerIcon.png');
 		this.load.image('top_bar', 'assets/images/placeholder_top_bar.png');
         
         this.load.spritesheet('village', 'assets/images/NewIcons/CitySpriteSheet.png', 128, 128);
@@ -51,7 +51,7 @@ MapStage.prototype = {
             var health_bar = this.game.add.sprite(VILLAGE_POSITIONS[i][0]-60, VILLAGE_POSITIONS[i][1]-90, 'healthbar');
             for (var j = 0; j < 4; j++) {
 			// Create a pie.
-			    var small_pie = new Timer(this.game, VILLAGE_POSITIONS[i][0] + (j * 35) - 50, VILLAGE_POSITIONS[i][1] + 70, 10, 2000, "rgba(0,0,0,0.6)", ACTION_COLORS[j], this.game.cache.getImage(ACTION_ICONS[j]));
+			    var small_pie = new Timer(this.game, VILLAGE_POSITIONS[i][0] + (j * 35) - 50, VILLAGE_POSITIONS[i][1] + 70, 10, 2000, "rgba(0,0,0,0.6)", PREVENTION_MEASURE_VALUES[PREVENTION_MEASURE_NAMES[j]].color, this.game.cache.getImage(PREVENTION_MEASURE_NAMES[j]));
                 village_pies.push(small_pie);
             }
             var left = this.game.add.sprite(VILLAGE_POSITIONS[i][0]-5, VILLAGE_POSITIONS[i][1]-105,'left');
@@ -130,11 +130,12 @@ MapStage.prototype = {
             game_state.day += 1;
             this.time_text_object.text = "Day: " + game_state.day;
 
-            if (game_state.available_villages == 1) {
+            if (game_state.available_villages === 1) {
                 // special condition to unlock the second village (once the first is cured)
                 if (game_state.villages[0].getHowManyInfected()/game_state.villages[0].getPopulation() <= SECOND_VILLAGE_UNLOCK_CRITERIA) {
                     this.createVillageUI(game_state.available_villages);
                     game_state.available_villages += 1;
+                    this.openTextPopup(SECOND_VILLAGE_UNLOCK_TEXT);
                 }
             }
             else {
@@ -142,6 +143,12 @@ MapStage.prototype = {
                 if (VILLAGE_UNLOCK_DAYS.indexOf(game_state.days_since_second_village_unlocked) != -1) {
                     this.createVillageUI(game_state.available_villages);
                     game_state.available_villages += 1;
+                    if (game_state.available_villages == 3) {
+                        // unlock boiling water
+                        game_state.boiling_water_unlocked = true;
+                        this.createPopupMenu();
+                        this.openTextPopup(BOILING_WATER_UNLOCK_TEXT);
+                    }
                 }
             }
 
@@ -284,17 +291,21 @@ MapStage.prototype = {
 		// Fill the actions pane with pies and actions.
 		var action_spacing = 105;
 		this.popup_pies = [];
-		for (var i = 0; i < 4; i++) {
+                var num_measures = 3;
+                if (game_state.boiling_water_unlocked) {
+                    num_measures = 4;
+                }
+		for (var i = 0; i < num_measures; i++) {
 			// Create a pie.
-			var pie = new PieProgress(this.game, left_column_center_x - 120, 200 + i * action_spacing - h/2, 40, "rgba(0,0,0,0.6)", ACTION_COLORS[i], this.game.cache.getImage(ACTION_ICONS[i]));
+			var pie = new PieProgress(this.game, left_column_center_x - 120, 200 + i * action_spacing - h/2, 40, "rgba(0,0,0,0.6)", PREVENTION_MEASURE_VALUES[PREVENTION_MEASURE_NAMES[i]].color, this.game.cache.getImage(PREVENTION_MEASURE_NAMES[i]));
 			this.popup_sprite.addChild(pie);
 			this.popup_pies.push(pie);
 			// Create the cost text below the pie.
-			var cost_text = this.game.add.text(left_column_center_x - 120 - 75, 200 + i * action_spacing - h/2, ACTION_COSTS[i], POPUP_ACTION_NAME_STYLE);
+			var cost_text = this.game.add.text(left_column_center_x - 120 - 75, 200 + i * action_spacing - h/2, PREVENTION_MEASURE_VALUES[PREVENTION_MEASURE_NAMES[i]].cost, POPUP_ACTION_NAME_STYLE);
 			cost_text.anchor.setTo(0.5, 0.5);
 			this.popup_sprite.addChild(cost_text);
 			// Create the action text.
-			var obj = this.game.add.text(left_column_center_x - 70, 200 + i * action_spacing - h/2, ACTION_NAMES[i], POPUP_ACTION_NAME_STYLE);
+			var obj = this.game.add.text(left_column_center_x - 70, 200 + i * action_spacing - h/2, PREVENTION_MEASURE_NAMES[i], POPUP_ACTION_NAME_STYLE);
 			obj.anchor.setTo(0.0, 0.5);
 			obj.inputEnabled = true;
 			obj.input.priorityID = 1;
@@ -444,23 +455,23 @@ MapStage.prototype = {
 			self.popup_description_text_object.text = "";
 		} else {
 			// Otherwise, populate them appropriately.
-			self.popup_description_title_object.text = ACTION_NAMES[action_index];
-			self.popup_description_cost_object.text = ACTION_COSTS[action_index];
-			self.popup_description_text_object.text = ACTION_DESCRIPTIONS[action_index];
+			self.popup_description_title_object.text = PREVENTION_MEASURE_NAMES[action_index];
+			self.popup_description_cost_object.text = PREVENTION_MEASURE_VALUES[PREVENTION_MEASURE_NAMES[action_index]].cost;
+			self.popup_description_text_object.text =PREVENTION_MEASURE_VALUES[PREVENTION_MEASURE_NAMES[action_index]].description;
 		}
 	},
 
 	buyAction: function(action_index, village_index) {
-		// This is the crucial callback, called when the user attempts to buy something.
 		console.log("Triggering action number " + action_index + " on village number " + village_index);
-		// Just for convenience of experimenetation action 2 always fails due to being on cooldown.
-		if (action_index == 2)
-			return "on-cooldown";
-		// Don't let the player buy things they can't afford.
-		if (game_state.money < ACTION_COSTS[action_index])
-			return "no-money";
-		// TODO: Actually update game_state to account for the fact that we just bought something.
-		game_state.money -= ACTION_COSTS[action_index];
+
+                prevention_measure_data = PREVENTION_MEASURE_VALUES[PREVENTION_MEASURE_NAMES[action_index]];
+		if (game_state.money < prevention_measure_data.cost) {
+                    return "no-money";
+                }
+                if (game_state.villages[village_index].getPreventionMeasuresDaysLeft(PREVENTION_MEASURE_NAMES[action_index]) > 0) {
+                    return "on-cooldown";
+                }
+                game_state.villages[village_index].implementPreventionMeasures(PREVENTION_MEASURE_NAMES[action_index])
 		return "good";
 	},
 
@@ -487,13 +498,15 @@ MapStage.prototype = {
 		this.setDescriptionBoxTexts(-1);
 
 		// Handwashing
-		this.popup_pies[0].progress = 1 - selected_village.getWashingHandsDaysLeft()/PREVENTION_MEASURE_VALUES.washing_hands.duration;
+		this.popup_pies[0].progress = 1 - selected_village.getPreventionMeasureDaysLeft("washing_hands")/PREVENTION_MEASURE_VALUES.washing_hands.duration;
 		// Water Containers
-		this.popup_pies[1].progress = 1 - selected_village.getWaterContainersDaysLeft()/PREVENTION_MEASURE_VALUES.water_containers.duration;
+		this.popup_pies[1].progress = 1 - selected_village.getPreventionMeasureDaysLeft("water_containers")/PREVENTION_MEASURE_VALUES.water_containers.duration;
 		// Electrolytes
-		this.popup_pies[2].progress = 1 - selected_village.getElectrolytesDaysLeft()/PREVENTION_MEASURE_VALUES.electrolytes.duration;
-		// Boiling water
-		this.popup_pies[3].progress = 1 - selected_village.getBoilWaterDaysLeft()/PREVENTION_MEASURE_VALUES.boil_water.duration;
+		this.popup_pies[2].progress = 1 - selected_village.getPreventionMeasureDaysLeft("electrolytes")/PREVENTION_MEASURE_VALUES.electrolytes.duration;
+                if (game_state.boiling_water_unlocked) {
+		    // Boiling water
+		    this.popup_pies[3].progress = 1 - selected_village.getPreventionMeasureDaysLeft("boil_water")/PREVENTION_MEASURE_VALUES.boil_water.duration;
+                }
 
 		// Shrink the popup down, preparing to grow it up later.
 		this.popup_sprite.scale.set(0.0);

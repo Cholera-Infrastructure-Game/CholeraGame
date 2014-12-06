@@ -27,7 +27,7 @@ var BUTTON_POP_TIME = 100;
 var TOP_BAR_HEIGHT = 40;
 
 // Money you make per day
-var DAILY_INCOME = 1;
+var DAILY_INCOME = 50;
 
 // The additive factor to the infection rate the measure has over time.
 var PREVENTION_MEASURE_VALUES = { //TODO balance these numbers
@@ -35,26 +35,34 @@ var PREVENTION_MEASURE_VALUES = { //TODO balance these numbers
         infection_rate_reduction: .05,
         percent_cured: .05,
         duration: 7,
-        cost: 500
+        cost: 500,
+        color: "#FF00FF",
+        description: "Washing your hands is straight-up legit OP IRL, so it is here too."
     },
     water_containers: {
         infection_rate_reduction: .1,
         percent_cured: 0,
         duration: 14,
-        cost: 1500
+        cost: 1500,
+        color: "#FFFF00",
+        description: "Because I'm sure we all hate unmanaged waste as much as the next guy."
     },
     electrolytes: {
         infection_rate_reduction: 0,
         percent_cured: .1,
         duration: 0,
-        cost: 2000
+        cost: 2000,
+        color: "#00FFFF",
+        description: "Rehydrating is delicious, or something."
     },
     boil_water: {
         infection_rate_reduction: .01,
         percent_cured: 0,
         duration: 14,
         cost: 2000,
-        upstream_effect_reduction: .9
+        upstream_effect_reduction: .9,
+        color: "#FFA500",
+        description: "Raise to 373 K to be free of pathogens."
     }
 }
 
@@ -65,40 +73,13 @@ VILLAGE_POSITIONS = [ //TODO update these positions
     [540,431],
 ];
 
-ACTION_NAMES = [
-	"Hand washing",
-	"Rehydration",
-	"Water Container",
-	"Boil water"
+PREVENTION_MEASURE_NAMES = [
+	"washing_hands",
+        "electrolytes",
+	"water_containers",
+	"boil_water"
 ];
 
-ACTION_COSTS = [
-	7,
-	25,
-	120,
-	455,
-];
-    
-ACTION_COLORS = [
-	"#FF00FF",
-	"#FFFF00",
-	"#00FFFF",
-	"#FFA500",
-];
-
-ACTION_ICONS = [
-	"soap",
-	"electrolyte",
-	"container",
-	"boil",
-];
-
-ACTION_DESCRIPTIONS = [
-	"Washing your hands is straight-up legit OP IRL, so it is here too.",
-	"Rehydrating is delicious, or something.",
-	"Because I'm sure we all hate unmanaged waste as much as the next guy.",
-	"Raise to 373 K to be free of pathogens."
-];
 
 // Days after unlocking the second villages that it takes to unlock the following villages.
 VILLAGE_UNLOCK_DAYS = [
@@ -131,6 +112,7 @@ var GameState = function () {
         villages: villages,
         available_villages: 1,
         frame_count: -1,
-        days_since_second_village_unlocked: -1
+        days_since_second_village_unlocked: -1,
+        boiling_water_unlocked: false
     };
 }
