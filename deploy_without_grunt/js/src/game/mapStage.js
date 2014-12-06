@@ -117,6 +117,7 @@ MapStage.prototype = {
         }
 
         this.createPopupMenu();
+        this.createTextPopup();
         this.createScoreBar();
 
 		var escape_key = this.game.input.keyboard.addKey(Phaser.Keyboard.ESC);
@@ -126,6 +127,9 @@ MapStage.prototype = {
     },
 
     update: function() {
+        if (!this.time_should_progress) {
+            return;
+        }
         game_state.frame_count += 1;
         if (game_state.frame_count % 60 === 0) {
             game_state.money += DAILY_INCOME;
@@ -232,7 +236,7 @@ MapStage.prototype = {
 
         var pause = this.game.add.text(this.game.world.width - 300, 10, "PAUSE", SCORE_BAR_STYLE);
         pause.inputEnabled = true;
-        pause.events.onInputUp.add(this.createPauseMenu, this);
+        pause.events.onInputUp.add(function() {this.openTextPopup("Game paused")}, this);
 		this.pause_text_object = pause;
     },
 
@@ -473,13 +477,6 @@ MapStage.prototype = {
 		this.popup_sprite.y = -1000;
 	},
 
-
-    createPauseMenu: function() {
-        // TODO: Make pause menu
-        console.log("TODO: need to make pause menu");
-        return;
-    },
-
     createVillagePopup: function(selected_village_index) {
 		console.log("Creating popup for: " + selected_village_index);
 		var selected_village = game_state.villages[selected_village_index];
@@ -547,6 +544,7 @@ MapStage.prototype = {
 		}, this);
 	},
 
+
     updateTooltip: function(pointer, x, y) {
         if (x >= 0 && x <= GAME_WIDTH && y >= 0 && y <= GAME_HEIGHT) {
             this.tooltip_bmd.fill(0, 0, 0);
@@ -557,5 +555,118 @@ MapStage.prototype = {
             this.tooltip_sprite.y = y;
         }
     },
+
+    createTextPopup: function() {
+		// This function simply creates the text popup sprite, and hides it.
+		self = this;
+
+		// Create the background sprite.
+		// All the other sprites are children of this one.
+		var bmd = this.game.add.bitmapData(GAME_WIDTH - POPUP_SHY_MARGIN*10, GAME_HEIGHT - TOP_BAR_HEIGHT - POPUP_SHY_MARGIN*10);
+		// Fill entirely with black
+		bmd.ctx.beginPath();
+		bmd.ctx.rect(0, 0, GAME_WIDTH, GAME_HEIGHT - TOP_BAR_HEIGHT);
+		bmd.ctx.fillStyle = '#000000';
+		bmd.ctx.fill();
+		// Fill the center with gray, leaving 2px of margin on all sides.
+		bmd.ctx.beginPath();
+		bmd.ctx.rect(2, 2, GAME_WIDTH - 4 - POPUP_SHY_MARGIN*10, GAME_HEIGHT - TOP_BAR_HEIGHT - 4 - POPUP_SHY_MARGIN*10);
+		bmd.ctx.fillStyle = '#a0a0a0';
+		bmd.ctx.fill();
+		this.text_popup_sprite = this.game.add.sprite(0, 0, bmd);
+		this.text_popup_sprite.anchor.set(0.5);
+
+		// For convenience, get these values out.
+		var w = this.text_popup_sprite.width;
+		var h = this.text_popup_sprite.height;
+
+		// Create text.
+		this.text_popup_text = this.game.add.text(0, 30-h/2, "Placeholder Text", POPUP_TEXT_STYLE);
+		// This next line causes the text to be centered properly.
+		this.text_popup_text.anchor.set(0.5);
+		this.text_popup_sprite.addChild(this.text_popup_text);
+
+		// Create the close button.
+		var button = this.game.add.text(0, this.text_popup_sprite.height * 0.4, "Return to map", POPUP_TEXT_STYLE);
+		button.anchor.set(0.5);
+		button.inputEnabled = true;
+		button.input.priorityID = 1;
+		button.input.useHandCursor = true;
+		button.events.onInputUp.add(this.closeTextPopup, this);
+		// Add handlers to make it pop up in size a little.
+		button.events.onInputOver.add(function() {
+			self.game.add.tween(button.scale).to({x: 1.3, y: 1.3}, BUTTON_POP_TIME, Phaser.Easing.Default, true);
+		});
+		button.events.onInputOut.add(function() {
+			self.game.add.tween(button.scale).to({x: 1.0, y: 1.0}, BUTTON_POP_TIME, Phaser.Easing.Default, true);
+		});
+		console.log(this.popup_sprite.body);
+		this.text_popup_return_button = button;
+		this.text_popup_sprite.addChild(button);
+                // this.popup_sprite.alpha = 0.95;
+
+		// Initially the popup is hidden.
+		this.fullyHideTextPopup();
+    },
+
+
+	fullyHideTextPopup: function() {
+		// Somewhat crummy solution, but simply moving the popup out of the way works.
+		this.text_popup_sprite.x = -1000;
+		this.text_popup_sprite.y = -1000;
+	},
+
+    openTextPopup: function(text) {
+		// Make sure no pop-up is currently open.
+		// This SHOULD never happen, but let's just be really careful.
+		if (this.popup_status != -1) {
+			console.log("WARNING: Call to createVillagePopup while popup was open!");
+			return;
+		}
+		// Pause all action.
+		this.time_should_progress = false;
+		// Update the popup with appropriate information.
+		this.text_popup_text.text = text;
+
+		// Shrink the popup down, preparing to grow it up later.
+		this.popup_sprite.scale.set(0.0);
+		// Place the popup directly over the center.
+		var pos = [GAME_WIDTH/2, GAME_HEIGHT/2];
+		this.text_popup_sprite.x = pos[0];
+		this.text_popup_sprite.y = pos[1];
+		// Then make it tween into position and size.
+                this.game.add.tween(this.text_popup_sprite).to({x: GAME_WIDTH/2, y: GAME_HEIGHT/2 + TOP_BAR_HEIGHT/2}, POPUP_TIME, Phaser.Easing.Quadratic.In, true);
+                var tween = this.game.add.tween(this.text_popup_sprite.scale);
+		tween.to({x: 1.0, y: 1.0}, POPUP_TIME, Phaser.Easing.Quartic.In, true);
+		// Only when the tweening is finished do we consider the popup to be truly open.
+		tween.onComplete.add(function() {
+			this.popup_status = -2;
+			// Even though we won't be listening for it, enable input just to block it for everything under the popup.
+			this.popup_sprite.inputEnabled = true;
+		}, this);
+    },
+
+	closeTextPopup: function() {
+		// Make sure that a popup is actually open.
+		if (this.popup_status == -1) {
+			console.log("WARNING: Call to text Popup while no popup was open!");
+			return;
+		}
+		// Tween the popup away.
+		var pos = [GAME_WIDTH/2, GAME_HEIGHT/2];
+        this.game.add.tween(this.popup_sprite).to({x: pos[0], y: pos[1]}, 300, Phaser.Easing.Default, true);
+        var tween = this.game.add.tween(this.popup_sprite.scale);
+		// It's deeply unfortunate, but it appears that a sprite with scale 0.0 is considered everywhere for input.
+		// Therefore, to work around this behavior we merely scale the popup window very very small.
+		// Then, when the tween is finished, we'll fully hide it by moving it away.
+		tween.to({x: 0.001, y: 0.001}, 300, Phaser.Easing.Default, true);
+		tween.onComplete.add(function() {
+			this.fullyHideTextPopup();
+			this.popup_status = -1;
+			// Resume all action.
+			this.time_should_progress = true;
+			this.text_popup_sprite.inputEnabled = false;
+		}, this);
+	},
 }
 
