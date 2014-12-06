@@ -47,17 +47,19 @@ MapStage.prototype = {
             var village_group = this.game.add.group()
             var village_pies = [];
             var village_sprite = this.game.add.button(VILLAGE_POSITIONS[i][0], VILLAGE_POSITIONS[i][1], 'village', function() {}, {}, 1, 0);
-            var health_bar_back = this.game.add.sprite(VILLAGE_POSITIONS[i][0]-60, VILLAGE_POSITIONS[i][1]-90, 'health_back');
-            var health_bar = this.game.add.sprite(VILLAGE_POSITIONS[i][0]-60, VILLAGE_POSITIONS[i][1]-90, 'healthbar');
+            village_sprite.scale.x = .6;
+            village_sprite.scale.y = .6;
+            var health_bar_back = this.game.add.sprite(VILLAGE_POSITIONS[i][0]-60, VILLAGE_POSITIONS[i][1]-60, 'health_back');
+            var health_bar = this.game.add.sprite(VILLAGE_POSITIONS[i][0]-60, VILLAGE_POSITIONS[i][1]-60, 'healthbar');
             for (var j = 0; j < 4; j++) {
 			// Create a pie.
                 var small_pie = new PieProgress(this.game, VILLAGE_POSITIONS[i][0] + (j * 35) - 50), VILLAGE_POSITIONS[i][1] + 70, 10, "rgba(0,0,0,0.6)", PREVENTION_MEASURE_VALUES[PREVENTION_MEASURE_NAMES[j]].color, his.game.cache.getImage(PREVENTION_MEASURE_NAMES[j]));
                 village_pies.push(small_pie);
             }
-            var left = this.game.add.sprite(VILLAGE_POSITIONS[i][0]-5, VILLAGE_POSITIONS[i][1]-105,'left');
+            var left = this.game.add.sprite(VILLAGE_POSITIONS[i][0]-5, VILLAGE_POSITIONS[i][1]-75,'left');
             left.scale.x = 0.03;
             left.scale.y = 0.03;
-            var right = this.game.add.sprite(VILLAGE_POSITIONS[i][0]-5, VILLAGE_POSITIONS[i][1]-95,'right');
+            var right = this.game.add.sprite(VILLAGE_POSITIONS[i][0]-5, VILLAGE_POSITIONS[i][1]-75,'right');
             left.visible = false;
             right.visible = false;
 //            Timer(this.game, VILLAGE_POSITIONS[i][0]+50, VILLAGE_POSITIONS[i][1]+50, 40, 2000, true);
@@ -86,10 +88,10 @@ MapStage.prototype = {
 				}, self);
 				// Also add a little increase in size effect on mouse over.
 				village_sprite.events.onInputOver.add(function() {
-					self.game.add.tween(_village_sprite.scale).to({x: 1.1, y: 1.1}, 100, Phaser.Easing.Quadratic.Out, true);
+					self.game.add.tween(_village_sprite.scale).to({x: .8, y: .8}, 100, Phaser.Easing.Quadratic.Out, true);
 				});
 				village_sprite.events.onInputOut.add(function() {
-					self.game.add.tween(_village_sprite.scale).to({x: 1.0, y: 1.0}, 100, Phaser.Easing.Quadratic.In, true);
+					self.game.add.tween(_village_sprite.scale).to({x: .6, y: .6}, 100, Phaser.Easing.Quadratic.In, true);
 				});
 			}());
             village_group.add(village_sprite); // 0
@@ -100,13 +102,12 @@ MapStage.prototype = {
             for (var p = 0; p < 4; p++) {
                 village_group.add(village_pies[p].getSprite()); // 5 to 8
             }
-            var text = "Village " + (i + 1);
             var style = { font: "12px Arial", fill: "#ffffff", align: "left" };
             var population_style = { font: "12px Arial", fill: "#000000", align: "left"};
-            var village_text = this.game.add.text(VILLAGE_POSITIONS[i][0] - 20, VILLAGE_POSITIONS[i][1] + 10, text, style);
-            var population = this.game.add.text(VILLAGE_POSITIONS[i][0]-60, VILLAGE_POSITIONS[i][1]-100, game_state.villages[i].getPopulation(), population_style);
-            village_group.add(village_text); // 9
-            village_group.add(population); // 10
+            var healthy_population = this.game.add.text(VILLAGE_POSITIONS[i][0]-60, VILLAGE_POSITIONS[i][1]-70, game_state.villages[i].getPopulation()-game_state.villages[i].getHowManyInfected(), population_style);
+            var infected_population = this.game.add.text(VILLAGE_POSITIONS[i][0]+30, VILLAGE_POSITIONS[i][1]-70, game_state.villages[i].getHowManyInfected(), population_style);
+            village_group.add(healthy_population);
+            village_group.add(infected_population);
             village_group.visible = false;
             this.village_groups.push(village_group);
         }
@@ -139,6 +140,7 @@ MapStage.prototype = {
                 }
             }
             else {
+                game_state.days_since_second_village_unlocked += 1;
                 // now unlock the other villages (based on days passed)
                 if (VILLAGE_UNLOCK_DAYS.indexOf(game_state.days_since_second_village_unlocked) != -1) {
                     this.createVillageUI(game_state.available_villages);
@@ -156,6 +158,8 @@ MapStage.prototype = {
                 game_state.villages[i].incrementDay();
                 this.village_groups[i].visible = true;
                 this.village_groups[i].getChildAt(2).width = 128 * (game_state.villages[i].getPopulation() - game_state.villages[i].getHowManyInfected()) / game_state.villages[i].getPopulation();
+                this.village_groups[i].getChildAt(9).text = game_state.villages[i].getPopulation()-game_state.villages[i].getHowManyInfected();
+                this.village_groups[i].getChildAt(10).text = game_state.villages[i].getHowManyInfected();
                 if(game_state.villages[i].isInfectedRatePositive()){
                     this.village_groups[i].getChildAt(4).visible = false;
                     this.village_groups[i].getChildAt(3).visible = true;
@@ -216,13 +220,12 @@ MapStage.prototype = {
         village_group.add(health_bar);
         village_group.add(left);
         village_group.add(right);
-        var text = "Village " + (i + 1);
         var style = { font: "12px Arial", fill: "#ffffff", align: "left" };
         var population_style = { font: "12px Arial", fill: "#000000", align: "left"};
-        var village_text = this.game.add.text(VILLAGE_POSITIONS[i][0] - 20, VILLAGE_POSITIONS[i][1] + 10, text, style);
-        var population = this.game.add.text(VILLAGE_POSITIONS[i][0]-60, VILLAGE_POSITIONS[i][1]-100, game_state.villages[i].getPopulation(), population_style);
-        village_group.add(village_text);
-        village_group.add(population);
+        var healthy_population = this.game.add.text(VILLAGE_POSITIONS[i][0]-60, VILLAGE_POSITIONS[i][1]-70, game_state.villages[i].getPopulation()-game_state.villages[i].getHowManyInfected(), population_style);
+        var infected_population = this.game.add.text(VILLAGE_POSITIONS[i][0]+30, VILLAGE_POSITIONS[i][1]-70, game_state.villages[i].getHowManyInfected(), population_style);
+        village_group.add(healthy_population);
+        village_group.add(infected_population);
         village_group.visible = false;
         this.village_groups.push(village_group);
     },
