@@ -33,8 +33,12 @@ MapStage.prototype = {
 		// This variable must be checked by the various update routines.
 		this.time_should_progress = true;
 
+		var map_sprite = this.game.add.sprite(0, 0, 'map');
+		map_sprite.scale.x = GAME_WIDTH/map_sprite.width;
+		map_sprite.scale.y = GAME_HEIGHT/map_sprite.height;
+
         this.game.add.sprite(0, 0, 'top_bar');
-        this.game.add.sprite(0, TOP_BAR_HEIGHT, 'map');
+        
 
         this.village_groups = [];
         for (i = 0; i < villages.length; i++) {
