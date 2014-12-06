@@ -58,7 +58,7 @@ var PREVENTION_MEASURE_VALUES = { //TODO balance these numbers
     electrolytes: {
         infection_rate_reduction: 0,
         percent_cured: .1,
-        duration: 0,
+        duration: 7,
         cost: 2000,
         color: "#00FFFF",
         display_name: "Electrolytes",
@@ -85,7 +85,7 @@ VILLAGE_POSITIONS = [ //TODO update these positions
 
 PREVENTION_MEASURE_NAMES = [
 	"washing_hands",
-        "electrolytes",
+    "electrolytes",
 	"water_containers",
 	"boil_water"
 ];
