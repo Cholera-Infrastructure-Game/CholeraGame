@@ -147,8 +147,8 @@ MapStage.prototype = {
             }
             if (game_state.day === 365) {
                 // Woo, you win!  Lets give you a score!
-                var score = total_people_infected/TOTAL_POPULATION;
-                // TODO (DEREK) go to game win screen, take score in as parameter
+                game_state.score = 1 - total_people_infected/TOTAL_POPULATION;
+                this.game.state.start('win_stage');
             }
             game_state.money += DAILY_INCOME;
             game_state.day += 1;
