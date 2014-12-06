@@ -66,6 +66,8 @@ MapStage.prototype = {
             left.scale.x = 0.03;
             left.scale.y = 0.03;
             var right = this.game.add.sprite(VILLAGE_POSITIONS[i][0]-5, VILLAGE_POSITIONS[i][1]-75,'right');
+            right.scale.x = 0.03;
+            right.scale.y = 0.03;
             left.visible = false;
             right.visible = false;
 //            Timer(this.game, VILLAGE_POSITIONS[i][0]+50, VILLAGE_POSITIONS[i][1]+50, 40, 2000, true);
@@ -194,16 +196,21 @@ MapStage.prototype = {
             for (var i = 0; i < game_state.available_villages; i++) {
                 game_state.villages[i].incrementDay(game_state.available_villages);
                 this.village_groups[i].visible = true;
+                this.village_groups[i].getChildAt(3).visible = false;
+                this.village_groups[i].getChildAt(4).visible = false;
+
                 this.village_groups[i].getChildAt(2).width = 128 * (game_state.villages[i].getPopulation() - game_state.villages[i].getHowManyInfected()) / game_state.villages[i].getPopulation();
                 this.village_groups[i].getChildAt(9).text = game_state.villages[i].getPopulation()-game_state.villages[i].getHowManyInfected();
                 this.village_groups[i].getChildAt(10).text = game_state.villages[i].getHowManyInfected();
                 if(game_state.villages[i].isInfectedRatePositive()){
+                    console.log("checking")
                     this.village_groups[i].getChildAt(4).visible = false;
                     this.village_groups[i].getChildAt(3).visible = true;
                 }
                 else{
-                    this.village_groups[i].getChildAt(3).visible = false;
                     this.village_groups[i].getChildAt(4).visible = true;
+                    this.village_groups[i].getChildAt(3).visible = false;
+
                 }
             }
         }
@@ -218,6 +225,8 @@ MapStage.prototype = {
         left.scale.x = 0.03;
         left.scale.y = 0.03;
         var right = this.game.add.sprite(VILLAGE_POSITIONS[i][0]-5, VILLAGE_POSITIONS[i][1]-95,'right');
+        right.scale.x = 0.03;
+        right.scale.y = 0.03;        
         left.visible = false;
         right.visible = false;
         // Timer(this.game, VILLAGE_POSITIONS[i][0]+50, VILLAGE_POSITIONS[i][1]+50, 40, 2000, true);
