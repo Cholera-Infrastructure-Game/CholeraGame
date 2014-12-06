@@ -56,6 +56,7 @@ MapStage.prototype = {
             for (var j = 0; j < 4; j++) {
 			// Create a pie.
                 var small_pie = new PieProgress(this.game, VILLAGE_POSITIONS[i][0] + (j * 35) - 50, VILLAGE_POSITIONS[i][1] + 70, 10, "rgba(0,0,0,0.6)", PREVENTION_MEASURE_VALUES[PREVENTION_MEASURE_NAMES[j]].color, this.game.cache.getImage(PREVENTION_MEASURE_NAMES[j]));
+                small_pie.visible = false;
                 village_pies.push(small_pie);
             }
             this.village_small_pies.push(village_pies);
@@ -150,6 +151,21 @@ MapStage.prototype = {
             game_state.money += DAILY_INCOME;
             game_state.day += 1;
             this.time_text_object.text = "Day: " + game_state.day;
+
+            // update small pies on map
+            for (var i = 0; i < this.village_small_pies.length; i++) {
+                for (var j = 0; j < this.village_small_pies[i].length; j++) {
+                    var selected_village = game_state.villages[i]
+                    var fraction_remaining = selected_village.getPreventionMeasureDaysLeft(PREVENTION_MEASURE_NAMES[j])/PREVENTION_MEASURE_VALUES[PREVENTION_MEASURE_NAMES[j]].duration
+                    if (fraction_remaining > 0) {
+                        this.village_small_pies[i][j].visible = true;
+                        this.village_small_pies[i][j].progress = fraction_remaining;
+
+                    } else {
+                        this.village_small_pies[i][j].visible = false;
+                    }
+                }
+            }
 
             if (game_state.available_villages === 1) {
                 // special condition to unlock the second village (once the first is cured)
