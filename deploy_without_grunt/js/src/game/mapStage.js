@@ -10,11 +10,6 @@ MapStage.prototype = {
     },
 
     preload: function() {
-        this.load.image('health0','assets/images/health_bar0.png');
-        this.load.image('health1','assets/images/health_bar1.png');
-        this.load.image('health2','assets/images/health_bar2.png');
-        this.load.image('health3','assets/images/health_bar3.png');
-        this.load.image('health4','assets/images/health_bar4.png');
         this.load.image('healthbar','assets/images/health_bar.png');
         this.load.image('health_back','assets/images/health_background.png');
         this.load.image('left','assets/images/Left_arrow.svg');
