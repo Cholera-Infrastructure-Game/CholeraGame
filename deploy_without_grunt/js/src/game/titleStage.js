@@ -37,6 +37,8 @@ TitleStage.prototype = {
         instructions_text.events.onInputOut.add(function() {
             this.game.add.tween(instructions_text.scale).to({x: 1.0, y: 1.0}, BUTTON_POP_TIME, Phaser.Easing.Default, true);
         }, this);
+        instructions_text.events.onInputUp.add(this.showInstructions, this);
+
 
         var credits_text = this.game.add.text(this.game.world.centerX, this.game.world.centerY + 200, "CREDITS", TITLE_STAGE_STYLE);
         credits_text.anchor.set(0.5);
@@ -56,5 +58,9 @@ TitleStage.prototype = {
 
     startGame: function() {
         this.game.state.start('map_stage');
+    },
+
+    showInstructions: function() {
+        this.game.state.start('help_stage');
     }
 }
