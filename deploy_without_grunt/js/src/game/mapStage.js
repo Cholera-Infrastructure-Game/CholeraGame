@@ -294,6 +294,7 @@ MapStage.prototype = {
 		var right_column_center_x = w/4;
 		add_text(left_column_center_x, 80-h/2, "Actions");
 		add_text(right_column_center_x, 80-h/2, "Description");
+        var action_buttons_y_offset = 150;
 
 		// Fill the actions pane with pies and actions.
 		var action_spacing = 105;
@@ -304,15 +305,17 @@ MapStage.prototype = {
                 }
 		for (var i = 0; i < num_measures; i++) {
 			// Create a pie.
-			var pie = new PieProgress(this.game, left_column_center_x - 120, 200 + i * action_spacing - h/2, 40, "rgba(0,0,0,0.6)", PREVENTION_MEASURE_VALUES[PREVENTION_MEASURE_NAMES[i]].color, this.game.cache.getImage(PREVENTION_MEASURE_NAMES[i]));
+			var pie = new PieProgress(this.game, left_column_center_x - 120, action_buttons_y_offset + i * action_spacing - h/2, 40, "rgba(0,0,0,0.6)", PREVENTION_MEASURE_VALUES[PREVENTION_MEASURE_NAMES[i]].color, this.game.cache.getImage(PREVENTION_MEASURE_NAMES[i]));
 			this.popup_sprite.addChild(pie);
 			this.popup_pies.push(pie);
-			// Create the cost text below the pie.
-			var cost_text = this.game.add.text(left_column_center_x - 120 - 75, 200 + i * action_spacing - h/2, PREVENTION_MEASURE_VALUES[PREVENTION_MEASURE_NAMES[i]].cost, POPUP_ACTION_NAME_STYLE);
-			cost_text.anchor.setTo(0.5, 0.5);
-			this.popup_sprite.addChild(cost_text);
+			// Create the cost text next to the pie.
+			// WARNING: I temporarily disabled this because it doesn't fit.
+			// Let's see where else we could put it.
+//			var cost_text = this.game.add.text(left_column_center_x - 120 - 75, action_buttons_y_offset + i * action_spacing - h/2, PREVENTION_MEASURE_VALUES[PREVENTION_MEASURE_NAMES[i]].cost, POPUP_ACTION_NAME_STYLE);
+//			cost_text.anchor.setTo(0.5, 0.5);
+//			this.popup_sprite.addChild(cost_text);
 			// Create the action text.
-			var obj = this.game.add.text(left_column_center_x - 70, 200 + i * action_spacing - h/2, PREVENTION_MEASURE_NAMES[i], POPUP_ACTION_NAME_STYLE);
+			var obj = this.game.add.text(left_column_center_x - 70, action_buttons_y_offset + i * action_spacing - h/2, PREVENTION_MEASURE_NAMES[i], POPUP_ACTION_NAME_STYLE);
 			obj.anchor.setTo(0.0, 0.5);
 			obj.inputEnabled = true;
 			obj.input.priorityID = 1;
@@ -394,9 +397,9 @@ MapStage.prototype = {
 		// Render the descriptions pane.
 		// Crucial: Remember that these are coordinates for the bitmapData, so (0, 0) is the UL corner, not the middle.
 		var corner_radius = 20;
-		var desc_width = 400;
-		var desc_height = 400;
-		var desc_box_top_y = 160;
+		var desc_width = 300;
+		var desc_height = 300;
+		var desc_box_top_y = 110;
 		bmd.ctx.beginPath();
 		// Change coordinates so that (0, 0) is the upper left corner of the box we are drawing.
 		bmd.ctx.translate(right_column_center_x + w/2 - desc_width/2, desc_box_top_y);
