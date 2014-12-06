@@ -42,8 +42,73 @@ MapStage.prototype = {
         
 
         this.village_groups = [];
-        for (i = 0; i < game_state.available_villages; i++) {
-            this.createVillageUI(i);
+
+        for (var i = 0; i < villages.length; i++) {
+            var village_group = this.game.add.group()
+            var village_pies = [];
+            var village_sprite = this.game.add.button(VILLAGE_POSITIONS[i][0], VILLAGE_POSITIONS[i][1], 'village', function() {}, {}, 1, 0);
+            var health_bar_back = this.game.add.sprite(VILLAGE_POSITIONS[i][0]-60, VILLAGE_POSITIONS[i][1]-90, 'health_back');
+            var health_bar = this.game.add.sprite(VILLAGE_POSITIONS[i][0]-60, VILLAGE_POSITIONS[i][1]-90, 'healthbar');
+            for (var j = 0; j < 4; j++) {
+			// Create a pie.
+			    var small_pie = new Timer(this.game, VILLAGE_POSITIONS[i][0] + (j * 35) - 50, VILLAGE_POSITIONS[i][1] + 70, 10, 2000, "rgba(0,0,0,0.6)", ACTION_COLORS[j], this.game.cache.getImage(ACTION_ICONS[j]));
+                village_pies.push(small_pie);
+            }
+            var left = this.game.add.sprite(VILLAGE_POSITIONS[i][0]-5, VILLAGE_POSITIONS[i][1]-105,'left');
+            left.scale.x = 0.03;
+            left.scale.y = 0.03;
+            var right = this.game.add.sprite(VILLAGE_POSITIONS[i][0]-5, VILLAGE_POSITIONS[i][1]-95,'right');
+            left.visible = false;
+            right.visible = false;
+//            Timer(this.game, VILLAGE_POSITIONS[i][0]+50, VILLAGE_POSITIONS[i][1]+50, 40, 2000, true);
+            village_sprite.village_index = i;
+            village_sprite.anchor.set(0.5);
+            village_sprite.inputEnabled = true;
+			// Here I do some obnoxious closure crap to close over i.
+			// This causes createVillagePopup to be called passing in the village.
+			(function() {
+				var _i = i;
+				var _village_sprite = village_sprite;
+	            village_sprite.events.onInputUp.add(function() {
+					// Launch the pop up.
+					self.createVillagePopup(_i);
+					// Do a little click animation.
+					var tween = self.game.add.tween(_village_sprite.scale);
+					tween.to({x: 0.9, y: 0.9}, 100, Phaser.Easing.Quadratic.In);
+					tween.to({x: 1.1, y: 1.1}, 100, Phaser.Easing.Quadratic.Out);
+					// WARNING: Here I insert a little extra delay before the onComplete is called.
+					tween.to({x: 1.1, y: 1.1}, 300, Phaser.Easing.Default);
+					// Trigger a mouse out dispatch when the animation is over..
+					// This fixes the issue where the popup blocks the mouse out on the selected village,
+					// causing it to be permanently highlighted, until it is moused out of some time later.
+					tween._lastChild.onComplete.add(function() { _village_sprite.events.onInputOut.dispatch(); });
+					tween.start();
+				}, self);
+				// Also add a little increase in size effect on mouse over.
+				village_sprite.events.onInputOver.add(function() {
+					self.game.add.tween(_village_sprite.scale).to({x: 1.1, y: 1.1}, 100, Phaser.Easing.Quadratic.Out, true);
+				});
+				village_sprite.events.onInputOut.add(function() {
+					self.game.add.tween(_village_sprite.scale).to({x: 1.0, y: 1.0}, 100, Phaser.Easing.Quadratic.In, true);
+				});
+			}());
+            village_group.add(village_sprite);
+            village_group.add(health_bar_back);
+            village_group.add(health_bar);
+            village_group.add(left);
+            village_group.add(right);
+            for (var p = 0; p < 4; p++) {
+                village_group.add(village_pies[p].getSprite());
+            }
+            var text = "Village " + (i + 1);
+            var style = { font: "12px Arial", fill: "#ffffff", align: "left" };
+            var population_style = { font: "12px Arial", fill: "#000000", align: "left"};
+            var village_text = this.game.add.text(VILLAGE_POSITIONS[i][0] - 20, VILLAGE_POSITIONS[i][1] + 10, text, style);
+            var population = this.game.add.text(VILLAGE_POSITIONS[i][0]-60, VILLAGE_POSITIONS[i][1]-100, game_state.villages[i].getPopulation(), population_style);
+            village_group.add(village_text);
+            village_group.add(population);
+            village_group.visible = false;
+            this.village_groups.push(village_group);
         }
 
         this.createPopupMenu();
