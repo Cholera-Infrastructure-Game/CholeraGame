@@ -292,9 +292,9 @@ MapStage.prototype = {
 		// Compute some scaling values.
 		var left_column_center_x = -w/4 + 10;
 		var right_column_center_x = w/4;
-		add_text(left_column_center_x, 80-h/2, "Actions");
+		add_text(left_column_center_x, 50-h/2, "Actions");
 		add_text(right_column_center_x, 80-h/2, "Description");
-        var action_buttons_y_offset = 150;
+                var action_buttons_y_offset = 100;
 
 		// Fill the actions pane with pies and actions.
 		var action_spacing = 105;
@@ -315,7 +315,7 @@ MapStage.prototype = {
 //			cost_text.anchor.setTo(0.5, 0.5);
 //			this.popup_sprite.addChild(cost_text);
 			// Create the action text.
-			var obj = this.game.add.text(left_column_center_x - 70, action_buttons_y_offset + i * action_spacing - h/2, PREVENTION_MEASURE_NAMES[i], POPUP_ACTION_NAME_STYLE);
+			var obj = this.game.add.text(left_column_center_x - 70, action_buttons_y_offset + i * action_spacing - h/2, PREVENTION_MEASURE_VALUES[PREVENTION_MEASURE_NAMES[i]].display_name, POPUP_ACTION_NAME_STYLE);
 			obj.anchor.setTo(0.0, 0.5);
 			obj.inputEnabled = true;
 			obj.input.priorityID = 1;
@@ -435,7 +435,7 @@ MapStage.prototype = {
 		this.popup_sprite.addChild(obj);
 
 		// Create the close button.
-		var button = this.game.add.text(0, this.popup_sprite.height * 0.4, "Return to map", POPUP_TEXT_STYLE);
+		var button = this.game.add.text(0, this.popup_sprite.height * 0.45, "Return to map", POPUP_TEXT_STYLE);
 		button.anchor.set(0.5);
 		button.inputEnabled = true;
 		button.input.priorityID = 1;
@@ -465,7 +465,7 @@ MapStage.prototype = {
 			self.popup_description_text_object.text = "";
 		} else {
 			// Otherwise, populate them appropriately.
-			self.popup_description_title_object.text = PREVENTION_MEASURE_NAMES[action_index];
+			self.popup_description_title_object.text = PREVENTION_MEASURE_VALUES[PREVENTION_MEASURE_NAMES[action_index]].display_name;
 			self.popup_description_cost_object.text = PREVENTION_MEASURE_VALUES[PREVENTION_MEASURE_NAMES[action_index]].cost;
 			self.popup_description_text_object.text =PREVENTION_MEASURE_VALUES[PREVENTION_MEASURE_NAMES[action_index]].description;
 		}

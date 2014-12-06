@@ -39,6 +39,7 @@ var PREVENTION_MEASURE_VALUES = { //TODO balance these numbers
         duration: 7,
         cost: 500,
         color: "#FF00FF",
+        display_name: "Soap",
         description: "Washing your hands is straight-up legit OP IRL, so it is here too."
     },
     water_containers: {
@@ -47,6 +48,7 @@ var PREVENTION_MEASURE_VALUES = { //TODO balance these numbers
         duration: 14,
         cost: 1500,
         color: "#FFFF00",
+        display_name: "Water Containers",
         description: "Because I'm sure we all hate unmanaged waste as much as the next guy."
     },
     electrolytes: {
@@ -55,6 +57,7 @@ var PREVENTION_MEASURE_VALUES = { //TODO balance these numbers
         duration: 0,
         cost: 2000,
         color: "#00FFFF",
+        display_name: "Electrolytes",
         description: "Rehydrating is delicious, or something."
     },
     boil_water: {
@@ -64,6 +67,7 @@ var PREVENTION_MEASURE_VALUES = { //TODO balance these numbers
         cost: 2000,
         upstream_effect_reduction: .9,
         color: "#FFA500",
+        display_name: "Boiling Water",
         description: "Raise to 373 K to be free of pathogens."
     }
 }
