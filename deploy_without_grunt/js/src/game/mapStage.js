@@ -198,7 +198,7 @@ MapStage.prototype = {
                 game_state.villages[i].incrementDay(game_state.available_villages);
                 this.village_groups[i].visible = true;
                 this.village_groups[i].getChildAt(4).visible = false;
-                this.village_groups[i].getChildAt(5).visible = false;
+                this.village_groups[i].getChildAt(3).visible = false;
 
                 this.village_groups[i].getChildAt(2).width = 128 * (game_state.villages[i].getPopulation() - game_state.villages[i].getHowManyInfected()) / game_state.villages[i].getPopulation();
                 this.village_groups[i].getChildAt(9).text = game_state.villages[i].getPopulation()-game_state.villages[i].getHowManyInfected();
