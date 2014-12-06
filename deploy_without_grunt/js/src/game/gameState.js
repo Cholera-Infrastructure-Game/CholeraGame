@@ -1,6 +1,6 @@
 //Static values
-var GAME_WIDTH = 968;
-var GAME_HEIGHT = 768;
+var GAME_WIDTH = 800;
+var GAME_HEIGHT = 600;
 
 var BASE_INFECTION_RATE = .05;
 var BASE_FACTOR = 0.000005;

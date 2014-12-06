@@ -11,11 +11,6 @@ MapStage.prototype = {
     },
 
     preload: function() {
-        this.load.image('health0','assets/images/health_bar0.png');
-        this.load.image('health1','assets/images/health_bar1.png');
-        this.load.image('health2','assets/images/health_bar2.png');
-        this.load.image('health3','assets/images/health_bar3.png');
-        this.load.image('health4','assets/images/health_bar4.png');
         this.load.image('healthbar','assets/images/health_bar.png');
         this.load.image('health_back','assets/images/health_background.png');
         this.load.image('left','assets/images/Left_arrow.svg');
@@ -39,8 +34,12 @@ MapStage.prototype = {
 		// This variable must be checked by the various update routines.
 		this.time_should_progress = true;
 
+		var map_sprite = this.game.add.sprite(0, 0, 'map');
+		map_sprite.scale.x = GAME_WIDTH/map_sprite.width;
+		map_sprite.scale.y = GAME_HEIGHT/map_sprite.height;
+
         this.game.add.sprite(0, 0, 'top_bar');
-        this.game.add.sprite(0, TOP_BAR_HEIGHT, 'map');
+        
 
         this.village_groups = [];
         for (i = 0; i < game_state.available_villages; i++) {
@@ -411,6 +410,7 @@ MapStage.prototype = {
 
     createVillagePopup: function(selected_village_index) {
 		console.log("Creating popup for: " + selected_village_index);
+		var selected_village = game_state.villages[selected_village_index];
 		// Make sure no pop-up is currently open.
 		// This SHOULD never happen, but let's just be really careful.
 		if (this.popup_status != -1) {
@@ -423,11 +423,16 @@ MapStage.prototype = {
 		this.popup_locality_text.text = "Locality: " + (selected_village_index + 1);
 		// Clear all the description box texts.
 		this.setDescriptionBoxTexts(-1);
-		// Update the pies. For now I use random data.
-		for (var i = 0; i < 4; i++) {
-			var pie = this.popup_pies[i];
-			pie.progress = Math.random();
-		}
+
+		// Handwashing
+		this.popup_pies[0].progress = 1 - selected_village.getWashingHandsDaysLeft()/PREVENTION_MEASURE_VALUES.washing_hands.duration;
+		// Water Containers
+		this.popup_pies[1].progress = 1 - selected_village.getWaterContainersDaysLeft()/PREVENTION_MEASURE_VALUES.water_containers.duration;
+		// Electrolytes
+		this.popup_pies[2].progress = 1 - selected_village.getElectrolytesDaysLeft()/PREVENTION_MEASURE_VALUES.electrolytes.duration;
+		// Boiling water
+		this.popup_pies[3].progress = 1 - selected_village.getBoilWaterDaysLeft()/PREVENTION_MEASURE_VALUES.boil_water.duration;
+
 		// Shrink the popup down, preparing to grow it up later.
 		this.popup_sprite.scale.set(0.0);
 		// Place the popup directly over the village.
