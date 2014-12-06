@@ -1,8 +1,8 @@
 //Takes in game object, x y coords, radius, duration in ms and bool for whether the circle shrinks or grows
 //returns the tween circle object
 //TODO: Look into onComplete function in tweening? might be able to fire an event; could be useful
-Timer = function(game, x, y, r, t, countdown) {
-    var pie = new PieProgress(game, x, y, r);
+Timer = function(game, x, y, r, t, c1, c2, i, countdown) {
+    var pie = new PieProgress(game, x, y, r, c1, c2, i);
     var pieSprite = game.world.add(pie);
     if (countdown) {
         pie.progress = 1;
