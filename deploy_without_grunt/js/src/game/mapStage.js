@@ -2,6 +2,7 @@ var MapStage = function (game) {
     this.money_text_object;
     this.time_text_object;
     this.village_groups;
+    this.time_should_progess;
 };
 
 MapStage.prototype = {
@@ -43,7 +44,7 @@ MapStage.prototype = {
 
         this.village_groups = [];
         for (i = 0; i < game_state.available_villages; i++) {
-            createVillageUI(i);
+            this.createVillageUI(i);
         }
 
         this.createPopupMenu();
@@ -54,25 +55,40 @@ MapStage.prototype = {
     },
 
     update: function() {
-        this.money_text_object.text = "Money: " + game_state.money;
-        this.time_text_object.text = "Day: " + game_state.day;
+        game_state.frame_count += 1;
+        if (game_state.frame_count % 60 === 0) {
+            game_state.money += DAILY_INCOME;
+            this.money_text_object.text = "Money: " + game_state.money;
+            game_state.day += 1;
+            this.time_text_object.text = "Day: " + game_state.day;
 
-        if (VILLAGE_UNLOCK_DAYS.indexOf(game_state.day) != -1) {
-            // we need to unlock another village
-            createVillageUI(game_state.available_villages);
-            game_state.available_villages += 1;
-        }
-
-        for (var i = 0; i < game_state.available_villages; i++) {
-            this.village_groups[i].visible = true;
-            this.village_groups[i].getChildAt(2).width = 128 * (game_state.villages[i].getPopulation() - game_state.villages[i].getHowManyInfected()) / game_state.villages[i].getPopulation();
-            if(game_state.villages[i].isInfectedRatePositive()){
-                this.village_groups[i].getChildAt(4).visible = false;
-                this.village_groups[i].getChildAt(3).visible = true;
+            if (game_state.available_villages == 1) {
+                // special condition to unlock the second village (once the first is cured)
+                if (game_state.villages[0].getHowManyInfected()/game_state.villages[0].getPopulation() <= SECOND_VILLAGE_UNLOCK_CRITERIA) {
+                    this.createVillageUI(game_state.available_villages);
+                    game_state.available_villages += 1;
+                }
             }
-            else{
-                this.village_groups[i].getChildAt(3).visible = false;
-                this.village_groups[i].getChildAt(4).visible = true;
+            else {
+                // now unlock the other villages (based on days passed)
+                if (VILLAGE_UNLOCK_DAYS.indexOf(game_state.days_since_second_village_unlocked) != -1) {
+                    this.createVillageUI(game_state.available_villages);
+                    game_state.available_villages += 1;
+                }
+            }
+
+            for (var i = 0; i < game_state.available_villages; i++) {
+                game_state.villages[i].incrementDay();
+                this.village_groups[i].visible = true;
+                this.village_groups[i].getChildAt(2).width = 128 * (game_state.villages[i].getPopulation() - game_state.villages[i].getHowManyInfected()) / game_state.villages[i].getPopulation();
+                if(game_state.villages[i].isInfectedRatePositive()){
+                    this.village_groups[i].getChildAt(4).visible = false;
+                    this.village_groups[i].getChildAt(3).visible = true;
+                }
+                else{
+                    this.village_groups[i].getChildAt(3).visible = false;
+                    this.village_groups[i].getChildAt(4).visible = true;
+                }
             }
         }
     },
@@ -134,7 +150,7 @@ MapStage.prototype = {
         village_group.add(population);
         village_group.visible = false;
         this.village_groups.push(village_group);
-    }
+    },
 
     createScoreBar: function() {
         var money_text = "Money: " + game_state.money;
