@@ -9,6 +9,10 @@ var INFECTION_RATE_POPULATION_CAP = 10000;
 // When percent infected in the first village hits this or less, the second village is unlocked
 var SECOND_VILLAGE_UNLOCK_CRITERIA = .1
 
+var SECOND_VILLAGE_UNLOCK_TEXT = "A new locality has appeared!\nYou'll have to deal with the\nnew locality's infection and make\nsure it doesn't spread to the\nold localities.";
+
+var BOIL_WATER_UNLOCK_TEXT = "You have unlocked boiling water!\nBoiling water prevents infection\nfrom spreading from\nupstream localities.";
+
 // This is how many pixels of map are still visible around the edge of the popup.
 var POPUP_SHY_MARGIN = 30;
 var SCORE_BAR_STYLE = { font: "24px Arial", fill: "#ff0044", stroke: "#000000", strokeThickness: 3, align: "center" };
