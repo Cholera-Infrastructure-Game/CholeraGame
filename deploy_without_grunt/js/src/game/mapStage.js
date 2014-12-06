@@ -48,83 +48,13 @@ MapStage.prototype = {
         this.village_small_pies = [];
         
         for (var i = 0; i < villages.length; i++) {
-            var village_group = this.game.add.group()
-            var village_pies = [];
-            var village_sprite = this.game.add.button(VILLAGE_POSITIONS[i][0], VILLAGE_POSITIONS[i][1], 'village', function() {}, {}, 1, 0);
-            village_sprite.scale.x = .6;
-            village_sprite.scale.y = .6;
-            var health_bar_back = this.game.add.sprite(VILLAGE_POSITIONS[i][0]-60, VILLAGE_POSITIONS[i][1]-60, 'health_back');
-            var health_bar = this.game.add.sprite(VILLAGE_POSITIONS[i][0]-60, VILLAGE_POSITIONS[i][1]-60, 'healthbar');
-            for (var j = 0; j < 4; j++) {
-			// Create a pie.
-                var small_pie = new PieProgress(this.game, VILLAGE_POSITIONS[i][0] + (j * 35) - 50, VILLAGE_POSITIONS[i][1] + 70, 10, "rgba(0,0,0,0.6)", PREVENTION_MEASURE_VALUES[PREVENTION_MEASURE_NAMES[j]].color, this.game.cache.getImage(PREVENTION_MEASURE_NAMES[j]));
-                small_pie.visible = false;
-                village_pies.push(small_pie);
-            }
-            this.village_small_pies.push(village_pies);
-            var left = this.game.add.sprite(VILLAGE_POSITIONS[i][0]-5, VILLAGE_POSITIONS[i][1]-75,'left');
-            left.scale.x = 0.02;
-            left.scale.y = 0.02;
-            var right = this.game.add.sprite(VILLAGE_POSITIONS[i][0]-5, VILLAGE_POSITIONS[i][1]-75,'right');
-            right.scale.x = 0.02;
-            right.scale.y = 0.02;
-            left.visible = false;
-            right.visible = false;
-//            Timer(this.game, VILLAGE_POSITIONS[i][0]+50, VILLAGE_POSITIONS[i][1]+50, 40, 2000, true);
-            village_sprite.village_index = i;
-            village_sprite.anchor.set(0.5);
-            village_sprite.inputEnabled = true;
-			// Here I do some obnoxious closure crap to close over i.
-			// This causes createVillagePopup to be called passing in the village.
-			(function() {
-				var _i = i;
-				var _village_sprite = village_sprite;
-	            village_sprite.events.onInputUp.add(function() {
-					// Launch the pop up.
-					self.createVillagePopup(_i);
-					// Do a little click animation.
-					var tween = self.game.add.tween(_village_sprite.scale);
-					tween.to({x: 0.9, y: 0.9}, 100, Phaser.Easing.Quadratic.In);
-					tween.to({x: 1.1, y: 1.1}, 100, Phaser.Easing.Quadratic.Out);
-					// WARNING: Here I insert a little extra delay before the onComplete is called.
-					tween.to({x: 1.1, y: 1.1}, 300, Phaser.Easing.Default);
-					// Trigger a mouse out dispatch when the animation is over..
-					// This fixes the issue where the popup blocks the mouse out on the selected village,
-					// causing it to be permanently highlighted, until it is moused out of some time later.
-					tween._lastChild.onComplete.add(function() { _village_sprite.events.onInputOut.dispatch(); });
-					tween.start();
-				}, self);
-				// Also add a little increase in size effect on mouse over.
-				village_sprite.events.onInputOver.add(function() {
-					self.game.add.tween(_village_sprite.scale).to({x: .8, y: .8}, 100, Phaser.Easing.Quadratic.Out, true);
-				});
-				village_sprite.events.onInputOut.add(function() {
-					self.game.add.tween(_village_sprite.scale).to({x: .6, y: .6}, 100, Phaser.Easing.Quadratic.In, true);
-				});
-			}());
-            village_group.add(village_sprite); // 0
-            village_group.add(health_bar_back); // 1
-            village_group.add(health_bar); // 2
-            village_group.add(left); // 3
-            village_group.add(right); // 4
-            for (var p = 0; p < 4; p++) {
-                village_group.add(village_pies[p]); // 5 to 8
-            }
-            var style = { font: "12px Arial", fill: "#ffffff", align: "left" };
-            var population_style = { font: "12px Arial", fill: "#000000", align: "left"};
-            var healthy_population = this.game.add.text(VILLAGE_POSITIONS[i][0]-60, VILLAGE_POSITIONS[i][1]-70, game_state.villages[i].getPopulation()-game_state.villages[i].getHowManyInfected(), population_style);
-            var infected_population = this.game.add.text(VILLAGE_POSITIONS[i][0]+30, VILLAGE_POSITIONS[i][1]-70, game_state.villages[i].getHowManyInfected(), population_style);
-            village_group.add(healthy_population);
-            village_group.add(infected_population);
-            village_group.visible = false;
-            this.village_groups.push(village_group);
+            this.createVillageUI(i);
         }
-
         this.createPopupMenu();
         this.createTextPopup();
         this.createScoreBar();
 
-		var escape_key = this.game.input.keyboard.addKey(Phaser.Keyboard.ESC);
+	var escape_key = this.game.input.keyboard.addKey(Phaser.Keyboard.ESC);
     	escape_key.onDown.add(this.closeVillagePopup, this);
     },
 
@@ -217,63 +147,76 @@ MapStage.prototype = {
     },
 
     createVillageUI: function(i) {
-        var village_group = this.game.add.group()
-        var village_sprite = this.game.add.button(VILLAGE_POSITIONS[i][0], VILLAGE_POSITIONS[i][1], 'village', function() {}, {}, 1, 0);
-        var health_bar_back = this.game.add.sprite(VILLAGE_POSITIONS[i][0]-60, VILLAGE_POSITIONS[i][1]-90, 'health_back');
-        var health_bar = this.game.add.sprite(VILLAGE_POSITIONS[i][0]-60, VILLAGE_POSITIONS[i][1]-90, 'healthbar');
-        var left = this.game.add.sprite(VILLAGE_POSITIONS[i][0]-5, VILLAGE_POSITIONS[i][1]-105,'left');
-        left.scale.x = 0.03;
-        left.scale.y = 0.03;
-        var right = this.game.add.sprite(VILLAGE_POSITIONS[i][0]-5, VILLAGE_POSITIONS[i][1]-95,'right');
-        right.scale.x = 0.03;
-        right.scale.y = 0.03;        
-        left.visible = false;
-        right.visible = false;
-        // Timer(this.game, VILLAGE_POSITIONS[i][0]+50, VILLAGE_POSITIONS[i][1]+50, 40, 2000, true);
-        village_sprite.village_index = i;
-        village_sprite.anchor.set(0.5);
-        village_sprite.inputEnabled = true;
-	// Here I do some obnoxious closure crap to close over i.
-	// This causes createVillagePopup to be called passing in the village.
-	(function() {
-	    var _i = i;
-	    var _village_sprite = village_sprite;
-	    village_sprite.events.onInputUp.add(function() {
-                // Launch the pop up.
-                self.createVillagePopup(_i);
-                // Do a little click animation.
-                var tween = self.game.add.tween(_village_sprite.scale);
-                tween.to({x: 0.9, y: 0.9}, 100, Phaser.Easing.Quadratic.In);
-                tween.to({x: 1.1, y: 1.1}, 100, Phaser.Easing.Quadratic.Out);
-                // WARNING: Here I insert a little extra delay before the onComplete is called.
-                tween.to({x: 1.1, y: 1.1}, 300, Phaser.Easing.Default);
-                // Trigger a mouse out dispatch when the animation is over..
-                // This fixes the issue where the popup blocks the mouse out on the selected village,
-                // causing it to be permanently highlighted, until it is moused out of some time later.
-                tween._lastChild.onComplete.add(function() { _village_sprite.events.onInputOut.dispatch(); });
-                tween.start();
-            }, self);
-            // Also add a little increase in size effect on mouse over.
-            village_sprite.events.onInputOver.add(function() {
-                self.game.add.tween(_village_sprite.scale).to({x: 1.1, y: 1.1}, 100, Phaser.Easing.Quadratic.Out, true);
-            });
-            village_sprite.events.onInputOut.add(function() {
-                self.game.add.tween(_village_sprite.scale).to({x: 1.0, y: 1.0}, 100, Phaser.Easing.Quadratic.In, true);
-            });
-        }());
-        village_group.add(village_sprite);
-        village_group.add(health_bar_back);
-        village_group.add(health_bar);
-        village_group.add(left);
-        village_group.add(right);
-        var style = { font: "12px Arial", fill: "#ffffff", align: "left" };
-        var population_style = { font: "12px Arial", fill: "#000000", align: "left"};
-        var healthy_population = this.game.add.text(VILLAGE_POSITIONS[i][0]-60, VILLAGE_POSITIONS[i][1]-70, game_state.villages[i].getPopulation()-game_state.villages[i].getHowManyInfected(), population_style);
-        var infected_population = this.game.add.text(VILLAGE_POSITIONS[i][0]+30, VILLAGE_POSITIONS[i][1]-70, game_state.villages[i].getHowManyInfected(), population_style);
-        village_group.add(healthy_population);
-        village_group.add(infected_population);
-        village_group.visible = false;
-        this.village_groups.push(village_group);
+            var village_group = this.game.add.group()
+            var village_pies = [];
+            var village_sprite = this.game.add.button(VILLAGE_POSITIONS[i][0], VILLAGE_POSITIONS[i][1], 'village', function() {}, {}, 1, 0);
+            village_sprite.scale.x = .6;
+            village_sprite.scale.y = .6;
+            var health_bar_back = this.game.add.sprite(VILLAGE_POSITIONS[i][0]-60, VILLAGE_POSITIONS[i][1]-60, 'health_back');
+            var health_bar = this.game.add.sprite(VILLAGE_POSITIONS[i][0]-60, VILLAGE_POSITIONS[i][1]-60, 'healthbar');
+            for (var j = 0; j < 4; j++) {
+			// Create a pie.
+                var small_pie = new PieProgress(this.game, VILLAGE_POSITIONS[i][0] + (j * 35) - 50, VILLAGE_POSITIONS[i][1] + 70, 10, "rgba(0,0,0,0.6)", PREVENTION_MEASURE_VALUES[PREVENTION_MEASURE_NAMES[j]].color, this.game.cache.getImage(PREVENTION_MEASURE_NAMES[j]));
+                small_pie.visible = false;
+                village_pies.push(small_pie);
+            }
+            this.village_small_pies.push(village_pies);
+            var left = this.game.add.sprite(VILLAGE_POSITIONS[i][0]-5, VILLAGE_POSITIONS[i][1]-75,'left');
+            left.scale.x = 0.02;
+            left.scale.y = 0.02;
+            var right = this.game.add.sprite(VILLAGE_POSITIONS[i][0]-5, VILLAGE_POSITIONS[i][1]-75,'right');
+            right.scale.x = 0.02;
+            right.scale.y = 0.02;
+            left.visible = false;
+            right.visible = false;
+//            Timer(this.game, VILLAGE_POSITIONS[i][0]+50, VILLAGE_POSITIONS[i][1]+50, 40, 2000, true);
+            village_sprite.village_index = i;
+            village_sprite.anchor.set(0.5);
+            village_sprite.inputEnabled = true;
+			// Here I do some obnoxious closure crap to close over i.
+			// This causes createVillagePopup to be called passing in the village.
+			(function() {
+				var _i = i;
+				var _village_sprite = village_sprite;
+	            village_sprite.events.onInputUp.add(function() {
+					// Launch the pop up.
+					self.createVillagePopup(_i);
+					// Do a little click animation.
+					var tween = self.game.add.tween(_village_sprite.scale);
+					tween.to({x: 0.9, y: 0.9}, 100, Phaser.Easing.Quadratic.In);
+					tween.to({x: 1.1, y: 1.1}, 100, Phaser.Easing.Quadratic.Out);
+					// WARNING: Here I insert a little extra delay before the onComplete is called.
+					tween.to({x: 1.1, y: 1.1}, 300, Phaser.Easing.Default);
+					// Trigger a mouse out dispatch when the animation is over..
+					// This fixes the issue where the popup blocks the mouse out on the selected village,
+					// causing it to be permanently highlighted, until it is moused out of some time later.
+					tween._lastChild.onComplete.add(function() { _village_sprite.events.onInputOut.dispatch(); });
+					tween.start();
+				}, self);
+				// Also add a little increase in size effect on mouse over.
+				village_sprite.events.onInputOver.add(function() {
+					self.game.add.tween(_village_sprite.scale).to({x: .8, y: .8}, 100, Phaser.Easing.Quadratic.Out, true);
+				});
+				village_sprite.events.onInputOut.add(function() {
+					self.game.add.tween(_village_sprite.scale).to({x: .6, y: .6}, 100, Phaser.Easing.Quadratic.In, true);
+				});
+			}());
+            village_group.add(village_sprite); // 0
+            village_group.add(health_bar_back); // 1
+            village_group.add(health_bar); // 2
+            village_group.add(left); // 3
+            village_group.add(right); // 4
+            for (var p = 0; p < 4; p++) {
+                village_group.add(village_pies[p]); // 5 to 8
+            }
+            var style = { font: "12px Arial", fill: "#ffffff", align: "left" };
+            var population_style = { font: "12px Arial", fill: "#000000", align: "left"};
+            var healthy_population = this.game.add.text(VILLAGE_POSITIONS[i][0]-60, VILLAGE_POSITIONS[i][1]-70, game_state.villages[i].getPopulation()-game_state.villages[i].getHowManyInfected(), population_style);
+            var infected_population = this.game.add.text(VILLAGE_POSITIONS[i][0]+30, VILLAGE_POSITIONS[i][1]-70, game_state.villages[i].getHowManyInfected(), population_style);
+            village_group.add(healthy_population);
+            village_group.add(infected_population);
+            village_group.visible = false;
+            this.village_groups.push(village_group);
     },
 
     createScoreBar: function() {
