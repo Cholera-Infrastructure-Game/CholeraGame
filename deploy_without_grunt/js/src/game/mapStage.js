@@ -645,7 +645,7 @@ MapStage.prototype = {
 		this.text_popup_text.text = text;
 
 		// Shrink the popup down, preparing to grow it up later.
-		this.popup_sprite.scale.set(0.0);
+		this.text_popup_sprite.scale.set(0.0);
 		// Place the popup directly over the center.
 		var pos = [GAME_WIDTH/2, GAME_HEIGHT/2];
 		this.text_popup_sprite.x = pos[0];
@@ -670,8 +670,8 @@ MapStage.prototype = {
 		}
 		// Tween the popup away.
 		var pos = [GAME_WIDTH/2, GAME_HEIGHT/2];
-        this.game.add.tween(this.popup_sprite).to({x: pos[0], y: pos[1]}, 300, Phaser.Easing.Default, true);
-        var tween = this.game.add.tween(this.popup_sprite.scale);
+        this.game.add.tween(this.text_popup_sprite).to({x: pos[0], y: pos[1]}, 300, Phaser.Easing.Default, true);
+        var tween = this.game.add.tween(this.text_popup_sprite.scale);
 		// It's deeply unfortunate, but it appears that a sprite with scale 0.0 is considered everywhere for input.
 		// Therefore, to work around this behavior we merely scale the popup window very very small.
 		// Then, when the tween is finished, we'll fully hide it by moving it away.
