@@ -77,10 +77,10 @@ var PREVENTION_MEASURE_VALUES = { //TODO balance these numbers
 }
 
 VILLAGE_POSITIONS = [ //TODO update these positions
-    [131,356],
-    [337,525],
-    [439,250],
-    [540,431],
+    [550,450],
+    [700,150],
+    [425,175],
+    [150,300],
 ];
 
 PREVENTION_MEASURE_NAMES = [
@@ -120,7 +120,7 @@ var GameState = function () {
         day: 0,
         money: 1000, //TODO figure out how much you should start with
         villages: villages,
-        available_villages: 1,
+        available_villages: 4,
         frame_count: -1,
         days_since_second_village_unlocked: -1,
         boiling_water_unlocked: false
