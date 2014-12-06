@@ -34,8 +34,6 @@ Village = function(population, village_factors, village_number, initial_percenta
                     prevention_measures[prevention_measure] -= 1;
                 }
             }
-            console.log(infected_rate);
-
             people_infected = Math.max(0, Math.min(Math.ceil(people_infected + Math.ceil(total_population * Math.random() * infected_rate)), total_population));
         },
 

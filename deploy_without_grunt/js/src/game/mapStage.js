@@ -47,9 +47,18 @@ MapStage.prototype = {
         this.village_groups = [];
         this.village_small_pies = [];
         
-        for (var i = 0; i < game_state.available_villages; i++) {
+        for (var i = 0; i < game_state.villages.length; i++) {
             this.createVillageUI(i);
         }
+
+        for (var village_group in this.village_groups) {
+            village_group.visible = false;
+        }
+
+        for (var i = 0; i < game_state.available_villages; i++) {
+            this.village_groups[i].visible = true;
+        }
+
         this.createPopupMenu();
         this.createTextPopup();
         this.createScoreBar();
@@ -104,7 +113,7 @@ MapStage.prototype = {
             if (game_state.available_villages === 1) {
                 // special condition to unlock the second village (once the first is cured)
                 if (game_state.villages[0].getHowManyInfected()/game_state.villages[0].getPopulation() <= SECOND_VILLAGE_UNLOCK_CRITERIA || VILLAGE_UNLOCK_DAYS.indexOf(game_state.day) != -1) {
-                    this.createVillageUI(game_state.available_villages);
+                    this.village_groups[game_state.available_villages].visible = true;
                     game_state.available_villages += 1;
                     this.openTextPopup(SECOND_VILLAGE_UNLOCK_TEXT);
                 }
@@ -113,7 +122,7 @@ MapStage.prototype = {
                 game_state.days_since_second_village_unlocked += 1;
                 // now unlock the other villages (based on days passed)
                 if (VILLAGE_UNLOCK_DAYS.indexOf(game_state.days_since_second_village_unlocked) > 0) {
-                    this.createVillageUI(game_state.available_villages);
+                    this.village_groups[game.available_villages].visible = true;
                     game_state.available_villages += 1;
                     if (game_state.available_villages == 3) {
                         // unlock boiling water
