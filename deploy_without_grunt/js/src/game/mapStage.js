@@ -127,13 +127,13 @@ MapStage.prototype = {
     },
 
     update: function() {
+        this.money_text_object.text = "Money: " + game_state.money;
         if (!this.time_should_progress) {
             return;
         }
         game_state.frame_count += 1;
         if (game_state.frame_count % 60 === 0) {
             game_state.money += DAILY_INCOME;
-            this.money_text_object.text = "Money: " + game_state.money;
             game_state.day += 1;
             this.time_text_object.text = "Day: " + game_state.day;
 
@@ -478,10 +478,10 @@ MapStage.prototype = {
 		if (game_state.money < prevention_measure_data.cost) {
                     return "no-money";
                 }
-                if (game_state.villages[village_index].getPreventionMeasuresDaysLeft(PREVENTION_MEASURE_NAMES[action_index]) > 0) {
+                if (game_state.villages[village_index].getPreventionMeasureDaysLeft(PREVENTION_MEASURE_NAMES[action_index]) > 0) {
                     return "on-cooldown";
                 }
-                game_state.villages[village_index].implementPreventionMeasures(PREVENTION_MEASURE_NAMES[action_index])
+                game_state.villages[village_index].implementPreventionMeasure(PREVENTION_MEASURE_NAMES[action_index])
 		return "good";
 	},
 
