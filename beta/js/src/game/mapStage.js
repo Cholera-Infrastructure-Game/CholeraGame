@@ -494,6 +494,7 @@ MapStage.prototype = {
 			console.log("WARNING: Call to createVillagePopup while popup was open!");
 			return;
 		}
+	        this.popup_status = selected_village_index;
 		// Pause all action.
 		this.time_should_progress = false;
 		// Update the popup with appropriate information.
@@ -516,7 +517,6 @@ MapStage.prototype = {
 		tween.to({x: 1.0, y: 1.0}, POPUP_TIME, Phaser.Easing.Quartic.In, true);
 		// Only when the tweening is finished do we consider the popup to be truly open.
 		tween.onComplete.add(function() {
-			this.popup_status = selected_village_index;
 			// Even though we won't be listening for it, enable input just to block it for everything under the popup.
 			this.popup_sprite.inputEnabled = true;
 		}, this);
@@ -613,6 +613,7 @@ MapStage.prototype = {
 			console.log("WARNING: Call to createVillagePopup while popup was open!");
 			return;
 		}
+                this.popup_status = -2;
 		// Pause all action.
 		this.time_should_progress = false;
 		// Update the popup with appropriate information.
@@ -630,7 +631,6 @@ MapStage.prototype = {
 		tween.to({x: 1.0, y: 1.0}, POPUP_TIME, Phaser.Easing.Quartic.In, true);
 		// Only when the tweening is finished do we consider the popup to be truly open.
 		tween.onComplete.add(function() {
-			this.popup_status = -2;
 			// Even though we won't be listening for it, enable input just to block it for everything under the popup.
 			this.popup_sprite.inputEnabled = true;
 		}, this);
