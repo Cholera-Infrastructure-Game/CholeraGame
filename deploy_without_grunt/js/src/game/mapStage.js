@@ -122,7 +122,7 @@ MapStage.prototype = {
                 game_state.days_since_second_village_unlocked += 1;
                 // now unlock the other villages (based on days passed)
                 if (VILLAGE_UNLOCK_DAYS.indexOf(game_state.days_since_second_village_unlocked) > 0) {
-                    this.village_groups[game.available_villages].visible = true;
+                    this.village_groups[game_state.available_villages].visible = true;
                     game_state.available_villages += 1;
                     if (game_state.available_villages == 3) {
                         // unlock boiling water
