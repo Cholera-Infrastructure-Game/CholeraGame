@@ -15,6 +15,8 @@ var POPUP_DESC_HEADER_STYLE = { font: "24px Arial", fill: "#000000", align: "lef
 var POPUP_DESC_STYLE = { font: "20px Arial", fill: "#000000", align: "left" };
 var POPUP_COST_TEXT_STYLE = { font: "16px Arial", fill: "#000000", align: "center" };
 var POPUP_GAME_PAUSED_TEXT_STYLE = { font: "20px Arial", fill: "#606060" };
+var TITLE_STAGE_STYLE = { font: "28px Arial", fill: "#000000", align: "center" };
+
 // Time in milliseconds over which the popup window tweens out.
 var POPUP_TIME = 500;
 // Time in milliseconds over which the tweening occurs for making text get larger when moused over.
