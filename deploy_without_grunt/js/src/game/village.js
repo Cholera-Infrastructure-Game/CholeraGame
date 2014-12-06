@@ -28,9 +28,9 @@ Village = function(population, village_factors, village_number, initial_percenta
                 }
             }
             for (var prevention_measure in prevention_measures) {
-                if (prevention_measures[prevention_measures] > 0) {
+                if (prevention_measures[prevention_measure] > 0) {
                     infected_rate -= PREVENTION_MEASURE_VALUES[prevention_measure].infection_rate_reduction;
-                    prevention_measures[prevention_measure] -= -1;
+                    prevention_measures[prevention_measure] -= 1;
                 }
             }
 

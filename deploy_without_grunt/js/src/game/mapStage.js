@@ -506,17 +506,9 @@ MapStage.prototype = {
 		this.popup_locality_text.text = "Locality: " + (selected_village_index + 1);
 		// Clear all the description box texts.
 		this.setDescriptionBoxTexts(-1);
-
-		// Handwashing
-		this.popup_pies[0].progress = 1 - selected_village.getPreventionMeasureDaysLeft("washing_hands")/PREVENTION_MEASURE_VALUES.washing_hands.duration;
-		// Water Containers
-		this.popup_pies[1].progress = 1 - selected_village.getPreventionMeasureDaysLeft("water_containers")/PREVENTION_MEASURE_VALUES.water_containers.duration;
-		// Electrolytes
-		this.popup_pies[2].progress = 1 - selected_village.getPreventionMeasureDaysLeft("electrolytes")/PREVENTION_MEASURE_VALUES.electrolytes.duration;
-                if (game_state.boiling_water_unlocked) {
-		    // Boiling water
-		    this.popup_pies[3].progress = 1 - selected_village.getPreventionMeasureDaysLeft("boil_water")/PREVENTION_MEASURE_VALUES.boil_water.duration;
-                }
+        for (var i = 0; i < this.popup_pies.length; i++) {
+            this.popup_pies[i].progress = selected_village.getPreventionMeasureDaysLeft(PREVENTION_MEASURE_NAMES[i])/PREVENTION_MEASURE_VALUES[PREVENTION_MEASURE_NAMES[i]].duration
+        }
 
 		// Shrink the popup down, preparing to grow it up later.
 		this.popup_sprite.scale.set(0.0);
