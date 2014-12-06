@@ -3,8 +3,6 @@ var MapStage = function (game) {
     this.time_text_object;
     this.village_groups;
     this.time_should_progess;
-    this.tooltip_bmd;
-    this.tooltip_sprite;
 };
 
 MapStage.prototype = {
@@ -45,9 +43,6 @@ MapStage.prototype = {
 
         this.village_groups = [];
         
-        this.tooltip_bmd = this.game.make.bitmapData(64, 64);
-        this.tooltip_sprite = this.game.add.sprite(0, 0, this.tooltip_bmd);
-
         for (var i = 0; i < villages.length; i++) {
             var village_group = this.game.add.group()
             var village_pies = [];
@@ -122,8 +117,6 @@ MapStage.prototype = {
 
 		var escape_key = this.game.input.keyboard.addKey(Phaser.Keyboard.ESC);
     	escape_key.onDown.add(this.closeVillagePopup, this);
-        
-        this.game.input.addMoveCallback(this.updateTooltip, this);
     },
 
     update: function() {
@@ -559,18 +552,6 @@ MapStage.prototype = {
 			this.popup_sprite.inputEnabled = false;
 		}, this);
 	},
-
-
-    updateTooltip: function(pointer, x, y) {
-        if (x >= 0 && x <= GAME_WIDTH && y >= 0 && y <= GAME_HEIGHT) {
-            this.tooltip_bmd.fill(0, 0, 0);
-            this.tooltip_bmd.context.fillStyle = "rgba(99, 33, 99, 0.7)";
-            this.tooltip_bmd.context.fillRect(1, 1, 62, 62);
-
-            this.tooltip_sprite.x = x;
-            this.tooltip_sprite.y = y;
-        }
-    },
 
     createTextPopup: function() {
 		// This function simply creates the text popup sprite, and hides it.
