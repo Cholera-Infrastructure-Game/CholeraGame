@@ -27,6 +27,8 @@ MapStage.prototype = {
     },
 
     create: function() {
+        game_state = new GameState();
+        console.log(game_state)
 		self = this;
 
 		// This variable holds the index of the village represented in the current popup.
@@ -141,7 +143,7 @@ MapStage.prototype = {
                 }
             }
             if (is_any_village_completely_infected) {
-                // TODO(DEREK) go to game over screen
+                this.game.state.start('end_stage');
             }
             if (game_state.day === 365) {
                 // Woo, you win!  Lets give you a score!
