@@ -9,6 +9,10 @@ var INFECTION_RATE_POPULATION_CAP = 10000;
 // When percent infected in the first village hits this or less, the second village is unlocked
 var SECOND_VILLAGE_UNLOCK_CRITERIA = .1
 
+var SECOND_VILLAGE_UNLOCK_TEXT = "A new locality has appeared!\nYou'll have to deal with the\nnew locality's infection and make\nsure it doesn't spread to the\nold localities.";
+
+var BOIL_WATER_UNLOCK_TEXT = "You have unlocked boiling water!\nBoiling water prevents infection\nfrom spreading from\nupstream localities.";
+
 // This is how many pixels of map are still visible around the edge of the popup.
 var POPUP_SHY_MARGIN = 30;
 var SCORE_BAR_STYLE = { font: "24px Arial", fill: "#ff0044", stroke: "#000000", strokeThickness: 3, align: "center" };
@@ -39,6 +43,7 @@ var PREVENTION_MEASURE_VALUES = { //TODO balance these numbers
         duration: 7,
         cost: 500,
         color: "#FF00FF",
+        display_name: "Soap",
         description: "Washing your hands is straight-up legit OP IRL, so it is here too."
     },
     water_containers: {
@@ -47,6 +52,7 @@ var PREVENTION_MEASURE_VALUES = { //TODO balance these numbers
         duration: 14,
         cost: 1500,
         color: "#FFFF00",
+        display_name: "Water Containers",
         description: "Because I'm sure we all hate unmanaged waste as much as the next guy."
     },
     electrolytes: {
@@ -55,6 +61,7 @@ var PREVENTION_MEASURE_VALUES = { //TODO balance these numbers
         duration: 7,
         cost: 2000,
         color: "#00FFFF",
+        display_name: "Electrolytes",
         description: "Rehydrating is delicious, or something."
     },
     boil_water: {
@@ -64,6 +71,7 @@ var PREVENTION_MEASURE_VALUES = { //TODO balance these numbers
         cost: 2000,
         upstream_effect_reduction: .9,
         color: "#FFA500",
+        display_name: "Boiling Water",
         description: "Raise to 373 K to be free of pathogens."
     }
 }

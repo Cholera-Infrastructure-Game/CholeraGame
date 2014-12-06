@@ -3,8 +3,6 @@ var MapStage = function (game) {
     this.time_text_object;
     this.village_groups;
     this.time_should_progess;
-    this.tooltip_bmd;
-    this.tooltip_sprite;
 };
 
 MapStage.prototype = {
@@ -45,9 +43,6 @@ MapStage.prototype = {
 
         this.village_groups = [];
         
-        this.tooltip_bmd = this.game.make.bitmapData(64, 64);
-        this.tooltip_sprite = this.game.add.sprite(0, 0, this.tooltip_bmd);
-
         for (var i = 0; i < villages.length; i++) {
             var village_group = this.game.add.group()
             var village_pies = [];
@@ -122,8 +117,6 @@ MapStage.prototype = {
 
 		var escape_key = this.game.input.keyboard.addKey(Phaser.Keyboard.ESC);
     	escape_key.onDown.add(this.closeVillagePopup, this);
-        
-        this.game.input.addMoveCallback(this.updateTooltip, this);
     },
 
     update: function() {
@@ -154,7 +147,7 @@ MapStage.prototype = {
                         // unlock boiling water
                         game_state.boiling_water_unlocked = true;
                         this.createPopupMenu();
-                        this.openTextPopup(BOILING_WATER_UNLOCK_TEXT);
+                        this.openTextPopup(BOIL_WATER_UNLOCK_TEXT);
                     }
                 }
             }
@@ -292,9 +285,9 @@ MapStage.prototype = {
 		// Compute some scaling values.
 		var left_column_center_x = -w/4 + 10;
 		var right_column_center_x = w/4;
-		add_text(left_column_center_x, 80-h/2, "Actions");
+		add_text(left_column_center_x, 50-h/2, "Actions");
 		add_text(right_column_center_x, 80-h/2, "Description");
-        var action_buttons_y_offset = 150;
+                var action_buttons_y_offset = 100;
 
 		// Fill the actions pane with pies and actions.
 		var action_spacing = 105;
@@ -315,7 +308,7 @@ MapStage.prototype = {
 //			cost_text.anchor.setTo(0.5, 0.5);
 //			this.popup_sprite.addChild(cost_text);
 			// Create the action text.
-			var obj = this.game.add.text(left_column_center_x - 70, action_buttons_y_offset + i * action_spacing - h/2, PREVENTION_MEASURE_NAMES[i], POPUP_ACTION_NAME_STYLE);
+			var obj = this.game.add.text(left_column_center_x - 70, action_buttons_y_offset + i * action_spacing - h/2, PREVENTION_MEASURE_VALUES[PREVENTION_MEASURE_NAMES[i]].display_name, POPUP_ACTION_NAME_STYLE);
 			obj.anchor.setTo(0.0, 0.5);
 			obj.inputEnabled = true;
 			obj.input.priorityID = 1;
@@ -435,7 +428,7 @@ MapStage.prototype = {
 		this.popup_sprite.addChild(obj);
 
 		// Create the close button.
-		var button = this.game.add.text(0, this.popup_sprite.height * 0.4, "Return to map", POPUP_TEXT_STYLE);
+		var button = this.game.add.text(0, this.popup_sprite.height * 0.45, "Return to map", POPUP_TEXT_STYLE);
 		button.anchor.set(0.5);
 		button.inputEnabled = true;
 		button.input.priorityID = 1;
@@ -465,7 +458,7 @@ MapStage.prototype = {
 			self.popup_description_text_object.text = "";
 		} else {
 			// Otherwise, populate them appropriately.
-			self.popup_description_title_object.text = PREVENTION_MEASURE_NAMES[action_index];
+			self.popup_description_title_object.text = PREVENTION_MEASURE_VALUES[PREVENTION_MEASURE_NAMES[action_index]].display_name;
 			self.popup_description_cost_object.text = PREVENTION_MEASURE_VALUES[PREVENTION_MEASURE_NAMES[action_index]].cost;
 			self.popup_description_text_object.text =PREVENTION_MEASURE_VALUES[PREVENTION_MEASURE_NAMES[action_index]].description;
 		}
@@ -552,18 +545,6 @@ MapStage.prototype = {
 		}, this);
 	},
 
-
-    updateTooltip: function(pointer, x, y) {
-        if (x >= 0 && x <= GAME_WIDTH && y >= 0 && y <= GAME_HEIGHT) {
-            this.tooltip_bmd.fill(0, 0, 0);
-            this.tooltip_bmd.context.fillStyle = "rgba(99, 33, 99, 0.7)";
-            this.tooltip_bmd.context.fillRect(1, 1, 62, 62);
-
-            this.tooltip_sprite.x = x;
-            this.tooltip_sprite.y = y;
-        }
-    },
-
     createTextPopup: function() {
 		// This function simply creates the text popup sprite, and hides it.
 		self = this;
@@ -589,7 +570,7 @@ MapStage.prototype = {
 		var h = this.text_popup_sprite.height;
 
 		// Create text.
-		this.text_popup_text = this.game.add.text(0, 30-h/2, "Placeholder Text", POPUP_TEXT_STYLE);
+		this.text_popup_text = this.game.add.text(0, 90-h/2, "Placeholder Text", POPUP_TEXT_STYLE);
 		// This next line causes the text to be centered properly.
 		this.text_popup_text.anchor.set(0.5);
 		this.text_popup_sprite.addChild(this.text_popup_text);
