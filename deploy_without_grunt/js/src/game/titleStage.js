@@ -49,6 +49,8 @@ TitleStage.prototype = {
         credits_text.events.onInputOut.add(function() {
             this.game.add.tween(credits_text.scale).to({x: 1.0, y: 1.0}, BUTTON_POP_TIME, Phaser.Easing.Default, true);
         }, this);
+        credits_text.events.onInputUp.add(this.showCredits, this);
+
 
     },
 
@@ -62,5 +64,9 @@ TitleStage.prototype = {
 
     showInstructions: function() {
         this.game.state.start('help_stage');
+    },
+
+    showCredits: function() {
+        this.game.state.start('credits_stage');
     }
 }
