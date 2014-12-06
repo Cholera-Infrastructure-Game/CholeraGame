@@ -385,6 +385,7 @@ MapStage.prototype = {
 
     createVillagePopup: function(selected_village_index) {
 		console.log("Creating popup for: " + selected_village_index);
+		var selected_village = game_state.villages[selected_village_index];
 		// Make sure no pop-up is currently open.
 		// This SHOULD never happen, but let's just be really careful.
 		if (this.popup_status != -1) {
@@ -397,11 +398,16 @@ MapStage.prototype = {
 		this.popup_locality_text.text = "Locality: " + (selected_village_index + 1);
 		// Clear all the description box texts.
 		this.setDescriptionBoxTexts(-1);
-		// Update the pies. For now I use random data.
-		for (var i = 0; i < 4; i++) {
-			var pie = this.popup_pies[i];
-			pie.progress = Math.random();
-		}
+
+		// Handwashing
+		this.popup_pies[0].progress = 1 - selected_village.getWashingHandsDaysLeft()/PREVENTION_MEASURE_VALUES.washing_hands.duration;
+		// Water Containers
+		this.popup_pies[1].progress = 1 - selected_village.getWaterContainersDaysLeft()/PREVENTION_MEASURE_VALUES.water_containers.duration;
+		// Electrolytes
+		this.popup_pies[2].progress = 1 - selected_village.getElectrolytesDaysLeft()/PREVENTION_MEASURE_VALUES.electrolytes.duration;
+		// Boiling water
+		this.popup_pies[3].progress = 1 - selected_village.getBoilWaterDaysLeft()/PREVENTION_MEASURE_VALUES.boil_water.duration;
+
 		// Shrink the popup down, preparing to grow it up later.
 		this.popup_sprite.scale.set(0.0);
 		// Place the popup directly over the village.
