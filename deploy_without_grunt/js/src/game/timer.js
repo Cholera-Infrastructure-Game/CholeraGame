@@ -21,6 +21,9 @@ Timer = function(game, x, y, r, t, c1, c2, i, countdown) {
         },
         visibleTimer: function(isVisible) {
             pieSprite.exists = isVisible;
+        },
+        getSprite: function() {
+            return pieSprite;
         }
     };
 }

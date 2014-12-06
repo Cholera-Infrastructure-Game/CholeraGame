@@ -1,8 +1,8 @@
-Village = function(population, village_factors, village_number) {
+Village = function(population, village_factors, village_number, initial_percentage_infected) {
     var village_factors = village_factors;
     var village_number = village_number;
     var total_population = population;
-    var people_infected = 10;
+    var people_infected = population * initial_percentage_infected;
 
     // Initialize all prevention measures to 0 (i.e. not implemented).
     // When a measure is put into place, the value is how many days are left.

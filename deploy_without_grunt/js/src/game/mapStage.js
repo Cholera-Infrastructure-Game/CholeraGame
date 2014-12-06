@@ -2,6 +2,7 @@ var MapStage = function (game) {
     this.money_text_object;
     this.time_text_object;
     this.village_groups;
+    this.time_should_progess;
 };
 
 MapStage.prototype = {
@@ -10,11 +11,6 @@ MapStage.prototype = {
     },
 
     preload: function() {
-        this.load.image('health0','assets/images/health_bar0.png');
-        this.load.image('health1','assets/images/health_bar1.png');
-        this.load.image('health2','assets/images/health_bar2.png');
-        this.load.image('health3','assets/images/health_bar3.png');
-        this.load.image('health4','assets/images/health_bar4.png');
         this.load.image('healthbar','assets/images/health_bar.png');
         this.load.image('health_back','assets/images/health_background.png');
         this.load.image('left','assets/images/Left_arrow.svg');
@@ -38,19 +34,25 @@ MapStage.prototype = {
 		// This variable must be checked by the various update routines.
 		this.time_should_progress = true;
 
+		var map_sprite = this.game.add.sprite(0, 0, 'map');
+		map_sprite.scale.x = GAME_WIDTH/map_sprite.width;
+		map_sprite.scale.y = GAME_HEIGHT/map_sprite.height;
+
         this.game.add.sprite(0, 0, 'top_bar');
-        this.game.add.sprite(0, TOP_BAR_HEIGHT, 'map');
+        
 
         this.village_groups = [];
-        for (i = 0; i < villages.length; i++) {
+
+        for (var i = 0; i < villages.length; i++) {
             var village_group = this.game.add.group()
+            var village_pies = [];
             var village_sprite = this.game.add.button(VILLAGE_POSITIONS[i][0], VILLAGE_POSITIONS[i][1], 'village', function() {}, {}, 1, 0);
             var health_bar_back = this.game.add.sprite(VILLAGE_POSITIONS[i][0]-60, VILLAGE_POSITIONS[i][1]-90, 'health_back');
             var health_bar = this.game.add.sprite(VILLAGE_POSITIONS[i][0]-60, VILLAGE_POSITIONS[i][1]-90, 'healthbar');
             for (var j = 0; j < 4; j++) {
 			// Create a pie.
 			    var small_pie = new Timer(this.game, VILLAGE_POSITIONS[i][0] + (j * 35) - 50, VILLAGE_POSITIONS[i][1] + 70, 10, 2000, "rgba(0,0,0,0.6)", ACTION_COLORS[j], this.game.cache.getImage(ACTION_ICONS[j]));
-                //village_group.add(small_pie);
+                village_pies.push(small_pie);
             }
             var left = this.game.add.sprite(VILLAGE_POSITIONS[i][0]-5, VILLAGE_POSITIONS[i][1]-105,'left');
             left.scale.x = 0.03;
@@ -95,6 +97,9 @@ MapStage.prototype = {
             village_group.add(health_bar);
             village_group.add(left);
             village_group.add(right);
+            for (var p = 0; p < 4; p++) {
+                village_group.add(village_pies[p].getSprite());
+            }
             var text = "Village " + (i + 1);
             var style = { font: "12px Arial", fill: "#ffffff", align: "left" };
             var population_style = { font: "12px Arial", fill: "#000000", align: "left"};
@@ -114,21 +119,101 @@ MapStage.prototype = {
     },
 
     update: function() {
-        this.money_text_object.text = "Money: " + game_state.money;
-        this.time_text_object.text = "Day: " + game_state.day;
+        game_state.frame_count += 1;
+        if (game_state.frame_count % 60 === 0) {
+            game_state.money += DAILY_INCOME;
+            this.money_text_object.text = "Money: " + game_state.money;
+            game_state.day += 1;
+            this.time_text_object.text = "Day: " + game_state.day;
 
-        for (var i = 0; i < game_state.available_villages; i++) {
-            this.village_groups[i].visible = true;
-            this.village_groups[i].getChildAt(2).width = 128 * (game_state.villages[i].getPopulation() - game_state.villages[i].getHowManyInfected()) / game_state.villages[i].getPopulation();
-            if(game_state.villages[i].isInfectedRatePositive()){
-                this.village_groups[i].getChildAt(4).visible = false;
-                this.village_groups[i].getChildAt(3).visible = true;
+            if (game_state.available_villages == 1) {
+                // special condition to unlock the second village (once the first is cured)
+                if (game_state.villages[0].getHowManyInfected()/game_state.villages[0].getPopulation() <= SECOND_VILLAGE_UNLOCK_CRITERIA) {
+                    this.createVillageUI(game_state.available_villages);
+                    game_state.available_villages += 1;
+                }
             }
-            else{
-                this.village_groups[i].getChildAt(3).visible = false;
-                this.village_groups[i].getChildAt(4).visible = true;
+            else {
+                // now unlock the other villages (based on days passed)
+                if (VILLAGE_UNLOCK_DAYS.indexOf(game_state.days_since_second_village_unlocked) != -1) {
+                    this.createVillageUI(game_state.available_villages);
+                    game_state.available_villages += 1;
+                }
+            }
+
+            for (var i = 0; i < game_state.available_villages; i++) {
+                game_state.villages[i].incrementDay();
+                this.village_groups[i].visible = true;
+                this.village_groups[i].getChildAt(2).width = 128 * (game_state.villages[i].getPopulation() - game_state.villages[i].getHowManyInfected()) / game_state.villages[i].getPopulation();
+                if(game_state.villages[i].isInfectedRatePositive()){
+                    this.village_groups[i].getChildAt(4).visible = false;
+                    this.village_groups[i].getChildAt(3).visible = true;
+                }
+                else{
+                    this.village_groups[i].getChildAt(3).visible = false;
+                    this.village_groups[i].getChildAt(4).visible = true;
+                }
             }
         }
+    },
+
+    createVillageUI: function(i) {
+        var village_group = this.game.add.group()
+        var village_sprite = this.game.add.button(VILLAGE_POSITIONS[i][0], VILLAGE_POSITIONS[i][1], 'village', function() {}, {}, 1, 0);
+        var health_bar_back = this.game.add.sprite(VILLAGE_POSITIONS[i][0]-60, VILLAGE_POSITIONS[i][1]-90, 'health_back');
+        var health_bar = this.game.add.sprite(VILLAGE_POSITIONS[i][0]-60, VILLAGE_POSITIONS[i][1]-90, 'healthbar');
+        var left = this.game.add.sprite(VILLAGE_POSITIONS[i][0]-5, VILLAGE_POSITIONS[i][1]-105,'left');
+        left.scale.x = 0.03;
+        left.scale.y = 0.03;
+        var right = this.game.add.sprite(VILLAGE_POSITIONS[i][0]-5, VILLAGE_POSITIONS[i][1]-95,'right');
+        left.visible = false;
+        right.visible = false;
+        // Timer(this.game, VILLAGE_POSITIONS[i][0]+50, VILLAGE_POSITIONS[i][1]+50, 40, 2000, true);
+        village_sprite.village_index = i;
+        village_sprite.anchor.set(0.5);
+        village_sprite.inputEnabled = true;
+	// Here I do some obnoxious closure crap to close over i.
+	// This causes createVillagePopup to be called passing in the village.
+	(function() {
+	    var _i = i;
+	    var _village_sprite = village_sprite;
+	    village_sprite.events.onInputUp.add(function() {
+                // Launch the pop up.
+                self.createVillagePopup(_i);
+                // Do a little click animation.
+                var tween = self.game.add.tween(_village_sprite.scale);
+                tween.to({x: 0.9, y: 0.9}, 100, Phaser.Easing.Quadratic.In);
+                tween.to({x: 1.1, y: 1.1}, 100, Phaser.Easing.Quadratic.Out);
+                // WARNING: Here I insert a little extra delay before the onComplete is called.
+                tween.to({x: 1.1, y: 1.1}, 300, Phaser.Easing.Default);
+                // Trigger a mouse out dispatch when the animation is over..
+                // This fixes the issue where the popup blocks the mouse out on the selected village,
+                // causing it to be permanently highlighted, until it is moused out of some time later.
+                tween._lastChild.onComplete.add(function() { _village_sprite.events.onInputOut.dispatch(); });
+                tween.start();
+            }, self);
+            // Also add a little increase in size effect on mouse over.
+            village_sprite.events.onInputOver.add(function() {
+                self.game.add.tween(_village_sprite.scale).to({x: 1.1, y: 1.1}, 100, Phaser.Easing.Quadratic.Out, true);
+            });
+            village_sprite.events.onInputOut.add(function() {
+                self.game.add.tween(_village_sprite.scale).to({x: 1.0, y: 1.0}, 100, Phaser.Easing.Quadratic.In, true);
+            });
+        }());
+        village_group.add(village_sprite);
+        village_group.add(health_bar_back);
+        village_group.add(health_bar);
+        village_group.add(left);
+        village_group.add(right);
+        var text = "Village " + (i + 1);
+        var style = { font: "12px Arial", fill: "#ffffff", align: "left" };
+        var population_style = { font: "12px Arial", fill: "#000000", align: "left"};
+        var village_text = this.game.add.text(VILLAGE_POSITIONS[i][0] - 20, VILLAGE_POSITIONS[i][1] + 10, text, style);
+        var population = this.game.add.text(VILLAGE_POSITIONS[i][0]-60, VILLAGE_POSITIONS[i][1]-100, game_state.villages[i].getPopulation(), population_style);
+        village_group.add(village_text);
+        village_group.add(population);
+        village_group.visible = false;
+        this.village_groups.push(village_group);
     },
 
     createScoreBar: function() {
@@ -390,6 +475,7 @@ MapStage.prototype = {
 
     createVillagePopup: function(selected_village_index) {
 		console.log("Creating popup for: " + selected_village_index);
+		var selected_village = game_state.villages[selected_village_index];
 		// Make sure no pop-up is currently open.
 		// This SHOULD never happen, but let's just be really careful.
 		if (this.popup_status != -1) {
@@ -402,11 +488,16 @@ MapStage.prototype = {
 		this.popup_locality_text.text = "Locality: " + (selected_village_index + 1);
 		// Clear all the description box texts.
 		this.setDescriptionBoxTexts(-1);
-		// Update the pies. For now I use random data.
-		for (var i = 0; i < 4; i++) {
-			var pie = this.popup_pies[i];
-			pie.progress = Math.random();
-		}
+
+		// Handwashing
+		this.popup_pies[0].progress = 1 - selected_village.getWashingHandsDaysLeft()/PREVENTION_MEASURE_VALUES.washing_hands.duration;
+		// Water Containers
+		this.popup_pies[1].progress = 1 - selected_village.getWaterContainersDaysLeft()/PREVENTION_MEASURE_VALUES.water_containers.duration;
+		// Electrolytes
+		this.popup_pies[2].progress = 1 - selected_village.getElectrolytesDaysLeft()/PREVENTION_MEASURE_VALUES.electrolytes.duration;
+		// Boiling water
+		this.popup_pies[3].progress = 1 - selected_village.getBoilWaterDaysLeft()/PREVENTION_MEASURE_VALUES.boil_water.duration;
+
 		// Shrink the popup down, preparing to grow it up later.
 		this.popup_sprite.scale.set(0.0);
 		// Place the popup directly over the village.
