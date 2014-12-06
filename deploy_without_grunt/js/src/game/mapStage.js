@@ -51,7 +51,7 @@ MapStage.prototype = {
             var health_bar = this.game.add.sprite(VILLAGE_POSITIONS[i][0]-60, VILLAGE_POSITIONS[i][1]-90, 'healthbar');
             for (var j = 0; j < 4; j++) {
 			// Create a pie.
-			    var small_pie = new Timer(this.game, VILLAGE_POSITIONS[i][0] + (j * 35) - 50, VILLAGE_POSITIONS[i][1] + 70, 10, 2000, "rgba(0,0,0,0.6)", PREVENTION_MEASURE_VALUES[PREVENTION_MEASURE_NAMES[j]].color, this.game.cache.getImage(PREVENTION_MEASURE_NAMES[j]));
+                var small_pie = new PieProgress(this.game, VILLAGE_POSITIONS[i][0] + (j * 35) - 50), VILLAGE_POSITIONS[i][1] + 70, 10, "rgba(0,0,0,0.6)", PREVENTION_MEASURE_VALUES[PREVENTION_MEASURE_NAMES[j]].color, his.game.cache.getImage(PREVENTION_MEASURE_NAMES[j]));
                 village_pies.push(small_pie);
             }
             var left = this.game.add.sprite(VILLAGE_POSITIONS[i][0]-5, VILLAGE_POSITIONS[i][1]-105,'left');
@@ -92,21 +92,21 @@ MapStage.prototype = {
 					self.game.add.tween(_village_sprite.scale).to({x: 1.0, y: 1.0}, 100, Phaser.Easing.Quadratic.In, true);
 				});
 			}());
-            village_group.add(village_sprite);
-            village_group.add(health_bar_back);
-            village_group.add(health_bar);
-            village_group.add(left);
-            village_group.add(right);
+            village_group.add(village_sprite); // 0
+            village_group.add(health_bar_back); // 1
+            village_group.add(health_bar); // 2
+            village_group.add(left); // 3
+            village_group.add(right); // 4
             for (var p = 0; p < 4; p++) {
-                village_group.add(village_pies[p].getSprite());
+                village_group.add(village_pies[p].getSprite()); // 5 to 8
             }
             var text = "Village " + (i + 1);
             var style = { font: "12px Arial", fill: "#ffffff", align: "left" };
             var population_style = { font: "12px Arial", fill: "#000000", align: "left"};
             var village_text = this.game.add.text(VILLAGE_POSITIONS[i][0] - 20, VILLAGE_POSITIONS[i][1] + 10, text, style);
             var population = this.game.add.text(VILLAGE_POSITIONS[i][0]-60, VILLAGE_POSITIONS[i][1]-100, game_state.villages[i].getPopulation(), population_style);
-            village_group.add(village_text);
-            village_group.add(population);
+            village_group.add(village_text); // 9
+            village_group.add(population); // 10
             village_group.visible = false;
             this.village_groups.push(village_group);
         }
