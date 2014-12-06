@@ -130,13 +130,30 @@ MapStage.prototype = {
         }
         game_state.frame_count += 1;
         if (game_state.frame_count % 60 === 0) {
+            // Check if game is over
+            var total_people_infected = 0;
+            var is_any_village_completely_infected = false;
+            for (var i = 0; i < game_state.available_villages; i++) {
+                total_people_infected += game_state.villages[i].getHowManyInfected();
+                if (game_state.villages[i].getHowManyInfected() === game_state.villages[i].getPopulation()) {
+                    is_any_village_completely_infected = true;
+                }
+            }
+            if (is_any_village_completely_infected) {
+                // TODO(DEREK) go to game over screen
+            }
+            if (game_state.day === 365) {
+                // Woo, you win!  Lets give you a score!
+                var score = total_people_infected/TOTAL_POPULATION;
+                // TODO (DEREK) go to game win screen, take score in as parameter
+            }
             game_state.money += DAILY_INCOME;
             game_state.day += 1;
             this.time_text_object.text = "Day: " + game_state.day;
 
             if (game_state.available_villages === 1) {
                 // special condition to unlock the second village (once the first is cured)
-                if (game_state.villages[0].getHowManyInfected()/game_state.villages[0].getPopulation() <= SECOND_VILLAGE_UNLOCK_CRITERIA) {
+                if (game_state.villages[0].getHowManyInfected()/game_state.villages[0].getPopulation() <= SECOND_VILLAGE_UNLOCK_CRITERIA || VILLAGE_UNLOCK_DAYS.indexOf(game_state.day) != -1) {
                     this.createVillageUI(game_state.available_villages);
                     game_state.available_villages += 1;
                     this.openTextPopup(SECOND_VILLAGE_UNLOCK_TEXT);
@@ -156,7 +173,6 @@ MapStage.prototype = {
                     }
                 }
             }
-
             for (var i = 0; i < game_state.available_villages; i++) {
                 game_state.villages[i].incrementDay();
                 this.village_groups[i].visible = true;

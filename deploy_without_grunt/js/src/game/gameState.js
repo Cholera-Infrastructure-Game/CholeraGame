@@ -90,11 +90,14 @@ PREVENTION_MEASURE_NAMES = [
 	"boil_water"
 ];
 
+TOTAL_POPULATION = 1000000;
 
-// Days after unlocking the second villages that it takes to unlock the following villages.
+// The first one is how many days pass until the second village unlocks if you suck and somehow dont beat the first village.
+// The other entries are days after unlocking the second villages that it takes to unlock the following villages.
 VILLAGE_UNLOCK_DAYS = [
-        20,
-        30
+        60,
+        100,
+        200,
 ];
 
 var prevention_descript = [ // TODO update this text
@@ -120,7 +123,7 @@ var GameState = function () {
         day: 0,
         money: 1000, //TODO figure out how much you should start with
         villages: villages,
-        available_villages: 4,
+        available_villages: 1,
         frame_count: -1,
         days_since_second_village_unlocked: -1,
         boiling_water_unlocked: false
