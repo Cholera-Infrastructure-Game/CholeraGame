@@ -2,7 +2,7 @@
 var GAME_WIDTH = 800;
 var GAME_HEIGHT = 600;
 
-var BASE_INFECTION_RATE = .05;
+var BASE_INFECTION_RATE = .01;
 var BASE_FACTOR = 0.000005;
 var INFECTION_RATE_POPULATION_CAP = 10000;
 
@@ -38,7 +38,7 @@ var DAILY_INCOME = 50;
 // The additive factor to the infection rate the measure has over time.
 var PREVENTION_MEASURE_VALUES = { //TODO balance these numbers
     washing_hands: {
-        infection_rate_reduction: .05,
+        infection_rate_reduction: .10,
         percent_cured: .05,
         duration: 7,
         cost: 500,
