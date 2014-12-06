@@ -26,21 +26,9 @@ TitleStage.prototype = {
         play_game_text.events.onInputOut.add(function() {
             this.game.add.tween(play_game_text.scale).to({x: 1.0, y: 1.0}, BUTTON_POP_TIME, Phaser.Easing.Default, true);
         }, this);
-        play_game_text.events.onInputUp.add(this.startGame, this);
+        play_game_text.events.onInputUp.add(this.showInstructions, this);
 
-        var instructions_text = this.game.add.text(this.game.world.centerX, this.game.world.centerY + 150, "INSTRUCTIONS", TITLE_STAGE_STYLE);
-        instructions_text.anchor.set(0.5);
-        instructions_text.inputEnabled = true;
-        instructions_text.events.onInputOver.add(function() {
-            this.game.add.tween(instructions_text.scale).to({x: 1.3, y: 1.3}, BUTTON_POP_TIME, Phaser.Easing.Default, true);
-        }, this);
-        instructions_text.events.onInputOut.add(function() {
-            this.game.add.tween(instructions_text.scale).to({x: 1.0, y: 1.0}, BUTTON_POP_TIME, Phaser.Easing.Default, true);
-        }, this);
-        instructions_text.events.onInputUp.add(this.showInstructions, this);
-
-
-        var credits_text = this.game.add.text(this.game.world.centerX, this.game.world.centerY + 200, "CREDITS", TITLE_STAGE_STYLE);
+        var credits_text = this.game.add.text(this.game.world.centerX, this.game.world.centerY + 150, "CREDITS", TITLE_STAGE_STYLE);
         credits_text.anchor.set(0.5);
         credits_text.inputEnabled = true;
         credits_text.events.onInputOver.add(function() {
@@ -56,10 +44,6 @@ TitleStage.prototype = {
 
     update: function() {
 
-    },
-
-    startGame: function() {
-        this.game.state.start('map_stage');
     },
 
     showInstructions: function() {
