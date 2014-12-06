@@ -44,7 +44,7 @@ var PREVENTION_MEASURE_VALUES = { //TODO balance these numbers
         cost: 200,
         color: "#FF00FF",
         display_name: "Soap",
-        description: "Washing your hands with soap is a simple and cheap but very effective way of wiping out cholera."
+        description: "-2.5 infection rate\n+5% infected people cured\n\nWashing your hands with soap is cheap and reduces the spread of infection and the infected population a little.\n\nCheap all-around measure."
     },
     water_containers: {
         infection_rate_reduction: .05,
@@ -53,26 +53,26 @@ var PREVENTION_MEASURE_VALUES = { //TODO balance these numbers
         cost: 500,
         color: "#FFFF00",
         display_name: "Water Containers",
-        description: "Storing water in closed containers drastically reduces the spread of cholera, but does nothing for those already infected."
+        description: "-5 infection rate\n\nStoring water in closed containers drastically reduces the spread of cholera, but does nothing for those already infected.\n\nWorks best when infection rate is high."
     },
     electrolytes: {
         infection_rate_reduction: 0,
-        percent_cured: .30,
+        percent_cured: .40,
         duration: 7,
         cost: 200,
         color: "#00FFFF",
         display_name: "Electrolytes",
-        description: "Electrolytes help those infected with cholera get better, but do nothing to stop the spread of infection."
+        description: "+40% infected people cured.\n\nElectrolytes help those infected with cholera get better, but do nothing to stop the spread of infection.\n\nWorks best when lots of people are infected."
     },
     boil_water: {
         infection_rate_reduction: .01,
         percent_cured: 0,
         duration: 21,
-        cost: 1000,
+        cost: 500,
         upstream_effect_reduction: .9,
         color: "#FFA500",
         display_name: "Boiling Water",
-        description: "Boiling water prevents cholera from spreading from villages further upstream."
+        description: "-1 infected rate\n90% upstream infection reduction\n\nBoiling water reduces contamination from infected villages upstream.\n\nWorks best in downstream villages."
     }
 }
 
