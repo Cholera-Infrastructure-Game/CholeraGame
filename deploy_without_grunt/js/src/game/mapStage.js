@@ -14,8 +14,8 @@ MapStage.prototype = {
     preload: function() {
         this.load.image('healthbar','assets/images/health_bar.png');
         this.load.image('health_back','assets/images/health_background.png');
-        this.load.image('left','assets/images/Left_arrow.svg');
-        this.load.image('right','assets/images/Right_arrow.svg');
+        this.load.image('left','assets/images/Left_arrow.png');
+        this.load.image('right','assets/images/Right_arrow.png');
         this.load.image('map', 'assets/images/NewMap.png');//Need to rearrange villages for NewMap
         this.load.image('boil_water', 'assets/images/NewIcons/BoilingWaterIcon.png');
         this.load.image('washing_hands', 'assets/images/NewIcons/SoapIcon.png');
@@ -63,11 +63,11 @@ MapStage.prototype = {
             }
             this.village_small_pies.push(village_pies);
             var left = this.game.add.sprite(VILLAGE_POSITIONS[i][0]-5, VILLAGE_POSITIONS[i][1]-75,'left');
-            left.scale.x = 0.03;
-            left.scale.y = 0.03;
+            left.scale.x = 0.02;
+            left.scale.y = 0.02;
             var right = this.game.add.sprite(VILLAGE_POSITIONS[i][0]-5, VILLAGE_POSITIONS[i][1]-75,'right');
-            right.scale.x = 0.03;
-            right.scale.y = 0.03;
+            right.scale.x = 0.02;
+            right.scale.y = 0.02;
             left.visible = false;
             right.visible = false;
 //            Timer(this.game, VILLAGE_POSITIONS[i][0]+50, VILLAGE_POSITIONS[i][1]+50, 40, 2000, true);
@@ -150,6 +150,7 @@ MapStage.prototype = {
             if (game_state.day === 365) {
                 // Woo, you win!  Lets give you a score!
                 game_state.score = 1 - total_people_infected/TOTAL_POPULATION;
+                // TODO take score into account.
                 this.game.state.start('win_stage');
             }
             game_state.money += DAILY_INCOME;
@@ -196,14 +197,13 @@ MapStage.prototype = {
             for (var i = 0; i < game_state.available_villages; i++) {
                 game_state.villages[i].incrementDay(game_state.available_villages);
                 this.village_groups[i].visible = true;
-                this.village_groups[i].getChildAt(3).visible = false;
                 this.village_groups[i].getChildAt(4).visible = false;
+                this.village_groups[i].getChildAt(5).visible = false;
 
                 this.village_groups[i].getChildAt(2).width = 128 * (game_state.villages[i].getPopulation() - game_state.villages[i].getHowManyInfected()) / game_state.villages[i].getPopulation();
                 this.village_groups[i].getChildAt(9).text = game_state.villages[i].getPopulation()-game_state.villages[i].getHowManyInfected();
                 this.village_groups[i].getChildAt(10).text = game_state.villages[i].getHowManyInfected();
                 if(game_state.villages[i].isInfectedRatePositive()){
-                    console.log("checking")
                     this.village_groups[i].getChildAt(4).visible = false;
                     this.village_groups[i].getChildAt(3).visible = true;
                 }
