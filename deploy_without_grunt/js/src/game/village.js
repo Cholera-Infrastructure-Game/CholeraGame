@@ -3,6 +3,7 @@ Village = function(population, village_factors, village_number, initial_percenta
     var village_number = village_number;
     var total_population = population;
     var people_infected = population * initial_percentage_infected;
+    var infected_rate = BASE_INFECTION_RATE; //from .00 to 1.00, the maximum percentage of people healthy that could become infected
 
     // Initialize all prevention measures to 0 (i.e. not implemented).
     // When a measure is put into place, the value is how many days are left.
@@ -16,7 +17,6 @@ Village = function(population, village_factors, village_number, initial_percenta
 
     return {
         incrementDay: function() {
-            var infected_rate = BASE_INFECTION_RATE; //from .00 to 1.00, the maximum percentage of people healthy that could become infected
             for (var i = 0; i < village_factors.length; i++) {
                 var village_infection_contribution = Math.min(game_state.villages[i].getHowManyInfected() * BASE_FACTOR, INFECTION_RATE_POPULATION_CAP * BASE_FACTOR)
                 if (village_factors[i] === 1 || prevention_measures.boil_water === 0) {
@@ -57,8 +57,7 @@ Village = function(population, village_factors, village_number, initial_percenta
         },
 
         isInfectedRatePositive: function() {
-            return true;
-            //TODO: Implement
+            return infected_rate > 0;
         }
     };
 }
