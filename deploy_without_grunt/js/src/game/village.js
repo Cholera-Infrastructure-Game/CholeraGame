@@ -16,8 +16,8 @@ Village = function(population, village_factors, village_number, initial_percenta
 
 
     return {
-        incrementDay: function() {
-            for (var i = 0; i < village_factors.length; i++) {
+        incrementDay: function(available_villages) {
+            for (var i = 0; i < available_villages; i++) {
                 var village_infection_contribution = Math.min(game_state.villages[i].getHowManyInfected() * BASE_FACTOR, INFECTION_RATE_POPULATION_CAP * BASE_FACTOR)
                 if (village_factors[i] === 1 || prevention_measures.boil_water === 0) {
                     //no need to modify the upstream factor

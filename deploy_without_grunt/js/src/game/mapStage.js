@@ -190,7 +190,7 @@ MapStage.prototype = {
                 }
             }
             for (var i = 0; i < game_state.available_villages; i++) {
-                game_state.villages[i].incrementDay();
+                game_state.villages[i].incrementDay(game_state.available_villages);
                 this.village_groups[i].visible = true;
                 this.village_groups[i].getChildAt(2).width = 128 * (game_state.villages[i].getPopulation() - game_state.villages[i].getHowManyInfected()) / game_state.villages[i].getPopulation();
                 this.village_groups[i].getChildAt(9).text = game_state.villages[i].getPopulation()-game_state.villages[i].getHowManyInfected();
