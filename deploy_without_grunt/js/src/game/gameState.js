@@ -2,9 +2,12 @@
 var GAME_WIDTH = 800;
 var GAME_HEIGHT = 600;
 
-var BASE_INFECTION_RATE = .00;
+var BASE_INFECTION_RATE = .05;
 var BASE_FACTOR = 0.000005;
 var INFECTION_RATE_POPULATION_CAP = 10000;
+
+// When percent infected in the first village hits this or less, the second village is unlocked
+var SECOND_VILLAGE_UNLOCK_CRITERIA = .1
 
 // This is how many pixels of map are still visible around the edge of the popup.
 var POPUP_SHY_MARGIN = 30;
@@ -25,32 +28,35 @@ var BUTTON_POP_TIME = 100;
 // Height in pixels of the top bar in the main game.
 var TOP_BAR_HEIGHT = 40;
 
+// Money you make per day
+var DAILY_INCOME = 1;
+
 // The additive factor to the infection rate the measure has over time.
 var PREVENTION_MEASURE_VALUES = { //TODO balance these numbers
     washing_hands: {
         infection_rate_reduction: .05,
         percent_cured: .05,
-        duration: 14,
-        cost: 20
+        duration: 7,
+        cost: 500
     },
     water_containers: {
         infection_rate_reduction: .1,
         percent_cured: 0,
         duration: 14,
-        cost: 20
+        cost: 1500
     },
     electrolytes: {
         infection_rate_reduction: 0,
         percent_cured: .1,
-        duration: 14,
-        cost: 20
+        duration: 0,
+        cost: 2000
     },
     boil_water: {
         infection_rate_reduction: .01,
         percent_cured: 0,
         duration: 14,
-        cost: 20,
-        upstream_effect_reduction: .5
+        cost: 2000,
+        upstream_effect_reduction: .9
     }
 }
 
@@ -96,6 +102,12 @@ ACTION_DESCRIPTIONS = [
 	"Raise to 373 K to be free of pathogens."
 ];
 
+// Days after unlocking the second villages that it takes to unlock the following villages.
+VILLAGE_UNLOCK_DAYS = [
+        20,
+        30
+];
+
 var prevention_descript = [ // TODO update this text
     "Lather and rinse for thorough handwashing. Cheap and simple but eventually runs out.",
     "Very effective at preventing cholera, though the immunity ends a little sooner. Moderately expensive.",
@@ -110,16 +122,17 @@ var prevention_descript = [ // TODO update this text
 
 var GameState = function () {
     villages = [
-        Village(100000, [1,0,0,.9], 1),
-        Village(200000, [0,1,.9,.9], 2),
-        Village(300000, [0,0,1,.9], 3),
-        Village(400000, [0,0,0,1], 4),
+        Village(100000, [1,0,0,.9], 1, .3),
+        Village(200000, [0,1,.9,.9], 2, .5),
+        Village(300000, [0,0,1,.9], 3, .7),
+        Village(400000, [0,0,0,1], 4, .9),
     ];
     return {
         day: 0,
         money: 1000, //TODO figure out how much you should start with
-        selected_village: null,
         villages: villages,
-        available_villages: 4,
+        available_villages: 1,
+        frame_count: -1,
+        days_since_second_village_unlocked: -1
     };
 }

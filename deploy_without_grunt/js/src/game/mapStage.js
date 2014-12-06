@@ -2,6 +2,7 @@ var MapStage = function (game) {
     this.money_text_object;
     this.time_text_object;
     this.village_groups;
+    this.time_should_progess;
 };
 
 MapStage.prototype = {
@@ -41,11 +42,18 @@ MapStage.prototype = {
         
 
         this.village_groups = [];
-        for (i = 0; i < villages.length; i++) {
+
+        for (var i = 0; i < villages.length; i++) {
             var village_group = this.game.add.group()
+            var village_pies = [];
             var village_sprite = this.game.add.button(VILLAGE_POSITIONS[i][0], VILLAGE_POSITIONS[i][1], 'village', function() {}, {}, 1, 0);
             var health_bar_back = this.game.add.sprite(VILLAGE_POSITIONS[i][0]-60, VILLAGE_POSITIONS[i][1]-90, 'health_back');
             var health_bar = this.game.add.sprite(VILLAGE_POSITIONS[i][0]-60, VILLAGE_POSITIONS[i][1]-90, 'healthbar');
+            for (var j = 0; j < 4; j++) {
+			// Create a pie.
+			    var small_pie = new Timer(this.game, VILLAGE_POSITIONS[i][0] + (j * 35) - 50, VILLAGE_POSITIONS[i][1] + 70, 10, 2000, "rgba(0,0,0,0.6)", ACTION_COLORS[j], this.game.cache.getImage(ACTION_ICONS[j]));
+                village_pies.push(small_pie);
+            }
             var left = this.game.add.sprite(VILLAGE_POSITIONS[i][0]-5, VILLAGE_POSITIONS[i][1]-105,'left');
             left.scale.x = 0.03;
             left.scale.y = 0.03;
@@ -89,6 +97,9 @@ MapStage.prototype = {
             village_group.add(health_bar);
             village_group.add(left);
             village_group.add(right);
+            for (var p = 0; p < 4; p++) {
+                village_group.add(village_pies[p].getSprite());
+            }
             var text = "Village " + (i + 1);
             var style = { font: "12px Arial", fill: "#ffffff", align: "left" };
             var population_style = { font: "12px Arial", fill: "#000000", align: "left"};
@@ -101,6 +112,7 @@ MapStage.prototype = {
         }
 
         this.createPopupMenu();
+        this.createTextPopup();
         this.createScoreBar();
 
 		var escape_key = this.game.input.keyboard.addKey(Phaser.Keyboard.ESC);
@@ -108,21 +120,104 @@ MapStage.prototype = {
     },
 
     update: function() {
-        this.money_text_object.text = "Money: " + game_state.money;
-        this.time_text_object.text = "Day: " + game_state.day;
+        if (!this.time_should_progress) {
+            return;
+        }
+        game_state.frame_count += 1;
+        if (game_state.frame_count % 60 === 0) {
+            game_state.money += DAILY_INCOME;
+            this.money_text_object.text = "Money: " + game_state.money;
+            game_state.day += 1;
+            this.time_text_object.text = "Day: " + game_state.day;
 
-        for (var i = 0; i < game_state.available_villages; i++) {
-            this.village_groups[i].visible = true;
-            this.village_groups[i].getChildAt(2).width = 128 * (game_state.villages[i].getPopulation() - game_state.villages[i].getHowManyInfected()) / game_state.villages[i].getPopulation();
-            if(game_state.villages[i].isInfectedRatePositive()){
-                this.village_groups[i].getChildAt(4).visible = false;
-                this.village_groups[i].getChildAt(3).visible = true;
+            if (game_state.available_villages == 1) {
+                // special condition to unlock the second village (once the first is cured)
+                if (game_state.villages[0].getHowManyInfected()/game_state.villages[0].getPopulation() <= SECOND_VILLAGE_UNLOCK_CRITERIA) {
+                    this.createVillageUI(game_state.available_villages);
+                    game_state.available_villages += 1;
+                }
             }
-            else{
-                this.village_groups[i].getChildAt(3).visible = false;
-                this.village_groups[i].getChildAt(4).visible = true;
+            else {
+                // now unlock the other villages (based on days passed)
+                if (VILLAGE_UNLOCK_DAYS.indexOf(game_state.days_since_second_village_unlocked) != -1) {
+                    this.createVillageUI(game_state.available_villages);
+                    game_state.available_villages += 1;
+                }
+            }
+
+            for (var i = 0; i < game_state.available_villages; i++) {
+                game_state.villages[i].incrementDay();
+                this.village_groups[i].visible = true;
+                this.village_groups[i].getChildAt(2).width = 128 * (game_state.villages[i].getPopulation() - game_state.villages[i].getHowManyInfected()) / game_state.villages[i].getPopulation();
+                if(game_state.villages[i].isInfectedRatePositive()){
+                    this.village_groups[i].getChildAt(4).visible = false;
+                    this.village_groups[i].getChildAt(3).visible = true;
+                }
+                else{
+                    this.village_groups[i].getChildAt(3).visible = false;
+                    this.village_groups[i].getChildAt(4).visible = true;
+                }
             }
         }
+    },
+
+    createVillageUI: function(i) {
+        var village_group = this.game.add.group()
+        var village_sprite = this.game.add.button(VILLAGE_POSITIONS[i][0], VILLAGE_POSITIONS[i][1], 'village', function() {}, {}, 1, 0);
+        var health_bar_back = this.game.add.sprite(VILLAGE_POSITIONS[i][0]-60, VILLAGE_POSITIONS[i][1]-90, 'health_back');
+        var health_bar = this.game.add.sprite(VILLAGE_POSITIONS[i][0]-60, VILLAGE_POSITIONS[i][1]-90, 'healthbar');
+        var left = this.game.add.sprite(VILLAGE_POSITIONS[i][0]-5, VILLAGE_POSITIONS[i][1]-105,'left');
+        left.scale.x = 0.03;
+        left.scale.y = 0.03;
+        var right = this.game.add.sprite(VILLAGE_POSITIONS[i][0]-5, VILLAGE_POSITIONS[i][1]-95,'right');
+        left.visible = false;
+        right.visible = false;
+        // Timer(this.game, VILLAGE_POSITIONS[i][0]+50, VILLAGE_POSITIONS[i][1]+50, 40, 2000, true);
+        village_sprite.village_index = i;
+        village_sprite.anchor.set(0.5);
+        village_sprite.inputEnabled = true;
+	// Here I do some obnoxious closure crap to close over i.
+	// This causes createVillagePopup to be called passing in the village.
+	(function() {
+	    var _i = i;
+	    var _village_sprite = village_sprite;
+	    village_sprite.events.onInputUp.add(function() {
+                // Launch the pop up.
+                self.createVillagePopup(_i);
+                // Do a little click animation.
+                var tween = self.game.add.tween(_village_sprite.scale);
+                tween.to({x: 0.9, y: 0.9}, 100, Phaser.Easing.Quadratic.In);
+                tween.to({x: 1.1, y: 1.1}, 100, Phaser.Easing.Quadratic.Out);
+                // WARNING: Here I insert a little extra delay before the onComplete is called.
+                tween.to({x: 1.1, y: 1.1}, 300, Phaser.Easing.Default);
+                // Trigger a mouse out dispatch when the animation is over..
+                // This fixes the issue where the popup blocks the mouse out on the selected village,
+                // causing it to be permanently highlighted, until it is moused out of some time later.
+                tween._lastChild.onComplete.add(function() { _village_sprite.events.onInputOut.dispatch(); });
+                tween.start();
+            }, self);
+            // Also add a little increase in size effect on mouse over.
+            village_sprite.events.onInputOver.add(function() {
+                self.game.add.tween(_village_sprite.scale).to({x: 1.1, y: 1.1}, 100, Phaser.Easing.Quadratic.Out, true);
+            });
+            village_sprite.events.onInputOut.add(function() {
+                self.game.add.tween(_village_sprite.scale).to({x: 1.0, y: 1.0}, 100, Phaser.Easing.Quadratic.In, true);
+            });
+        }());
+        village_group.add(village_sprite);
+        village_group.add(health_bar_back);
+        village_group.add(health_bar);
+        village_group.add(left);
+        village_group.add(right);
+        var text = "Village " + (i + 1);
+        var style = { font: "12px Arial", fill: "#ffffff", align: "left" };
+        var population_style = { font: "12px Arial", fill: "#000000", align: "left"};
+        var village_text = this.game.add.text(VILLAGE_POSITIONS[i][0] - 20, VILLAGE_POSITIONS[i][1] + 10, text, style);
+        var population = this.game.add.text(VILLAGE_POSITIONS[i][0]-60, VILLAGE_POSITIONS[i][1]-100, game_state.villages[i].getPopulation(), population_style);
+        village_group.add(village_text);
+        village_group.add(population);
+        village_group.visible = false;
+        this.village_groups.push(village_group);
     },
 
     createScoreBar: function() {
@@ -134,7 +229,7 @@ MapStage.prototype = {
 
         var pause = this.game.add.text(this.game.world.width - 300, 10, "PAUSE", SCORE_BAR_STYLE);
         pause.inputEnabled = true;
-        pause.events.onInputUp.add(this.createPauseMenu, this);
+        pause.events.onInputUp.add(function() {this.openTextPopup("Game paused")}, this);
 		this.pause_text_object = pause;
     },
 
@@ -375,13 +470,6 @@ MapStage.prototype = {
 		this.popup_sprite.y = -1000;
 	},
 
-
-    createPauseMenu: function() {
-        // TODO: Make pause menu
-        console.log("TODO: need to make pause menu");
-        return;
-    },
-
     createVillagePopup: function(selected_village_index) {
 		console.log("Creating popup for: " + selected_village_index);
 		var selected_village = game_state.villages[selected_village_index];
@@ -448,6 +536,120 @@ MapStage.prototype = {
 			this.popup_sprite.inputEnabled = false;
 		}, this);
 	},
+
+    createTextPopup: function() {
+		// This function simply creates the text popup sprite, and hides it.
+		self = this;
+
+		// Create the background sprite.
+		// All the other sprites are children of this one.
+		var bmd = this.game.add.bitmapData(GAME_WIDTH - POPUP_SHY_MARGIN*10, GAME_HEIGHT - TOP_BAR_HEIGHT - POPUP_SHY_MARGIN*10);
+		// Fill entirely with black
+		bmd.ctx.beginPath();
+		bmd.ctx.rect(0, 0, GAME_WIDTH, GAME_HEIGHT - TOP_BAR_HEIGHT);
+		bmd.ctx.fillStyle = '#000000';
+		bmd.ctx.fill();
+		// Fill the center with gray, leaving 2px of margin on all sides.
+		bmd.ctx.beginPath();
+		bmd.ctx.rect(2, 2, GAME_WIDTH - 4 - POPUP_SHY_MARGIN*10, GAME_HEIGHT - TOP_BAR_HEIGHT - 4 - POPUP_SHY_MARGIN*10);
+		bmd.ctx.fillStyle = '#a0a0a0';
+		bmd.ctx.fill();
+		this.text_popup_sprite = this.game.add.sprite(0, 0, bmd);
+		this.text_popup_sprite.anchor.set(0.5);
+
+		// For convenience, get these values out.
+		var w = this.text_popup_sprite.width;
+		var h = this.text_popup_sprite.height;
+
+		// Create text.
+		this.text_popup_text = this.game.add.text(0, 30-h/2, "Placeholder Text", POPUP_TEXT_STYLE);
+		// This next line causes the text to be centered properly.
+		this.text_popup_text.anchor.set(0.5);
+		this.text_popup_sprite.addChild(this.text_popup_text);
+
+		// Create the close button.
+		var button = this.game.add.text(0, this.text_popup_sprite.height * 0.4, "Return to map", POPUP_TEXT_STYLE);
+		button.anchor.set(0.5);
+		button.inputEnabled = true;
+		button.input.priorityID = 1;
+		button.input.useHandCursor = true;
+		button.events.onInputUp.add(this.closeTextPopup, this);
+		// Add handlers to make it pop up in size a little.
+		button.events.onInputOver.add(function() {
+			self.game.add.tween(button.scale).to({x: 1.3, y: 1.3}, BUTTON_POP_TIME, Phaser.Easing.Default, true);
+		});
+		button.events.onInputOut.add(function() {
+			self.game.add.tween(button.scale).to({x: 1.0, y: 1.0}, BUTTON_POP_TIME, Phaser.Easing.Default, true);
+		});
+		console.log(this.popup_sprite.body);
+		this.text_popup_return_button = button;
+		this.text_popup_sprite.addChild(button);
+                // this.popup_sprite.alpha = 0.95;
+
+		// Initially the popup is hidden.
+		this.fullyHideTextPopup();
+    },
+
+
+	fullyHideTextPopup: function() {
+		// Somewhat crummy solution, but simply moving the popup out of the way works.
+		this.text_popup_sprite.x = -1000;
+		this.text_popup_sprite.y = -1000;
+	},
+
+    openTextPopup: function(text) {
+		// Make sure no pop-up is currently open.
+		// This SHOULD never happen, but let's just be really careful.
+		if (this.popup_status != -1) {
+			console.log("WARNING: Call to createVillagePopup while popup was open!");
+			return;
+		}
+		// Pause all action.
+		this.time_should_progress = false;
+		// Update the popup with appropriate information.
+		this.text_popup_text.text = text;
+
+		// Shrink the popup down, preparing to grow it up later.
+		this.popup_sprite.scale.set(0.0);
+		// Place the popup directly over the center.
+		var pos = [GAME_WIDTH/2, GAME_HEIGHT/2];
+		this.text_popup_sprite.x = pos[0];
+		this.text_popup_sprite.y = pos[1];
+		// Then make it tween into position and size.
+                this.game.add.tween(this.text_popup_sprite).to({x: GAME_WIDTH/2, y: GAME_HEIGHT/2 + TOP_BAR_HEIGHT/2}, POPUP_TIME, Phaser.Easing.Quadratic.In, true);
+                var tween = this.game.add.tween(this.text_popup_sprite.scale);
+		tween.to({x: 1.0, y: 1.0}, POPUP_TIME, Phaser.Easing.Quartic.In, true);
+		// Only when the tweening is finished do we consider the popup to be truly open.
+		tween.onComplete.add(function() {
+			this.popup_status = -2;
+			// Even though we won't be listening for it, enable input just to block it for everything under the popup.
+			this.popup_sprite.inputEnabled = true;
+		}, this);
+    },
+
+	closeTextPopup: function() {
+		// Make sure that a popup is actually open.
+		if (this.popup_status == -1) {
+			console.log("WARNING: Call to text Popup while no popup was open!");
+			return;
+		}
+		// Tween the popup away.
+		var pos = [GAME_WIDTH/2, GAME_HEIGHT/2];
+        this.game.add.tween(this.popup_sprite).to({x: pos[0], y: pos[1]}, 300, Phaser.Easing.Default, true);
+        var tween = this.game.add.tween(this.popup_sprite.scale);
+		// It's deeply unfortunate, but it appears that a sprite with scale 0.0 is considered everywhere for input.
+		// Therefore, to work around this behavior we merely scale the popup window very very small.
+		// Then, when the tween is finished, we'll fully hide it by moving it away.
+		tween.to({x: 0.001, y: 0.001}, 300, Phaser.Easing.Default, true);
+		tween.onComplete.add(function() {
+			this.fullyHideTextPopup();
+			this.popup_status = -1;
+			// Resume all action.
+			this.time_should_progress = true;
+			this.text_popup_sprite.inputEnabled = false;
+		}, this);
+	},
+
 
 }
 
