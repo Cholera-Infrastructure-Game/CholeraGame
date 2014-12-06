@@ -1,5 +1,5 @@
 WinStage = function(game) {
-    this.win_text = "You have managed to control the spread of cholera with a score of: ";
+    this.win_text = "You survived a year of Cholera!  Congratulations!";
 
 };
 
@@ -19,7 +19,7 @@ WinStage.prototype = {
         this.add.sprite(0, 0, 'homeBackground');
 
         // Add some instructions
-        this.instructionText = this.add.text(this.game.world.centerX, 130, this.win_text + game_state.score, {font: "20px Arial", fill: "000000", align: "center"});
+        this.instructionText = this.add.text(this.game.world.centerX, 130, this.win_text, {font: "20px Arial", fill: "000000", align: "center"});
         this.instructionText.anchor.set(0.5);
         this.instructionText.wordWrap = true;
         this.instructionText.wordWrapWidth = 600;

@@ -47,7 +47,7 @@ MapStage.prototype = {
         this.village_groups = [];
         this.village_small_pies = [];
         
-        for (var i = 0; i < villages.length; i++) {
+        for (var i = 0; i < game_state.available_villages; i++) {
             this.createVillageUI(i);
         }
         this.createPopupMenu();
@@ -64,7 +64,7 @@ MapStage.prototype = {
             return;
         }
         game_state.frame_count += 1;
-        if (game_state.frame_count % 60 === 0) {
+        if (game_state.frame_count % 45 === 0) {
             // Check if game is over
             var total_people_infected = 0;
             var is_any_village_completely_infected = false;
@@ -75,15 +75,14 @@ MapStage.prototype = {
                 }
             }
             if (is_any_village_completely_infected) {
+                // your score is how many days you survived
                 this.game.state.start('end_stage');
             }
             if (game_state.day === 365) {
-                // Woo, you win!  Lets give you a score!
-                game_state.score = 1 - total_people_infected/TOTAL_POPULATION;
-                // TODO take score into account.
+                // You somehow survived a year orz orz orz
                 this.game.state.start('win_stage');
             }
-            game_state.money += DAILY_INCOME;
+            game_state.money += DAILY_INCOME * (1 + .5 * Math.floor(game_state.day/60));
             game_state.day += 1;
             this.time_text_object.text = "Day: " + game_state.day;
 
@@ -113,7 +112,7 @@ MapStage.prototype = {
             else {
                 game_state.days_since_second_village_unlocked += 1;
                 // now unlock the other villages (based on days passed)
-                if (VILLAGE_UNLOCK_DAYS.indexOf(game_state.days_since_second_village_unlocked) != -1) {
+                if (VILLAGE_UNLOCK_DAYS.indexOf(game_state.days_since_second_village_unlocked) > 0) {
                     this.createVillageUI(game_state.available_villages);
                     game_state.available_villages += 1;
                     if (game_state.available_villages == 3) {
@@ -125,7 +124,7 @@ MapStage.prototype = {
                 }
             }
             for (var i = 0; i < game_state.available_villages; i++) {
-                game_state.villages[i].incrementDay(game_state.available_villages);
+                game_state.villages[i].incrementDay();
                 this.village_groups[i].visible = true;
                 this.village_groups[i].getChildAt(4).visible = false;
                 this.village_groups[i].getChildAt(3).visible = false;

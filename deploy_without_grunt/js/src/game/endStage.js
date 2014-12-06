@@ -8,7 +8,19 @@ EndStage.prototype = {
 	init: function () {
 		this.input.maxPointers = 1;
 		this.stage.disableVisibilityChange = true;
-		this.game_over_text = "Game over!\n\nYou failed to control the cholera outbreak."
+                if (game_state.day > 300) {
+		    this.game_over_text = "Congratulations!  You managed to survive 300 days!  Try and make it to a year!"
+                }
+                if (game_state.day > 200) {
+		    this.game_over_text = "Congratulations!  You managed to survive 200 days! Try and make it past 4 villages!"
+                }
+                if (game_state.day > 100) {
+		    this.game_over_text = "Cholera spread fast, but you managed to survive 100 days!"
+                }
+                else {
+		    this.game_over_text = "Oh no!  Cholera spread too quickly!  Try and use prevention measures to keep it under control next time!"
+                }
+
 	},
 
 	preload: function() {

@@ -2,12 +2,12 @@
 var GAME_WIDTH = 800;
 var GAME_HEIGHT = 600;
 
-var BASE_INFECTION_RATE = .01;
-var BASE_FACTOR = 0.000005;
-var INFECTION_RATE_POPULATION_CAP = 10000;
+var BASE_INFECTION_RATE = .0075;
+var BASE_FACTOR = 0.0000008;
+var INFECTION_RATE_POPULATION_CAP = 50000;
 
 // When percent infected in the first village hits this or less, the second village is unlocked
-var SECOND_VILLAGE_UNLOCK_CRITERIA = .1
+var SECOND_VILLAGE_UNLOCK_CRITERIA = .01
 
 var SECOND_VILLAGE_UNLOCK_TEXT = "A new locality has appeared!\nYou'll have to deal with the\nnew locality's infection and make\nsure it doesn't spread to the\nold localities.";
 
@@ -38,28 +38,28 @@ var DAILY_INCOME = 50;
 // The additive factor to the infection rate the measure has over time.
 var PREVENTION_MEASURE_VALUES = { //TODO balance these numbers
     washing_hands: {
-        infection_rate_reduction: .10,
+        infection_rate_reduction: .025,
         percent_cured: .05,
-        duration: 7,
-        cost: 500,
+        duration: 14,
+        cost: 200,
         color: "#FF00FF",
         display_name: "Soap",
         description: "Washing your hands with soap is a simple and cheap but very effective way of wiping out cholera."
     },
     water_containers: {
-        infection_rate_reduction: .1,
+        infection_rate_reduction: .05,
         percent_cured: 0,
-        duration: 14,
-        cost: 1500,
+        duration: 21,
+        cost: 500,
         color: "#FFFF00",
         display_name: "Water Containers",
         description: "Storing water in closed containers drastically reduces the spread of cholera, but does nothing for those already infected."
     },
     electrolytes: {
         infection_rate_reduction: 0,
-        percent_cured: .1,
+        percent_cured: .30,
         duration: 7,
-        cost: 2000,
+        cost: 200,
         color: "#00FFFF",
         display_name: "Electrolytes",
         description: "Electrolytes help those infected with cholera get better, but do nothing to stop the spread of infection."
@@ -67,8 +67,8 @@ var PREVENTION_MEASURE_VALUES = { //TODO balance these numbers
     boil_water: {
         infection_rate_reduction: .01,
         percent_cured: 0,
-        duration: 14,
-        cost: 2000,
+        duration: 21,
+        cost: 1000,
         upstream_effect_reduction: .9,
         color: "#FFA500",
         display_name: "Boiling Water",
@@ -76,7 +76,7 @@ var PREVENTION_MEASURE_VALUES = { //TODO balance these numbers
     }
 }
 
-VILLAGE_POSITIONS = [ //TODO update these positions
+VILLAGE_POSITIONS = [
     [550,450],
     [700,150],
     [425,175],
@@ -96,8 +96,8 @@ TOTAL_POPULATION = 1000000;
 // The other entries are days after unlocking the second villages that it takes to unlock the following villages.
 VILLAGE_UNLOCK_DAYS = [
         60,
-        100,
-        200,
+        40,
+        120,
 ];
 
 var prevention_descript = [ // TODO update this text
@@ -114,10 +114,10 @@ var prevention_descript = [ // TODO update this text
 
 var GameState = function () {
     villages = [
-        Village(100000, [1,0,0,.9], 1, .3),
-        Village(200000, [0,1,.9,.9], 2, .5),
-        Village(300000, [0,0,1,.9], 3, .7),
-        Village(400000, [0,0,0,1], 4, .9),
+        Village(100000, [1,0,0,.75], 1, .1),
+        Village(200000, [0,1,.75,.75], 2, .3),
+        Village(300000, [0,0,1,.75], 3, .4),
+        Village(400000, [0,0,0,1], 4, .5),
     ];
     return {
         day: 0,

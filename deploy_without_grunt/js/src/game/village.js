@@ -16,15 +16,16 @@ Village = function(population, village_factors, village_number, initial_percenta
 
 
     return {
-        incrementDay: function(available_villages) {
-            for (var i = 0; i < available_villages; i++) {
+        incrementDay: function() {
+            infected_rate = BASE_INFECTION_RATE;
+            for (var i = 0; i < game_state.available_villages; i++) {
                 var village_infection_contribution = Math.min(game_state.villages[i].getHowManyInfected() * BASE_FACTOR, INFECTION_RATE_POPULATION_CAP * BASE_FACTOR)
                 if (village_factors[i] === 1 || prevention_measures.boil_water === 0) {
                     //no need to modify the upstream factor
                     infected_rate += village_infection_contribution * village_factors[i];
                 }
                 else {
-                    infected_rate += village_infection_contribution * village_factors[i] * PREVENTION_MEASURE_VALUES.boil_water.upstream_effect_reduction;
+                    infected_rate += village_infection_contribution * village_factors[i] * (1 - PREVENTION_MEASURE_VALUES.boil_water.upstream_effect_reduction);
                 }
             }
             for (var prevention_measure in prevention_measures) {
@@ -33,8 +34,9 @@ Village = function(population, village_factors, village_number, initial_percenta
                     prevention_measures[prevention_measure] -= 1;
                 }
             }
+            console.log(infected_rate);
 
-            people_infected = Math.min(Math.ceil(people_infected + Math.ceil((people_infected / 0.6) * Math.random() * infected_rate)), total_population);
+            people_infected = Math.max(0, Math.min(Math.ceil(people_infected + Math.ceil(total_population * Math.random() * infected_rate)), total_population));
         },
 
         implementPreventionMeasure: function(prevention_measure) {
