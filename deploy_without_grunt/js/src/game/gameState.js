@@ -94,6 +94,12 @@ ACTION_DESCRIPTIONS = [
 	"Raise to 373 K to be free of pathogens."
 ];
 
+VILLAGE_UNLOCK_DAYS = [
+        10,
+        20,
+        30
+];
+
 var prevention_descript = [ // TODO update this text
     "Lather and rinse for thorough handwashing. Cheap and simple but eventually runs out.",
     "Very effective at preventing cholera, though the immunity ends a little sooner. Moderately expensive.",
@@ -116,8 +122,7 @@ var GameState = function () {
     return {
         day: 0,
         money: 1000, //TODO figure out how much you should start with
-        selected_village: null,
         villages: villages,
-        available_villages: 4,
+        available_villages: 1,
     };
 }
