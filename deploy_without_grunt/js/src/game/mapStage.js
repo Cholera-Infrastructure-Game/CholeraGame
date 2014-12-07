@@ -4,6 +4,7 @@ var MapStage = function (game) {
     this.village_groups;
     this.time_should_progess;
     this.village_small_pies; // array of village pies
+    this.graphics;
 };
 
 MapStage.prototype = {
@@ -28,6 +29,7 @@ MapStage.prototype = {
 
     create: function() {
         game_state = new GameState();
+        this.graphics = this.game.add.graphics(0,0);
         console.log(game_state)
 		self = this;
 
@@ -301,6 +303,15 @@ MapStage.prototype = {
 			var pie = new PieProgress(this.game, left_column_center_x - 120, action_buttons_y_offset + i * action_spacing - h/2, 40, "rgba(0,0,0,0.6)", PREVENTION_MEASURE_VALUES[PREVENTION_MEASURE_NAMES[i]].color, this.game.cache.getImage(PREVENTION_MEASURE_NAMES[i]));
 			this.popup_sprite.addChild(pie);
 			this.popup_pies.push(pie);
+            pie.inputEnabled = true;
+            pie.input.priorityID = 1;
+            pie.input.useHandCursor = true;
+            pie.events.onInputOver.add(function() {
+                console.log("it's working")
+            });
+            pie.events.onInputDown.add(function() {
+                console.log("what the fuck")
+            });
 			// Create the cost text next to the pie.
 			// WARNING: I temporarily disabled this because it doesn't fit.
 			// Let's see where else we could put it.
@@ -318,71 +329,77 @@ MapStage.prototype = {
 				var _i = i;
 				var _obj = obj;
 				var _pie = pie;
-				obj.events.onInputDown.add(function() {
-					// TODO: Hook up to this callback.
-					var result = self.buyAction(_i, self.popup_status);
-					if (result == "good") {
-						// If we succeeded in buying the measure then make the button pulse.
-						var tween = self.game.add.tween(_obj.scale);
-						tween.to({x: 1.1, y: 1.1}, 100, Phaser.Easing.Quadratic.In);
-						tween.to({x: 1.3, y: 1.3}, 100, Phaser.Easing.Quadratic.Out);
-						tween.start();
-					} else if (result == "no-money") {
-						// If we failed because we didn't have the money, then make the money indicator jiggle.
-						// First make sure we're not writing over a current tween.
-						if (self.game.tweens.isTweening(self.money_text_object))
-							return;
-						// We are going to temporarily reposition the money object, and reanchor it.
-						// This is necessary because rescaling and rotations occur about the anchor.
-						var new_center_x = 10 + self.money_text_object.width/2;
-						var new_center_y = 10 + self.money_text_object.height/2;
-						self.money_text_object.x = new_center_x;
-						self.money_text_object.y = new_center_y;
-						self.money_text_object.anchor.set(0.5);
-						// Make the text slide a bit more down into view.
-						var tween = self.game.add.tween(self.money_text_object);
-						tween.to({x: new_center_x+30, y: new_center_y+22}, 100, Phaser.Easing.Quadratic.Out);
-						tween.to({x: new_center_x+30, y: new_center_y+22}, 300, Phaser.Easing.Default);
-						tween.to({x: new_center_x, y: new_center_y}, 100, Phaser.Easing.Quadratic.In);
-						tween.start();
-						// Make the text expand.
-						tween = self.game.add.tween(self.money_text_object.scale);
-						tween.to({x: 1.2, y: 1.2}, 100, Phaser.Easing.Quadratic.Out);
-						tween.to({x: 1.2, y: 1.2}, 300, Phaser.Easing.Default);
-						tween.to({x: 1.0, y: 1.0}, 100, Phaser.Easing.Quadratic.In);
-						tween.start();
-						// .. and rock it back and forth a few times.
-						tween = self.game.add.tween(self.money_text_object);
-						tween.to({angle: 0}, 50, Phaser.Easing.Default);
-						tween.to({angle: 20}, 100, Phaser.Easing.Quadratic.InOut);
-						tween.to({angle: -20}, 100, Phaser.Easing.Quadratic.InOut);
-						tween.to({angle: 20}, 100, Phaser.Easing.Quadratic.InOut);
-						tween.to({angle: -20}, 100, Phaser.Easing.Quadratic.InOut);
-						tween.to({angle: 0}, 52, Phaser.Easing.Quadratic.InOut);
-						tween.start();
-						tween._lastChild.onComplete.add(function() {
-							// Now put everything back.
-							self.money_text_object.x = 10;
-							self.money_text_object.y = 10;
-							self.money_text_object.anchor.set(0.0);
-						});
-					} else if (result == "on-cooldown") {
-						// Make the cooldown pie bubble up.
-						var tween = self.game.add.tween(_pie.scale);
-						tween.to({x: 1.2, y: 1.2}, 200, Phaser.Easing.Quadratic.Out);
-						tween.to({x: 1.0, y: 1.0}, 200, Phaser.Easing.Quadratic.In);
-						tween.start();
-					}
-				});
-				obj.events.onInputOver.add(function() {
-					self.game.add.tween(_obj.scale).to({x: 1.3, y: 1.3}, BUTTON_POP_TIME, Phaser.Easing.Default, true);
-					// On mouse over we set the description box text appropriately.
-					self.setDescriptionBoxTexts(_i);
-				});
-				obj.events.onInputOut.add(function() {
-					self.game.tween
-					self.game.add.tween(_obj.scale).to({x: 1.0, y: 1.0}, BUTTON_POP_TIME, Phaser.Easing.Default, true);
-				});
+                var clickable_actions = [obj, pie];
+                for (var k = 0; k < clickable_actions.length; k++) {
+                    var item = clickable_actions[k];
+    				item.events.onInputDown.add(function() {
+    					// TODO: Hook up to this callback.
+    					var result = self.buyAction(_i, self.popup_status);
+    					if (result == "good") {
+    						// If we succeeded in buying the measure then make the button pulse.
+    						var tween = self.game.add.tween(_obj.scale);
+    						tween.to({x: 1.1, y: 1.1}, 100, Phaser.Easing.Quadratic.In);
+    						tween.to({x: 1.3, y: 1.3}, 100, Phaser.Easing.Quadratic.Out);
+    						tween.start();
+    					} else if (result == "no-money") {
+    						// If we failed because we didn't have the money, then make the money indicator jiggle.
+    						// First make sure we're not writing over a current tween.
+    						if (self.game.tweens.isTweening(self.money_text_object))
+    							return;
+    						// We are going to temporarily reposition the money object, and reanchor it.
+    						// This is necessary because rescaling and rotations occur about the anchor.
+    						var new_center_x = 10 + self.money_text_object.width/2;
+    						var new_center_y = 10 + self.money_text_object.height/2;
+    						self.money_text_object.x = new_center_x;
+    						self.money_text_object.y = new_center_y;
+    						self.money_text_object.anchor.set(0.5);
+    						// Make the text slide a bit more down into view.
+    						var tween = self.game.add.tween(self.money_text_object);
+    						tween.to({x: new_center_x+30, y: new_center_y+22}, 100, Phaser.Easing.Quadratic.Out);
+    						tween.to({x: new_center_x+30, y: new_center_y+22}, 300, Phaser.Easing.Default);
+    						tween.to({x: new_center_x, y: new_center_y}, 100, Phaser.Easing.Quadratic.In);
+    						tween.start();
+    						// Make the text expand.
+    						tween = self.game.add.tween(self.money_text_object.scale);
+    						tween.to({x: 1.2, y: 1.2}, 100, Phaser.Easing.Quadratic.Out);
+    						tween.to({x: 1.2, y: 1.2}, 300, Phaser.Easing.Default);
+    						tween.to({x: 1.0, y: 1.0}, 100, Phaser.Easing.Quadratic.In);
+    						tween.start();
+    						// .. and rock it back and forth a few times.
+    						tween = self.game.add.tween(self.money_text_object);
+    						tween.to({angle: 0}, 50, Phaser.Easing.Default);
+    						tween.to({angle: 20}, 100, Phaser.Easing.Quadratic.InOut);
+    						tween.to({angle: -20}, 100, Phaser.Easing.Quadratic.InOut);
+    						tween.to({angle: 20}, 100, Phaser.Easing.Quadratic.InOut);
+    						tween.to({angle: -20}, 100, Phaser.Easing.Quadratic.InOut);
+    						tween.to({angle: 0}, 52, Phaser.Easing.Quadratic.InOut);
+    						tween.start();
+    						tween._lastChild.onComplete.add(function() {
+    							// Now put everything back.
+    							self.money_text_object.x = 10;
+    							self.money_text_object.y = 10;
+    							self.money_text_object.anchor.set(0.0);
+    						});
+    					} else if (result == "on-cooldown") {
+    						// Make the cooldown pie bubble up.
+    						var tween = self.game.add.tween(_pie.scale);
+    						tween.to({x: 1.2, y: 1.2}, 200, Phaser.Easing.Quadratic.Out);
+    						tween.to({x: 1.0, y: 1.0}, 200, Phaser.Easing.Quadratic.In);
+    						tween.start();
+    					}
+    				});
+    				item.events.onInputOver.add(function() {
+    					self.game.add.tween(_obj.scale).to({x: 1.3, y: 1.3}, BUTTON_POP_TIME, Phaser.Easing.Default, true);
+    					self.game.add.tween(_pie.scale).to({x: 1.3, y: 1.3}, BUTTON_POP_TIME, Phaser.Easing.Default, true);
+
+                        // On mouse over we set the description box text appropriately.
+    					self.setDescriptionBoxTexts(_i);
+    				});
+    				item.events.onInputOut.add(function() {
+    					self.game.add.tween(_pie.scale).to({x: 1.0, y: 1.0}, BUTTON_POP_TIME, Phaser.Easing.Default, true);
+    					self.game.add.tween(_obj.scale).to({x: 1.0, y: 1.0}, BUTTON_POP_TIME, Phaser.Easing.Default, true);
+    				});
+                }
 			}());
 			this.popup_sprite.addChild(obj);
 		}
