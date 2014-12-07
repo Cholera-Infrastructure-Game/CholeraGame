@@ -4,6 +4,8 @@ var MapStage = function (game) {
     this.village_groups;
     this.time_should_progess;
     this.village_small_pies; // array of village pies
+    this.is_action_selected = [false, false, false, false];
+    this.selected_village_index;
 };
 
 MapStage.prototype = {
@@ -304,12 +306,6 @@ MapStage.prototype = {
             pie.inputEnabled = true;
             pie.input.priorityID = 1;
             pie.input.useHandCursor = true;
-            pie.events.onInputOver.add(function() {
-                console.log("it's working")
-            });
-            pie.events.onInputDown.add(function() {
-                console.log("what the fuck")
-            });
 			// Create the cost text next to the pie.
 			// WARNING: I temporarily disabled this because it doesn't fit.
 			// Let's see where else we could put it.
@@ -332,13 +328,11 @@ MapStage.prototype = {
                     var item = clickable_actions[k];
     				item.events.onInputDown.add(function() {
     					// TODO: Hook up to this callback.
-    					var result = self.buyAction(_i, self.popup_status);
+    					var result = self.clickAction(_i, self.popup_status);
     					if (result == "good") {
     						// If we succeeded in buying the measure then make the button pulse.
-    						var tween = self.game.add.tween(_obj.scale);
-    						tween.to({x: 1.1, y: 1.1}, 100, Phaser.Easing.Quadratic.In);
-    						tween.to({x: 1.3, y: 1.3}, 100, Phaser.Easing.Quadratic.Out);
-    						tween.start();
+                            self.game.add.tween(_obj.scale).to({x: 1.15, y: 1.15}, BUTTON_POP_TIME, Phaser.Easing.Default, true);
+                            self.game.add.tween(_pie.scale).to({x: 1.15, y: 1.15}, BUTTON_POP_TIME, Phaser.Easing.Default, true);
     					} else if (result == "no-money") {
     						// If we failed because we didn't have the money, then make the money indicator jiggle.
     						// First make sure we're not writing over a current tween.
@@ -384,7 +378,10 @@ MapStage.prototype = {
     						tween.to({x: 1.2, y: 1.2}, 200, Phaser.Easing.Quadratic.Out);
     						tween.to({x: 1.0, y: 1.0}, 200, Phaser.Easing.Quadratic.In);
     						tween.start();
-    					}
+    					} else if (result == "undo") {
+                            self.game.add.tween(_pie.scale).to({x: 1.0, y: 1.0}, BUTTON_POP_TIME, Phaser.Easing.Default, true);
+                            self.game.add.tween(_obj.scale).to({x: 1.0, y: 1.0}, BUTTON_POP_TIME, Phaser.Easing.Default, true);                            
+                        }
     				});
     				item.events.onInputOver.add(function() {
     					self.game.add.tween(_obj.scale).to({x: 1.3, y: 1.3}, BUTTON_POP_TIME, Phaser.Easing.Default, true);
@@ -394,9 +391,14 @@ MapStage.prototype = {
     					self.setDescriptionBoxTexts(_i);
     				});
     				item.events.onInputOut.add(function() {
-    					self.game.add.tween(_pie.scale).to({x: 1.0, y: 1.0}, BUTTON_POP_TIME, Phaser.Easing.Default, true);
-    					self.game.add.tween(_obj.scale).to({x: 1.0, y: 1.0}, BUTTON_POP_TIME, Phaser.Easing.Default, true);
-    				});
+                        if (self.is_action_selected[_i] === true) {
+                            self.game.add.tween(_pie.scale).to({x: 1.15, y: 1.15}, BUTTON_POP_TIME, Phaser.Easing.Default, true);
+                            self.game.add.tween(_obj.scale).to({x: 1.15, y: 1.15}, BUTTON_POP_TIME, Phaser.Easing.Default, true);                       
+                        } else {
+    					   self.game.add.tween(_pie.scale).to({x: 1.0, y: 1.0}, BUTTON_POP_TIME, Phaser.Easing.Default, true);
+    					   self.game.add.tween(_obj.scale).to({x: 1.0, y: 1.0}, BUTTON_POP_TIME, Phaser.Easing.Default, true);
+    				    }
+                    });
                 }
 			}());
 			this.popup_sprite.addChild(obj);
@@ -479,19 +481,26 @@ MapStage.prototype = {
 		}
 	},
 
-	buyAction: function(action_index, village_index) {
+	clickAction: function(action_index, village_index) {
 		console.log("Triggering action number " + action_index + " on village number " + village_index);
+        prevention_measure_data = PREVENTION_MEASURE_VALUES[PREVENTION_MEASURE_NAMES[action_index]];
 
-                prevention_measure_data = PREVENTION_MEASURE_VALUES[PREVENTION_MEASURE_NAMES[action_index]];
-		if (game_state.money < prevention_measure_data.cost) {
-                    return "no-money";
-                }
-                if (game_state.villages[village_index].getPreventionMeasureDaysLeft(PREVENTION_MEASURE_NAMES[action_index]) > 0) {
-                    return "on-cooldown";
-                }
-                game_state.villages[village_index].implementPreventionMeasure(PREVENTION_MEASURE_NAMES[action_index])
-		this.popup_pies[action_index].progress = 1;
-        return "good";
+        if (self.is_action_selected[action_index]) {
+            self.is_action_selected[action_index] = false
+            game_state.money += prevention_measure_data.cost
+            return "undo"
+        }
+        else {
+    		if (game_state.money < prevention_measure_data.cost) {
+                return "no-money";
+            }
+            if (game_state.villages[village_index].getPreventionMeasureDaysLeft(PREVENTION_MEASURE_NAMES[action_index]) > 0) {
+                return "on-cooldown";
+            }
+            self.is_action_selected[action_index] = true;
+            game_state.money -= prevention_measure_data.cost
+            return "good";
+        }
 	},
 
 	fullyHidePopup: function() {
@@ -502,6 +511,7 @@ MapStage.prototype = {
 
     createVillagePopup: function(selected_village_index) {
 		console.log("Creating popup for: " + selected_village_index);
+        self.selected_village_index = selected_village_index;
 		var selected_village = game_state.villages[selected_village_index];
 		// Make sure no pop-up is currently open.
 		// This SHOULD never happen, but let's just be really careful.
@@ -519,6 +529,8 @@ MapStage.prototype = {
         for (var i = 0; i < this.popup_pies.length; i++) {
             this.popup_pies[i].progress = selected_village.getPreventionMeasureDaysLeft(PREVENTION_MEASURE_NAMES[i])/PREVENTION_MEASURE_VALUES[PREVENTION_MEASURE_NAMES[i]].duration
         }
+        self.is_action_selected = [false, false, false, false];
+
 
 		// Shrink the popup down, preparing to grow it up later.
 		this.popup_sprite.scale.set(0.0);
@@ -559,6 +571,13 @@ MapStage.prototype = {
 			this.time_should_progress = true;
 			this.popup_sprite.inputEnabled = false;
 		}, this);
+
+        for (var i = 0; i < this.is_action_selected.length; i++) {
+            if (this.is_action_selected[i]) {
+                game_state.villages[this.selected_village_index].implementPreventionMeasure(PREVENTION_MEASURE_NAMES[i])
+            }
+        }
+
 	},
 
     createTextPopup: function() {
