@@ -4,7 +4,6 @@ var MapStage = function (game) {
     this.village_groups;
     this.time_should_progess;
     this.village_small_pies; // array of village pies
-    this.graphics;
 };
 
 MapStage.prototype = {
@@ -29,7 +28,6 @@ MapStage.prototype = {
 
     create: function() {
         game_state = new GameState();
-        this.graphics = this.game.add.graphics(0,0);
         console.log(game_state)
 		self = this;
 
