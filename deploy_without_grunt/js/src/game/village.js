@@ -39,7 +39,6 @@ Village = function(population, village_factors, village_number, initial_percenta
 
         implementPreventionMeasure: function(prevention_measure) {
             var measure = PREVENTION_MEASURE_VALUES[prevention_measure];
-            game_state.money -= measure.cost;
             prevention_measures[prevention_measure] = measure.duration;
             people_infected -= people_infected * measure.percent_cured;
         },
