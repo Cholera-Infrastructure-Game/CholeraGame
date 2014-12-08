@@ -3,7 +3,7 @@ var HelpStage = function (game) {
 	this.startButton = null;
 };
 
-var mainHelpText = "Cholera has broken out in the area! The localities have come together and decided to elect you to stop its terrible spread! Use the money raised by the localities to implement measures that will heal people and reduce cholera's infection rate. New measures unlock with time, and maybe at the end of the year something good will happen??? But be warned, if too many people are infected by cholera, it's game over!";
+var mainHelpText = "Cholera is spreading!\n\nClick on villages to add various measures to stop the epidemic before its too late!\nMore villages will pop up over time, so be ready to deal with infection spreading downstream.";
 
 HelpStage.prototype = {
 
@@ -21,16 +21,24 @@ HelpStage.prototype = {
 		this.add.sprite(0, 0, 'homeBackground');
 
 		// Add some instructions
-		this.instructionText = this.add.text(140, 130, mainHelpText, {font: "24px Bubblegum Sans"});
-		this.instructionText.fontSize = 24;
-		this.instructionText.fill = "#FFFFFF";
+		this.instructionText = this.add.text(this.game.world.centerX, 130, mainHelpText, {font: "20px Arial", fill: "000000", align: "center"});
+        this.instructionText.anchor.set(0.5);
         this.instructionText.wordWrap = true;
 		this.instructionText.wordWrapWidth = 600;
 
-		this.startButton = this.add.button(200, 350, 'startButton', this.playGame);
+		var back_to_title_text = this.add.text(this.game.world.centerX, 350, "START GAME", TITLE_STAGE_STYLE);
+		back_to_title_text.anchor.set(0.5);
+        back_to_title_text.inputEnabled = true;
+        back_to_title_text.events.onInputOver.add(function() {
+            this.game.add.tween(back_to_title_text.scale).to({x: 1.3, y: 1.3}, BUTTON_POP_TIME, Phaser.Easing.Default, true);
+        }, this);
+        back_to_title_text.events.onInputOut.add(function() {
+            this.game.add.tween(back_to_title_text.scale).to({x: 1.0, y: 1.0}, BUTTON_POP_TIME, Phaser.Easing.Default, true);
+        }, this);
+        back_to_title_text.events.onInputUp.add(this.returnToTitle, this);
 	},
 
-	playGame: function() {
+	returnToTitle: function() {
 		// Is this enough to restart the game - we'll see!
 		this.game.state.start('map_stage');
 	}
