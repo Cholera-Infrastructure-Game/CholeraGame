@@ -249,7 +249,7 @@ MapStage.prototype = {
         var time_text = "Day: " + game_state.day;
         this.time_text_object = this.game.add.text(300, 10, time_text, SCORE_BAR_STYLE);
 
-        var pause = this.game.add.text(this.game.world.width - 300, 10, "PAUSE", SCORE_BAR_STYLE);
+        var pause = this.game.add.text(this.game.world.width - 100, 10, "PAUSE", SCORE_BAR_STYLE);
         pause.inputEnabled = true;
         pause.events.onInputUp.add(function() {this.openTextPopup("Game paused")}, this);
 		this.pause_text_object = pause;
