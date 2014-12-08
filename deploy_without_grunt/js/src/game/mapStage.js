@@ -71,6 +71,17 @@ MapStage.prototype = {
     },
 
     update: function() {
+        if (!game_state.first_village_clicked && game_state.throb_complete) {
+            game_state.throb_complete = false;
+            var _village_groups = this.village_groups;
+            var tween = self.game.add.tween(_village_groups[0].getChildAt(0).scale).to({x: .8, y: .8}, 1000, Phaser.Easing.Quadratic.Out, true);
+	    tween.onComplete.add(function () {
+                var inner_tween = self.game.add.tween(_village_groups[0].getChildAt(0).scale).to({x: .6, y: .6}, 1000, Phaser.Easing.Quadratic.In, true);
+                inner_tween.onComplete.add(function () {game_state.throb_complete = true;});
+                inner_tween.start();
+            });
+            tween.start();
+        }
         this.money_text_object.text = "Money: " + game_state.money;
         if (!this.time_should_progress) {
             return;
@@ -206,6 +217,7 @@ MapStage.prototype = {
 				}, self);
 				// Also add a little increase in size effect on mouse over.
 				village_sprite.events.onInputOver.add(function() {
+                                        game_state.first_village_clicked = true;
 					self.game.add.tween(_village_sprite.scale).to({x: .8, y: .8}, 100, Phaser.Easing.Quadratic.Out, true);
 				});
 				village_sprite.events.onInputOut.add(function() {

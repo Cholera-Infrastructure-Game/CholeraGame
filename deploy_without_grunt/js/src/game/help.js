@@ -3,7 +3,7 @@ var HelpStage = function (game) {
 	this.startButton = null;
 };
 
-var mainHelpText = "Cholera has broken out in the area! The localities have come together and decided to elect you to stop its terrible spread! Use the money raised by the localities to implement measures that will heal people and reduce cholera's infection rate. New measures unlock with time, and maybe at the end of the year something good will happen??? But be warned, if too many people are infected by cholera, it's game over!";
+var mainHelpText = "Cholera is spreading!\n\nClick on villages to add various measures to stop the epidemic before its too late!\nMore villages will pop up over time, so be ready to deal with infection spreading downstream.";
 
 HelpStage.prototype = {
 
@@ -26,7 +26,7 @@ HelpStage.prototype = {
         this.instructionText.wordWrap = true;
 		this.instructionText.wordWrapWidth = 600;
 
-		var back_to_title_text = this.add.text(this.game.world.centerX, 350, "BACK", TITLE_STAGE_STYLE);
+		var back_to_title_text = this.add.text(this.game.world.centerX, 350, "START GAME", TITLE_STAGE_STYLE);
 		back_to_title_text.anchor.set(0.5);
         back_to_title_text.inputEnabled = true;
         back_to_title_text.events.onInputOver.add(function() {
@@ -40,6 +40,6 @@ HelpStage.prototype = {
 
 	returnToTitle: function() {
 		// Is this enough to restart the game - we'll see!
-		this.game.state.start('title_stage');
+		this.game.state.start('map_stage');
 	}
 }

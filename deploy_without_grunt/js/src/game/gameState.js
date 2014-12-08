@@ -127,6 +127,8 @@ var GameState = function () {
         frame_count: -1,
         days_since_second_village_unlocked: -1,
         boiling_water_unlocked: false,
-        score: 0
+        score: 0,
+        first_village_clicked: false,
+        throb_complete: true
     };
 }
