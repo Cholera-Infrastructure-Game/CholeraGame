@@ -6,6 +6,7 @@ var MapStage = function (game) {
     this.village_small_pies; // array of village pies
     this.is_action_selected = [false, false, false, false];
     this.selected_village_index;
+    this.action_items;
 };
 
 MapStage.prototype = {
@@ -298,6 +299,7 @@ MapStage.prototype = {
                 if (game_state.boiling_water_unlocked) {
                     num_measures = 4;
                 }
+        self.action_items = []
 		for (var i = 0; i < num_measures; i++) {
 			// Create a pie.
 			var pie = new PieProgress(this.game, left_column_center_x - 120, action_buttons_y_offset + i * action_spacing - h/2, 40, "rgba(0,0,0,0.6)", PREVENTION_MEASURE_VALUES[PREVENTION_MEASURE_NAMES[i]].color, this.game.cache.getImage(PREVENTION_MEASURE_NAMES[i]));
@@ -324,6 +326,7 @@ MapStage.prototype = {
 				var _obj = obj;
 				var _pie = pie;
                 var clickable_actions = [obj, pie];
+                self.action_items.push(clickable_actions);
                 for (var k = 0; k < clickable_actions.length; k++) {
                     var item = clickable_actions[k];
     				item.events.onInputDown.add(function() {
@@ -531,7 +534,6 @@ MapStage.prototype = {
         }
         self.is_action_selected = [false, false, false, false];
 
-
 		// Shrink the popup down, preparing to grow it up later.
 		this.popup_sprite.scale.set(0.0);
 		// Place the popup directly over the village.
@@ -556,6 +558,13 @@ MapStage.prototype = {
 			console.log("WARNING: Call to closeVillagePopup while no popup was open!");
 			return;
 		}
+        for (var i = 0; i < this.action_items.length; i++) {
+            var one_action_item = this.action_items[i];
+            for (var j = 0; j < one_action_item.length; j++) {
+                var item = one_action_item[j];
+                this.game.add.tween(item.scale).to({x: 1.0, y: 1.0}, BUTTON_POP_TIME, Phaser.Easing.Default, true);
+            }
+        }
 		// Tween the popup away.
 		var pos = VILLAGE_POSITIONS[this.popup_status];
         this.game.add.tween(this.popup_sprite).to({x: pos[0], y: pos[1]}, 300, Phaser.Easing.Default, true);
