@@ -348,6 +348,7 @@ MapStage.prototype = {
     						// If we succeeded in buying the measure then make the button pulse.
                             self.game.add.tween(_obj.scale).to({x: 1.15, y: 1.15}, BUTTON_POP_TIME, Phaser.Easing.Default, true);
                             self.game.add.tween(_pie.scale).to({x: 1.15, y: 1.15}, BUTTON_POP_TIME, Phaser.Easing.Default, true);
+                            _pie.progress = 1;
     					} else if (result == "no-money") {
     						// If we failed because we didn't have the money, then make the money indicator jiggle.
     						// First make sure we're not writing over a current tween.
@@ -395,7 +396,8 @@ MapStage.prototype = {
     						tween.start();
     					} else if (result == "undo") {
                             self.game.add.tween(_pie.scale).to({x: 1.0, y: 1.0}, BUTTON_POP_TIME, Phaser.Easing.Default, true);
-                            self.game.add.tween(_obj.scale).to({x: 1.0, y: 1.0}, BUTTON_POP_TIME, Phaser.Easing.Default, true);                            
+                            self.game.add.tween(_obj.scale).to({x: 1.0, y: 1.0}, BUTTON_POP_TIME, Phaser.Easing.Default, true);
+                            _pie.progress = 0;                            
                         }
     				});
     				item.events.onInputOver.add(function() {
