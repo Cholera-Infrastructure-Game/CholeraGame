@@ -6,7 +6,10 @@ music = null;
 
 TitleStage.prototype = {
     init: function() {
-
+    try {
+        music.stop();
+    }
+    catch(err) {}
     },
 
     preload: function() {
