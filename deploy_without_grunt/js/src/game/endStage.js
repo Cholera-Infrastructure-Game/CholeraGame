@@ -6,6 +6,7 @@ var EndStage = function (game) {
 EndStage.prototype = {
 
 	init: function () {
+                music.stop();
 		this.input.maxPointers = 1;
 		this.stage.disableVisibilityChange = true;
                 if (game_state.day > 300) {

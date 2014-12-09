@@ -2,6 +2,8 @@ var TitleStage = function(game) {
 
 };
 
+music = null;
+
 TitleStage.prototype = {
     init: function() {
 
@@ -14,7 +16,7 @@ TitleStage.prototype = {
     },
 
     create: function() {
-        var music = this.add.audio('background_music');
+        music = this.add.audio('background_music');
         music.play();
 
         var title_screen_sprite = this.game.add.sprite(0, 0, 'title_screen');

@@ -6,6 +6,7 @@ WinStage = function(game) {
 WinStage.prototype = {
 
     init: function () {
+        music.stop();
         this.input.maxPointers = 1;
         this.stage.disableVisibilityChange = true;
     },
