@@ -13,7 +13,7 @@ HelpStage.prototype = {
 	},
 
 	preload: function() {
-		this.load.image('homeBackground', 'assets/images/background.png');
+		this.load.image('homeBackground', 'assets/images/GameOver.png');
 		this.load.image('startButton', 'assets/images/start_button.png');
 	},
 
