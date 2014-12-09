@@ -6,6 +6,7 @@ var EndStage = function (game) {
 EndStage.prototype = {
 
 	init: function () {
+                music.stop();
 		this.input.maxPointers = 1;
 		this.stage.disableVisibilityChange = true;
                 if (game_state.day > 300) {
@@ -24,12 +25,12 @@ EndStage.prototype = {
 	},
 
 	preload: function() {
-		this.load.image('homeBackground', 'assets/images/background.png');
+		this.load.image('gameOverBackground', 'assets/images/GameOver.png');
 		this.load.image('startButton', 'assets/images/start_button.png');
 	},
 
 	create: function() {
-		this.add.sprite(0, 0, 'homeBackground');
+		this.add.sprite(0, 0, 'gameOverBackground');
 
 		// Add some instructions
 		this.instructionText = this.add.text(this.game.world.centerX, 130, this.game_over_text, {font: "20px Arial", fill: "000000", align: "center"});
