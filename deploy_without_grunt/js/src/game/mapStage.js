@@ -19,7 +19,7 @@ MapStage.prototype = {
         this.load.image('health_back','assets/images/health_background.png');
         this.load.image('left','assets/images/Left_arrow.png');
         this.load.image('right','assets/images/Right_arrow.png');
-        this.load.image('map', 'assets/images/NewMap.png');//Need to rearrange villages for NewMap
+        this.load.spritesheet('map', 'assets/images/flowSpriteSheet.png', 1280, 960);
         this.load.image('boil_water', 'assets/images/NewIcons/BoilingWaterIcon.png');
         this.load.image('washing_hands', 'assets/images/NewIcons/SoapIcon.png');
         this.load.image('electrolytes', 'assets/images/NewIcons/Electrolytes.png');
@@ -43,6 +43,8 @@ MapStage.prototype = {
 		var map_sprite = this.game.add.sprite(0, 0, 'map');
 		map_sprite.scale.x = GAME_WIDTH/map_sprite.width;
 		map_sprite.scale.y = GAME_HEIGHT/map_sprite.height;
+                map_sprite.animations.add('flow');
+                map_sprite.animations.play('flow', 5, true);
 
         this.game.add.sprite(0, 0, 'top_bar');
         
@@ -249,7 +251,7 @@ MapStage.prototype = {
         var time_text = "Day: " + game_state.day;
         this.time_text_object = this.game.add.text(300, 10, time_text, SCORE_BAR_STYLE);
 
-        var pause = this.game.add.text(this.game.world.width - 300, 10, "PAUSE", SCORE_BAR_STYLE);
+        var pause = this.game.add.text(this.game.world.width - 100, 10, "PAUSE", SCORE_BAR_STYLE);
         pause.inputEnabled = true;
         pause.events.onInputUp.add(function() {this.openTextPopup("Game paused")}, this);
 		this.pause_text_object = pause;
@@ -348,6 +350,7 @@ MapStage.prototype = {
     						// If we succeeded in buying the measure then make the button pulse.
                             self.game.add.tween(_obj.scale).to({x: 1.15, y: 1.15}, BUTTON_POP_TIME, Phaser.Easing.Default, true);
                             self.game.add.tween(_pie.scale).to({x: 1.15, y: 1.15}, BUTTON_POP_TIME, Phaser.Easing.Default, true);
+                            _pie.progress = 1;
     					} else if (result == "no-money") {
     						// If we failed because we didn't have the money, then make the money indicator jiggle.
     						// First make sure we're not writing over a current tween.
@@ -395,7 +398,8 @@ MapStage.prototype = {
     						tween.start();
     					} else if (result == "undo") {
                             self.game.add.tween(_pie.scale).to({x: 1.0, y: 1.0}, BUTTON_POP_TIME, Phaser.Easing.Default, true);
-                            self.game.add.tween(_obj.scale).to({x: 1.0, y: 1.0}, BUTTON_POP_TIME, Phaser.Easing.Default, true);                            
+                            self.game.add.tween(_obj.scale).to({x: 1.0, y: 1.0}, BUTTON_POP_TIME, Phaser.Easing.Default, true);
+                            _pie.progress = 0;                            
                         }
     				});
     				item.events.onInputOver.add(function() {
