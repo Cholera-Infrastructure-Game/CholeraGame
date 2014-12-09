@@ -20,7 +20,7 @@ TitleStage.prototype = {
 
     create: function() {
         music = this.add.audio('background_music');
-        music.play();
+        music.play('',0,1,true);
 
         var title_screen_sprite = this.game.add.sprite(0, 0, 'title_screen');
         title_screen_sprite.scale.x = GAME_WIDTH/title_screen_sprite.width;

@@ -22,12 +22,19 @@ HelpStage.prototype = {
 
 		// Add some instructions
 		this.instructionText = this.add.text(this.game.world.centerX, 130, mainHelpText, {font: "20px Arial", fill: "000000", align: "center"});
-        this.instructionText.anchor.set(0.5);
-        this.instructionText.wordWrap = true;
+                this.instructionText.anchor.set(0.5);
+                this.instructionText.wordWrap = true;
+                this.instructionText.stroke = '#000000';
+                this.instructionText.strokeThickness = 3;
+                this.instructionText.fill = '#FFFFFF'
 		this.instructionText.wordWrapWidth = 600;
 
-		var back_to_title_text = this.add.text(this.game.world.centerX, 350, "START GAME", TITLE_STAGE_STYLE);
-		back_to_title_text.anchor.set(0.5);
+		var back_to_title_text = this.add.text(this.game.world.centerX, 350, "START GAME", {font: "45px Arial", fill: "000000", align: "center"});
+                back_to_title_text.anchor.set(0.5);
+                back_to_title_text.stroke = '#FFFFFF';
+                back_to_title_text.strokeThickness = 1;
+                back_to_title_text.fill = '#000000';
+
         back_to_title_text.inputEnabled = true;
         back_to_title_text.events.onInputOver.add(function() {
             this.game.add.tween(back_to_title_text.scale).to({x: 1.3, y: 1.3}, BUTTON_POP_TIME, Phaser.Easing.Default, true);
