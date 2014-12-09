@@ -12,12 +12,13 @@ WinStage.prototype = {
     },
 
     preload: function() {
-        this.load.image('homeBackground', 'assets/images/background.png');
+        this.load.image('winBackground', 'assets/images/WinScreen.png');
         this.load.image('startButton', 'assets/images/start_button.png');
+        this.load.image('boil_water', 'assets/images/NewIcons/BoilingWaterIcon.png');
     },
 
     create: function() {
-        this.add.sprite(0, 0, 'homeBackground');
+        this.add.sprite(0, 0, 'winBackground');
 
         // Add some instructions
         this.instructionText = this.add.text(this.game.world.centerX, 130, this.win_text, {font: "20px Arial", fill: "000000", align: "center"});
