@@ -19,7 +19,7 @@ MapStage.prototype = {
         this.load.image('health_back','assets/images/health_background.png');
         this.load.image('left','assets/images/Left_arrow.png');
         this.load.image('right','assets/images/Right_arrow.png');
-        this.load.image('map', 'assets/images/NewMap.png');//Need to rearrange villages for NewMap
+        this.load.spritesheet('map', 'assets/images/flowSpriteSheet.png', 1280, 960);
         this.load.image('boil_water', 'assets/images/NewIcons/BoilingWaterIcon.png');
         this.load.image('washing_hands', 'assets/images/NewIcons/SoapIcon.png');
         this.load.image('electrolytes', 'assets/images/NewIcons/Electrolytes.png');
@@ -43,6 +43,8 @@ MapStage.prototype = {
 		var map_sprite = this.game.add.sprite(0, 0, 'map');
 		map_sprite.scale.x = GAME_WIDTH/map_sprite.width;
 		map_sprite.scale.y = GAME_HEIGHT/map_sprite.height;
+                map_sprite.animations.add('flow');
+                map_sprite.animations.play('flow', 5, true);
 
         this.game.add.sprite(0, 0, 'top_bar');
         
