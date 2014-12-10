@@ -105,6 +105,9 @@ VILLAGE_UNLOCK_DAYS = [
         120,
 ];
 
+// Text to appear in the popup menu description box if no measure has been hovered over
+var DEFAULT_DESCRIPTION_BOX_TEXT = "Hover over a prevention measure to see details.\n\nClick to buy.\nClick again to undo purchase.";
+
 var prevention_descript = [ // TODO update this text
     "Lather and rinse for thorough handwashing. Cheap and simple but eventually runs out.",
     "Very effective at preventing cholera, though the immunity ends a little sooner. Moderately expensive.",
