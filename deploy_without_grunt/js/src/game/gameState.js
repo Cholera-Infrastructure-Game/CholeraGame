@@ -6,6 +6,11 @@ var BASE_INFECTION_RATE = .0075;
 var BASE_FACTOR = 0.0000008;
 var INFECTION_RATE_POPULATION_CAP = 50000;
 
+// The probability of a healthy village becoming randomly infected on any given day.
+var RANDOM_EVENT_CHANCE = .05;
+// The maximum percentage of the population that can be infected on a random event.
+var RANDOM_EVENT_INFECTED_CAP = .25;
+
 // When percent infected in the first village hits this or less, the second village is unlocked
 var SECOND_VILLAGE_UNLOCK_CRITERIA = .01
 
@@ -38,7 +43,7 @@ var DAILY_INCOME = 50;
 // The additive factor to the infection rate the measure has over time.
 var PREVENTION_MEASURE_VALUES = { //TODO balance these numbers
     washing_hands: {
-        infection_rate_reduction: .025,
+        infection_rate_reduction: .035,
         percent_cured: .05,
         duration: 14,
         cost: 200,
@@ -47,7 +52,7 @@ var PREVENTION_MEASURE_VALUES = { //TODO balance these numbers
         description: "-2.5 infection rate\n+5% infected people cured\n\nWashing your hands with soap is cheap and reduces the spread of infection and the infected population a little.\n\nCheap all-around measure."
     },
     water_containers: {
-        infection_rate_reduction: .05,
+        infection_rate_reduction: .06,
         percent_cured: 0,
         duration: 21,
         cost: 500,
@@ -68,7 +73,7 @@ var PREVENTION_MEASURE_VALUES = { //TODO balance these numbers
         infection_rate_reduction: .01,
         percent_cured: 0,
         duration: 21,
-        cost: 500,
+        cost: 800,
         upstream_effect_reduction: .9,
         color: "#FFA500",
         display_name: "Boiling Water",
