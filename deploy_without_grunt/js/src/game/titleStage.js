@@ -26,7 +26,7 @@ TitleStage.prototype = {
         title_screen_sprite.scale.x = GAME_WIDTH/title_screen_sprite.width;
         title_screen_sprite.scale.y = GAME_HEIGHT/title_screen_sprite.height;
 
-        var play_game_text = this.game.add.text(this.game.world.centerX, this.game.world.centerY + 100, "PLAY GAME", TITLE_STAGE_STYLE);
+        var play_game_text = this.game.add.text(this.game.world.centerX, this.game.world.centerY + 120, "PLAY GAME", TITLE_STAGE_STYLE);
         play_game_text.anchor.set(0.5);
         play_game_text.inputEnabled = true;
         play_game_text.events.onInputOver.add(function() {
@@ -37,7 +37,7 @@ TitleStage.prototype = {
         }, this);
         play_game_text.events.onInputUp.add(this.showInstructions, this);
 
-        var credits_text = this.game.add.text(this.game.world.centerX, this.game.world.centerY + 150, "CREDITS", TITLE_STAGE_STYLE);
+        var credits_text = this.game.add.text(this.game.world.centerX, this.game.world.centerY + 170, "CREDITS", TITLE_STAGE_STYLE);
         credits_text.anchor.set(0.5);
         credits_text.inputEnabled = true;
         credits_text.events.onInputOver.add(function() {

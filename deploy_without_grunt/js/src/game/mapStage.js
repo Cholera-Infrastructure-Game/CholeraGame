@@ -2,7 +2,7 @@ var MapStage = function (game) {
     this.money_text_object;
     this.time_text_object;
     this.village_groups;
-    this.time_should_progess;
+    this.time_should_progress;
     this.village_small_pies; // array of village pies
     this.is_action_selected = [false, false, false, false];
     this.selected_village_index;
@@ -52,7 +52,8 @@ MapStage.prototype = {
                 map_sprite.animations.add('flow');
                 map_sprite.animations.play('flow', 5, true);
 
-        this.game.add.sprite(0, 0, 'top_bar');
+        var top_bar = this.game.add.sprite(0, 0, 'top_bar');
+        top_bar.alpha = 0.5;
         
 
         this.village_groups = [];
@@ -90,7 +91,7 @@ MapStage.prototype = {
             });
             tween.start();
         }
-        this.money_text_object.text = "Money: " + game_state.money;
+        this.money_text_object.text = "Money: $" + game_state.money;
         if (!this.time_should_progress) {
             return;
         }
@@ -252,15 +253,24 @@ MapStage.prototype = {
     },
 
     createScoreBar: function() {
-        var money_text = "Money: " + game_state.money;
-        this.money_text_object = this.game.add.text(10, 10, money_text, SCORE_BAR_STYLE);
+        var money_text = "Money: $" + game_state.money;
+        this.money_text_object = this.game.add.text(10, 7, money_text, SCORE_BAR_STYLE);
 
         var time_text = "Day: " + game_state.day;
-        this.time_text_object = this.game.add.text(300, 10, time_text, SCORE_BAR_STYLE);
+        this.time_text_object = this.game.add.text(this.game.world.centerX - 20, 7, time_text, SCORE_BAR_STYLE);
 
-        var pause = this.game.add.text(this.game.world.width - 100, 10, "PAUSE", SCORE_BAR_STYLE);
+        var pause = this.game.add.text(this.game.world.width - 120, 7, "PAUSE", SCORE_BAR_STYLE);
         pause.inputEnabled = true;
-        pause.events.onInputUp.add(function() {this.openTextPopup("Game paused")}, this);
+        pause.events.onInputOver.add(function() {
+            if (!this.time_should_progress) {
+                self.game.add.tween(pause.scale).to({x: 1.2, y: 1.2}, 100, Phaser.Easing.Quadratic.Out, true)
+            }
+        });
+        pause.events.onInputOut.add(function(){
+            self.game.add.tween(pause.scale).to({x: 1, y: 1}, 100, Phaser.Easing.Quadratic.In, true)
+        });
+
+        pause.events.onInputUp.add(function() {this.openTextPopup("Game Paused")}, this);
 		this.pause_text_object = pause;
     },
 
@@ -289,7 +299,7 @@ MapStage.prototype = {
 		var h = this.popup_sprite.height;
 
 		// Create text for the top.
-		this.popup_locality_text = this.game.add.text(0, 30-h/2, "You shouldn't see this.", POPUP_TEXT_STYLE);
+		this.popup_locality_text = this.game.add.text(0, 30-h/2, "You shouldn't see this.", POPUP_TITLE_TEXT_STYLE);
 		// This next line causes the text to be centered properly.
 		this.popup_locality_text.anchor.set(0.5);
 		this.popup_sprite.addChild(this.popup_locality_text);
@@ -310,7 +320,7 @@ MapStage.prototype = {
 		var left_column_center_x = -w/4 + 10;
 		var right_column_center_x = w/4;
 		add_text(left_column_center_x, 50-h/2, "Actions");
-		add_text(right_column_center_x, 80-h/2, "Description");
+		add_text(right_column_center_x, 50-h/2, "Description");
                 var action_buttons_y_offset = 100;
 
 		// Fill the actions pane with pies and actions.
@@ -436,8 +446,8 @@ MapStage.prototype = {
 		// Crucial: Remember that these are coordinates for the bitmapData, so (0, 0) is the UL corner, not the middle.
 		var corner_radius = 20;
 		var desc_width = 300;
-		var desc_height = 300;
-		var desc_box_top_y = 110;
+		var desc_height = 330;
+		var desc_box_top_y = 80;
 		bmd.ctx.beginPath();
 		// Change coordinates so that (0, 0) is the upper left corner of the box we are drawing.
 		bmd.ctx.translate(right_column_center_x + w/2 - desc_width/2, desc_box_top_y);
@@ -473,7 +483,7 @@ MapStage.prototype = {
 		this.popup_sprite.addChild(obj);
 
 		// Create the close button.
-		var button = this.game.add.text(0, this.popup_sprite.height * 0.45, "Return to map", POPUP_TEXT_STYLE);
+		var button = this.game.add.text(0, this.popup_sprite.height * 0.45, "RETURN TO MAP", POPUP_TEXT_CLICKABLE_STYLE);
 		button.anchor.set(0.5);
 		button.inputEnabled = true;
 		button.input.priorityID = 1;
@@ -504,7 +514,7 @@ MapStage.prototype = {
 		} else {
 			// Otherwise, populate them appropriately.
 			self.popup_description_title_object.text = PREVENTION_MEASURE_VALUES[PREVENTION_MEASURE_NAMES[action_index]].display_name;
-			self.popup_description_cost_object.text = PREVENTION_MEASURE_VALUES[PREVENTION_MEASURE_NAMES[action_index]].cost;
+			self.popup_description_cost_object.text = "$" + PREVENTION_MEASURE_VALUES[PREVENTION_MEASURE_NAMES[action_index]].cost;
 			self.popup_description_text_object.text =PREVENTION_MEASURE_VALUES[PREVENTION_MEASURE_NAMES[action_index]].description;
 		}
 	},
@@ -551,7 +561,7 @@ MapStage.prototype = {
 		// Pause all action.
 		this.time_should_progress = false;
 		// Update the popup with appropriate information.
-		this.popup_locality_text.text = "Locality: " + (selected_village_index + 1);
+		this.popup_locality_text.text = "LOCALITY: " + (selected_village_index + 1);
 		// Clear all the description box texts.
 		this.setDescriptionBoxTexts(-1);
         for (var i = 0; i < this.popup_pies.length; i++) {
@@ -646,7 +656,7 @@ MapStage.prototype = {
 		this.text_popup_sprite.addChild(this.text_popup_text);
 
 		// Create the close button.
-		var button = this.game.add.text(0, this.text_popup_sprite.height * 0.4, "Return to map", POPUP_TEXT_STYLE);
+		var button = this.game.add.text(0, this.text_popup_sprite.height * 0.4, "RETURN TO MAP", POPUP_TEXT_CLICKABLE_STYLE);
 		button.anchor.set(0.5);
 		button.inputEnabled = true;
 		button.input.priorityID = 1;
