@@ -10,10 +10,10 @@ EndStage.prototype = {
 		this.input.maxPointers = 1;
 		this.stage.disableVisibilityChange = true;
                 if (game_state.day > 300) {
-		    this.game_over_text = "Congratulations!  You managed to survive " + game_state.day + " days!  Try and make it to a year!"
+		    this.game_over_text = "Almost there!  You managed to survive " + game_state.day + " days!  Try and make it to a year!"
                 }
                 if (game_state.day > 200) {
-		    this.game_over_text = "Congratulations!  You managed to survive " + game_state.day + " days! Try and make it past 4 villages!"
+		    this.game_over_text = "Good try!  You managed to survive " + game_state.day + " days! Try and make it past 4 villages!"
                 }
                 if (game_state.day > 100) {
 		    this.game_over_text = "Cholera spread fast, but you managed to survive " + game_state.day + " days!"
@@ -27,9 +27,13 @@ EndStage.prototype = {
 	preload: function() {
 		this.load.image('gameOverBackground', 'assets/images/GameOver.png');
 		this.load.image('startButton', 'assets/images/start_button.png');
+                this.load.audio('background_lose_music', ['assets/sound/GameOverTrack.mp3', 'assets/sound/GameOverTrack.ogg']);
 	},
 
 	create: function() {
+                music = this.add.audio('background_lose_music');
+                music.play('',0,.5,true);
+
 		this.add.sprite(0, 0, 'gameOverBackground');
 
 		// Add some instructions

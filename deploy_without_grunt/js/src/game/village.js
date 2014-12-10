@@ -17,7 +17,10 @@ Village = function(population, village_factors, village_number, initial_percenta
 
     return {
         incrementDay: function() {
-            infected_rate = BASE_INFECTION_RATE;
+            infected_rate = 0;
+            if (people_infected != 0) {
+                infected_rate = BASE_INFECTION_RATE;
+            }
             for (var i = 0; i < game_state.available_villages; i++) {
                 var village_infection_contribution = Math.min(game_state.villages[i].getHowManyInfected() * BASE_FACTOR, INFECTION_RATE_POPULATION_CAP * BASE_FACTOR)
                 if (village_factors[i] === 1 || prevention_measures.boil_water === 0) {
@@ -33,6 +36,14 @@ Village = function(population, village_factors, village_number, initial_percenta
                     infected_rate -= PREVENTION_MEASURE_VALUES[prevention_measure].infection_rate_reduction;
                     prevention_measures[prevention_measure] -= 1;
                 }
+            }
+            if (people_infected === 0 && infected_rate <= 0) {
+                 // Special case, don't just infect, have random infection events.
+                var random_indicator = Math.random();
+                if (random_indicator < RANDOM_EVENT_CHANCE) {
+                    people_infected = Math.ceil(total_population * RANDOM_EVENT_INFECTED_CAP * (Math.random() + 1) * .5);
+                }
+                return;
             }
             people_infected = Math.max(0, Math.min(Math.ceil(people_infected + Math.ceil(total_population * Math.random() * infected_rate)), total_population));
         },

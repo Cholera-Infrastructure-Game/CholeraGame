@@ -15,10 +15,13 @@ WinStage.prototype = {
         this.load.image('winBackground', 'assets/images/WinScreen.png');
         this.load.image('startButton', 'assets/images/start_button.png');
         this.load.image('boil_water', 'assets/images/NewIcons/BoilingWaterIcon.png');
+        this.load.audio('background_win_music', ['assets/sound/VictoryTrack.mp3', 'assets/sound/VictoryTrack.ogg']);
     },
 
     create: function() {
         this.add.sprite(0, 0, 'winBackground');
+        music = this.add.audio('background_win_music');
+        music.play('',0,.5,true);
 
         // Add some instructions
         this.instructionText = this.add.text(this.game.world.centerX, 130, this.win_text, {font: "20px Arial", fill: "000000", align: "center"});
