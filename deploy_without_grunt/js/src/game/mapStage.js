@@ -650,7 +650,7 @@ MapStage.prototype = {
 		var h = this.text_popup_sprite.height;
 
 		// Create text.
-		this.text_popup_text = this.game.add.text(0, 90-h/2, "Placeholder Text", POPUP_TEXT_STYLE);
+		this.text_popup_text = this.game.add.text(0, 90-h/2, "Placeholder Text", POPUP_TEXT_STYLE2);
 		// This next line causes the text to be centered properly.
 		this.text_popup_text.anchor.set(0.5);
 		this.text_popup_sprite.addChild(this.text_popup_text);

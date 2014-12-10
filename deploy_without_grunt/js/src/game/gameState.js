@@ -22,6 +22,7 @@ var BOIL_WATER_UNLOCK_TEXT = "You have unlocked boiling water!\nBoiling water pr
 var POPUP_SHY_MARGIN = 30;
 var SCORE_BAR_STYLE = { font: "24px Arial", fill: "#FFFFFF", stroke: "#000000", strokeThickness: 3, align: "center" };
 var POPUP_TEXT_STYLE = { font: "32px Arial", fill: "#000000", align: "center" };
+var POPUP_TEXT_STYLE2 = { font: "24px Arial", fill: "#000000", align: "center" };
 var POPUP_TITLE_TEXT_STYLE = { font: "bold 32px Arial", fill: "#000000", align: "center" };
 var POPUP_TEXT_CLICKABLE_STYLE = { font: "bold 32px Arial", fill: "#000000", stroke: "#FFFFFF", strokeThickness: 3, align: "center" };
 var POPUP_ACTION_NAME_STYLE = { font: "28px Arial", fill: "#000000", align: "center" };
