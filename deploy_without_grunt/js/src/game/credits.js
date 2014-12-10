@@ -17,7 +17,9 @@ CreditsStage.prototype = {
     },
 
     create: function() {
-        this.add.sprite(0, 0, 'homeBackground');
+        var background_sprite = this.game.add.sprite(0, 0, 'homeBackground');
+        background_sprite.scale.x = GAME_WIDTH/background_sprite.width;
+        background_sprite.scale.y = GAME_HEIGHT/background_sprite.height;
 
         // Add some instructions
         this.instructionText = this.add.text(this.game.world.centerX, 130, this.credits_text, {font: "20px Arial", fill: "000000", align: "center"});

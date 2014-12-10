@@ -6,7 +6,7 @@ var EndStage = function (game) {
 EndStage.prototype = {
 
 	init: function () {
-                music.stop();
+        music.stop();
 		this.input.maxPointers = 1;
 		this.stage.disableVisibilityChange = true;
                 if (game_state.day > 300) {
@@ -31,15 +31,20 @@ EndStage.prototype = {
 	},
 
 	create: function() {
-                music = this.add.audio('background_lose_music');
-                music.play('',0,.5,true);
+        music = this.add.audio('background_lose_music');
+        music.play('',0,.5,true);
 
-		this.add.sprite(0, 0, 'gameOverBackground');
+		var background_sprite = this.add.sprite(0, 0, 'gameOverBackground');
+        background_sprite.scale.x = GAME_WIDTH/background_sprite.width;
+        background_sprite.scale.y = GAME_HEIGHT/background_sprite.height;
 
 		// Add some instructions
 		this.instructionText = this.add.text(this.game.world.centerX, 130, this.game_over_text, {font: "20px Arial", fill: "000000", align: "center"});
         this.instructionText.anchor.set(0.5);
         this.instructionText.wordWrap = true;
+        this.instructionText.stroke = '#000000';
+        this.instructionText.strokeThickness = 3;
+        this.instructionText.fill = '#FFFFFF'
 		this.instructionText.wordWrapWidth = 600;
 
 		var back_to_title_text = this.add.text(this.game.world.centerX, 350, "TRY AGAIN", TITLE_STAGE_STYLE);

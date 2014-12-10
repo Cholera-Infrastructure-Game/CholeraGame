@@ -19,9 +19,12 @@ WinStage.prototype = {
     },
 
     create: function() {
-        this.add.sprite(0, 0, 'winBackground');
         music = this.add.audio('background_win_music');
         music.play('',0,.5,true);
+
+        var background_sprite = this.add.sprite(0, 0, 'winBackground');
+        background_sprite.scale.x = GAME_WIDTH/background_sprite.width;
+        background_sprite.scale.y = GAME_HEIGHT/background_sprite.height;
 
         // Add some instructions
         this.instructionText = this.add.text(this.game.world.centerX, 130, this.win_text, {font: "20px Arial", fill: "000000", align: "center"});
@@ -29,7 +32,7 @@ WinStage.prototype = {
         this.instructionText.wordWrap = true;
         this.instructionText.wordWrapWidth = 600;
 
-        var back_to_title_text = this.add.text(this.game.world.centerX, 350, "BACK", TITLE_STAGE_STYLE);
+        var back_to_title_text = this.add.text(this.game.world.centerX, 350, "PLAY AGAIN", TITLE_STAGE_STYLE);
         back_to_title_text.anchor.set(0.5);
         back_to_title_text.inputEnabled = true;
         back_to_title_text.events.onInputOver.add(function() {

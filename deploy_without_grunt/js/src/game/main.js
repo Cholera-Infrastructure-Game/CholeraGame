@@ -8,7 +8,5 @@ window.onload = function() {
     cholera_game.state.add("win_stage", WinStage);
     cholera_game.state.add("help_stage", HelpStage);
     cholera_game.state.add("credits_stage", CreditsStage);
-    // cholera_game.state.start("help_stage");
     cholera_game.state.start("title_stage");
-//	cholera_game.state.start("map_stage");
 }

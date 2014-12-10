@@ -27,7 +27,9 @@ HelpStage.prototype = {
 	},
 
 	create: function() {
-		this.game.add.sprite(0, 0, 'homeBackground');
+		var background_sprite = this.game.add.sprite(0, 0, 'homeBackground');
+        background_sprite.scale.x = GAME_WIDTH/background_sprite.width;
+        background_sprite.scale.y = GAME_HEIGHT/background_sprite.height;
 
 		// Add some instructions
 		this.instructionText = this.game.add.text(this.game.world.centerX, 50, mainHelpText, {font: "20px Arial", fill: "000000", align: "center"});
@@ -38,15 +40,14 @@ HelpStage.prototype = {
         this.instructionText.fill = '#FFFFFF'
 		this.instructionText.wordWrapWidth = 650;
 
-        var start_button_sprite = this.game.add.sprite(this.game.world.centerX, this.game.world.height - 100, "startButton");
+        var start_button_sprite = this.game.add.text(this.game.world.centerX, this.game.world.height - 100, "START", TITLE_STAGE_STYLE);
         start_button_sprite.anchor.set(0.5);
-        start_button_sprite.scale.set(0.5);
         start_button_sprite.inputEnabled = true;
         start_button_sprite.events.onInputOver.add(function() {
-            this.game.add.tween(start_button_sprite.scale).to({x: 0.7, y: 0.7}, BUTTON_POP_TIME, Phaser.Easing.Default, true);
+            this.game.add.tween(start_button_sprite.scale).to({x: 1.3, y: 1.3}, BUTTON_POP_TIME, Phaser.Easing.Default, true);
         }, this);
         start_button_sprite.events.onInputOut.add(function() {
-            this.game.add.tween(start_button_sprite.scale).to({x: 0.5, y: 0.5}, BUTTON_POP_TIME, Phaser.Easing.Default, true);
+            this.game.add.tween(start_button_sprite.scale).to({x: 1, y: 1}, BUTTON_POP_TIME, Phaser.Easing.Default, true);
         }, this);
         start_button_sprite.events.onInputUp.add(this.returnToTitle, this);
 
