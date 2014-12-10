@@ -27,9 +27,13 @@ EndStage.prototype = {
 	preload: function() {
 		this.load.image('gameOverBackground', 'assets/images/GameOver.png');
 		this.load.image('startButton', 'assets/images/start_button.png');
+                this.load.audio('background_lose_music', ['assets/sound/GameOverTrack.mp3', 'assets/sound/GameOverTrack.ogg']);
 	},
 
 	create: function() {
+                music = this.add.audio('background_lose_music');
+                music.play('',0,.5,true);
+
 		this.add.sprite(0, 0, 'gameOverBackground');
 
 		// Add some instructions

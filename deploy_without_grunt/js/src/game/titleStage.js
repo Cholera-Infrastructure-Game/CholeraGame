@@ -14,13 +14,13 @@ TitleStage.prototype = {
 
     preload: function() {
         this.load.image('title_screen', 'assets/images/TitleScreen1.png');
-        this.load.audio('background_music', 'assets/sound/africanTheme.mp3');
+        this.load.audio('background_music', ['assets/sound/africanTheme.mp3', 'assets/sound/africanTheme.ogg']);
 
     },
 
     create: function() {
         music = this.add.audio('background_music');
-        music.play('',0,1,true);
+        music.play('',0,.5,true);
 
         var title_screen_sprite = this.game.add.sprite(0, 0, 'title_screen');
         title_screen_sprite.scale.x = GAME_WIDTH/title_screen_sprite.width;
