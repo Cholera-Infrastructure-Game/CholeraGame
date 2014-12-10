@@ -90,6 +90,10 @@ MapStage.prototype = {
             });
             tween.start();
         }
+        if (game_state.has_random_event_occured && !game_state.has_random_event_popup_been_shown) {
+            game_state.has_random_event_popup_been_shown = true;
+            this.openTextPopup("A healthy locality has had\nan outbreak!\nBe ready to deal with random\noutbreaks at any time.");
+        }
         this.money_text_object.text = "Money: " + game_state.money;
         if (!this.time_should_progress) {
             return;

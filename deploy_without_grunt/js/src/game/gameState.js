@@ -52,7 +52,7 @@ var PREVENTION_MEASURE_VALUES = { //TODO balance these numbers
         description: "-2.5 infection rate\n+5% infected people cured\n\nWashing your hands with soap is cheap and reduces the spread of infection and the infected population a little.\n\nCheap all-around measure."
     },
     water_containers: {
-        infection_rate_reduction: .06,
+        infection_rate_reduction: .05,
         percent_cured: 0,
         duration: 21,
         cost: 500,
@@ -137,6 +137,8 @@ var GameState = function () {
         boiling_water_unlocked: false,
         score: 0,
         first_village_clicked: false,
-        throb_complete: true
+        throb_complete: true,
+        has_random_event_occured: false,
+        has_random_event_popup_been_shown: false
     };
 }
