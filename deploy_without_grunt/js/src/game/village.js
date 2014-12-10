@@ -41,6 +41,7 @@ Village = function(population, village_factors, village_number, initial_percenta
                  // Special case, don't just infect, have random infection events.
                 var random_indicator = Math.random();
                 if (random_indicator < RANDOM_EVENT_CHANCE) {
+                    game_state.has_random_event_occured = true;
                     people_infected = Math.ceil(total_population * RANDOM_EVENT_INFECTED_CAP * (Math.random() + 1) * .5);
                 }
                 return;

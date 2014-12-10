@@ -15,7 +15,7 @@ WinStage.prototype = {
         this.load.image('winBackground', 'assets/images/WinScreen.png');
         this.load.image('startButton', 'assets/images/start_button.png');
         this.load.image('boil_water', 'assets/images/NewIcons/BoilingWaterIcon.png');
-        this.load.audio('background_win_music', ['assets/sound/VictoryTrack.mp3', 'assets/sound/VictoryTrack.ogg']);
+        this.load.audio('background_win_music', 'assets/sound/VictoryTrack.ogg');
     },
 
     create: function() {
