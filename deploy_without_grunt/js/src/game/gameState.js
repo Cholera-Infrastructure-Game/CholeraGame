@@ -72,7 +72,7 @@ var PREVENTION_MEASURE_VALUES = { //TODO balance these numbers
         upstream_effect_reduction: .9,
         color: "#FFA500",
         display_name: "Boiling Water",
-        description: "-1 infected rate\n90% upstream infection reduction\n\nBoiling water reduces contamination from infected villages upstream.\n\nWorks best in downstream villages."
+        description: "-1 infected rate\n90% upstream infection reduction\n\nBoiling water reduces contamination from infected localities upstream.\n\nWorks best in downstream localities."
     }
 }
 
