@@ -27,10 +27,16 @@ MapStage.prototype = {
 		this.load.image('top_bar', 'assets/images/placeholder_top_bar.png');
         
         this.load.spritesheet('village', 'assets/images/NewIcons/CitySpriteSheet.png', 128, 128);
+        this.load.audio('popup_sound', 'assets/sound/OpenCloseWindow.ogg');
+        this.load.audio('buy_sound', 'assets/sound/Buy.ogg');
+        this.load.audio('unbuy_sound', 'assets/sound/HighlightSound.ogg');
     },
 
     create: function() {
         game_state = new GameState();
+        this.popup_sound = this.add.audio('popup_sound');
+        this.buy_sound = this.add.audio('buy_sound');
+        this.unbuy_sound = this.add.audio('unbuy_sound');
         console.log(game_state)
 		self = this;
 
@@ -203,6 +209,7 @@ MapStage.prototype = {
 				var _i = i;
 				var _village_sprite = village_sprite;
 	            village_sprite.events.onInputUp.add(function() {
+                                        this.popup_sound.play();
 					// Launch the pop up.
 					self.createVillagePopup(_i);
 					// Do a little click animation.
@@ -348,6 +355,7 @@ MapStage.prototype = {
     					var result = self.clickAction(_i, self.popup_status);
     					if (result == "good") {
     						// If we succeeded in buying the measure then make the button pulse.
+                            self.buy_sound.play();
                             self.game.add.tween(_obj.scale).to({x: 1.15, y: 1.15}, BUTTON_POP_TIME, Phaser.Easing.Default, true);
                             self.game.add.tween(_pie.scale).to({x: 1.15, y: 1.15}, BUTTON_POP_TIME, Phaser.Easing.Default, true);
                             _pie.progress = 1;
@@ -397,6 +405,7 @@ MapStage.prototype = {
     						tween.to({x: 1.0, y: 1.0}, 200, Phaser.Easing.Quadratic.In);
     						tween.start();
     					} else if (result == "undo") {
+                            self.unbuy_sound.play();
                             self.game.add.tween(_pie.scale).to({x: 1.0, y: 1.0}, BUTTON_POP_TIME, Phaser.Easing.Default, true);
                             self.game.add.tween(_obj.scale).to({x: 1.0, y: 1.0}, BUTTON_POP_TIME, Phaser.Easing.Default, true);
                             _pie.progress = 0;                            
@@ -457,7 +466,7 @@ MapStage.prototype = {
 		this.popup_description_cost_object = obj;
 		this.popup_sprite.addChild(obj);
 		// We will later modify its text to set the description.
-		obj = this.game.add.text(right_column_center_x - desc_width/2 + margin, desc_box_top_y - h/2 + margin + clearance, "", POPUP_DESC_STYLE);
+		obj = this.game.add.text(right_column_center_x - desc_width/2 + margin, desc_box_top_y - h/2 + margin + clearance, DEFAULT_DESCRIPTION_BOX_TEXT, POPUP_DESC_STYLE);
 		obj.wordWrap = true;
 		obj.wordWrapWidth = desc_width - margin*2;
 		this.popup_description_text_object = obj;
@@ -491,7 +500,7 @@ MapStage.prototype = {
 			// In case of the special index -1, we clear all the texts.
 			self.popup_description_title_object.text = "";
 			self.popup_description_cost_object.text = "";
-			self.popup_description_text_object.text = "";
+			self.popup_description_text_object.text = DEFAULT_DESCRIPTION_BOX_TEXT;
 		} else {
 			// Otherwise, populate them appropriately.
 			self.popup_description_title_object.text = PREVENTION_MEASURE_VALUES[PREVENTION_MEASURE_NAMES[action_index]].display_name;
@@ -568,6 +577,7 @@ MapStage.prototype = {
     },
 
 	closeVillagePopup: function() {
+                this.popup_sound.play();
 		console.log("Closing popup.");
 		// Make sure that a popup is actually open.
 		if (this.popup_status == -1) {
