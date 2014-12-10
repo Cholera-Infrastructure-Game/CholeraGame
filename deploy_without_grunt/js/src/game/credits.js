@@ -12,7 +12,7 @@ CreditsStage.prototype = {
     },
 
     preload: function() {
-        this.load.image('homeBackground', 'assets/images/background.png');
+        this.load.image('homeBackground', 'assets/images/GameOver.png');
         this.load.image('startButton', 'assets/images/start_button.png');
     },
 
@@ -23,6 +23,9 @@ CreditsStage.prototype = {
         this.instructionText = this.add.text(this.game.world.centerX, 130, this.credits_text, {font: "20px Arial", fill: "000000", align: "center"});
         this.instructionText.anchor.set(0.5);
         this.instructionText.wordWrap = true;
+        this.instructionText.stroke = '#000000';
+        this.instructionText.strokeThickness = 3;
+        this.instructionText.fill = '#FFFFFF'
         this.instructionText.wordWrapWidth = 600;
 
         var back_to_title_text = this.add.text(this.game.world.centerX, 350, "BACK", TITLE_STAGE_STYLE);

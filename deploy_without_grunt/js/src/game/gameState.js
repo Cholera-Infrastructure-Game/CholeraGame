@@ -20,14 +20,17 @@ var BOIL_WATER_UNLOCK_TEXT = "You have unlocked boiling water!\nBoiling water pr
 
 // This is how many pixels of map are still visible around the edge of the popup.
 var POPUP_SHY_MARGIN = 30;
-var SCORE_BAR_STYLE = { font: "24px Arial", fill: "#ff0044", stroke: "#000000", strokeThickness: 3, align: "center" };
+var SCORE_BAR_STYLE = { font: "24px Arial", fill: "#FFFFFF", stroke: "#000000", strokeThickness: 3, align: "center" };
 var POPUP_TEXT_STYLE = { font: "32px Arial", fill: "#000000", align: "center" };
+var POPUP_TEXT_STYLE2 = { font: "24px Arial", fill: "#000000", align: "center" };
+var POPUP_TITLE_TEXT_STYLE = { font: "bold 32px Arial", fill: "#000000", align: "center" };
+var POPUP_TEXT_CLICKABLE_STYLE = { font: "bold 32px Arial", fill: "#000000", stroke: "#FFFFFF", strokeThickness: 3, align: "center" };
 var POPUP_ACTION_NAME_STYLE = { font: "28px Arial", fill: "#000000", align: "center" };
 var POPUP_DESC_HEADER_STYLE = { font: "24px Arial", fill: "#000000", align: "left" };
 var POPUP_DESC_STYLE = { font: "20px Arial", fill: "#000000", align: "left" };
 var POPUP_COST_TEXT_STYLE = { font: "16px Arial", fill: "#000000", align: "center" };
 var POPUP_GAME_PAUSED_TEXT_STYLE = { font: "20px Arial", fill: "#606060" };
-var TITLE_STAGE_STYLE = { font: "28px Arial", fill: "#000000", align: "center" };
+var TITLE_STAGE_STYLE = { font: "bold 32px Arial", fill: "#000000", align: "center" };
 
 // Time in milliseconds over which the popup window tweens out.
 var POPUP_TIME = 500;
