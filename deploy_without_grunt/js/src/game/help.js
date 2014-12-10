@@ -4,9 +4,9 @@ var HelpStage = function (game) {
 };
 
 var mainHelpText = "Cholera is spreading in the localities!\n\n\n\n\n" + 
-"To stop the outbreak, you need to add various measures to stop the epidemic before its too late:\n\n\n\n" + 
-"Click on the localities to add measures to each locality. Although money will increase over time, be careful of how much you're spending!\n\n" +
-"More localities will pop up over time, so be ready to deal with infection spreading downstream. Plus, even if your locality is healthy, always be on a lookout for random outbreaks.";
+"To stop the outbreak, you need to implement various prevention measures in each locality:\n\n\n\n" + 
+"Click on a locality and choose which prevention measures you want to implement. Although you gain money every day, be careful of your spending!\n\n" +
+"More localities will pop up over time, so be prepared because cholera is easily spread down river. Plus, even if a locality is healthy, there's always a chance for a random outbreak.";
 
 HelpStage.prototype = {
 
