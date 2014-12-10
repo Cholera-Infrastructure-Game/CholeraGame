@@ -3,7 +3,10 @@ var HelpStage = function (game) {
 	this.startButton = null;
 };
 
-var mainHelpText = "Cholera is spreading!\n\nClick on villages to add various measures to stop the epidemic before its too late!\nMore villages will pop up over time, so be ready to deal with infection spreading downstream.";
+var mainHelpText = "Cholera is spreading in the localities!\n\n\n\n\n" + 
+"To stop the outbreak, you need to add various measures to stop the epidemic before its too late:\n\n\n\n" + 
+"Click on the localities to add measures to each locality. Although money will increase over time, be careful of how much you're spending!\n\n" +
+"More localities will pop up over time, so be ready to deal with infection spreading downstream. Plus, even if your locality is healthy, always be on a lookout for random outbreaks.";
 
 HelpStage.prototype = {
 
@@ -15,34 +18,49 @@ HelpStage.prototype = {
 	preload: function() {
 		this.load.image('homeBackground', 'assets/images/GameOver.png');
 		this.load.image('startButton', 'assets/images/start_button.png');
+        this.load.image('boil_water_circle', 'assets/images/NewIcons/boil_water_circle.png');
+        this.load.image('washing_hands_circle', 'assets/images/NewIcons/soap_circle.png');
+        this.load.image('electrolytes_circle', 'assets/images/NewIcons/electrolytes_circle.png');
+        this.load.image('water_containers_circle', 'assets/images/NewIcons/water_containers_circle.png');
+        this.load.spritesheet('village', 'assets/images/NewIcons/CitySpriteSheet.png', 128, 128);
+
 	},
 
 	create: function() {
-		this.add.sprite(0, 0, 'homeBackground');
+		this.game.add.sprite(0, 0, 'homeBackground');
 
 		// Add some instructions
-		this.instructionText = this.add.text(this.game.world.centerX, 130, mainHelpText, {font: "20px Arial", fill: "000000", align: "center"});
-                this.instructionText.anchor.set(0.5);
-                this.instructionText.wordWrap = true;
-                this.instructionText.stroke = '#000000';
-                this.instructionText.strokeThickness = 3;
-                this.instructionText.fill = '#FFFFFF'
-		this.instructionText.wordWrapWidth = 600;
+		this.instructionText = this.game.add.text(this.game.world.centerX, 50, mainHelpText, {font: "20px Arial", fill: "000000", align: "center"});
+        this.instructionText.anchor.set(0.5, 0);
+        this.instructionText.wordWrap = true;
+        this.instructionText.stroke = '#000000';
+        this.instructionText.strokeThickness = 3;
+        this.instructionText.fill = '#FFFFFF'
+		this.instructionText.wordWrapWidth = 650;
 
-		var back_to_title_text = this.add.text(this.game.world.centerX, 350, "START GAME", {font: "45px Arial", fill: "000000", align: "center"});
-                back_to_title_text.anchor.set(0.5);
-                back_to_title_text.stroke = '#FFFFFF';
-                back_to_title_text.strokeThickness = 1;
-                back_to_title_text.fill = '#000000';
+        var start_button_sprite = this.game.add.sprite(this.game.world.centerX, this.game.world.height - 100, "startButton");
+        start_button_sprite.anchor.set(0.5);
+        start_button_sprite.scale.set(0.5);
+        start_button_sprite.inputEnabled = true;
+        start_button_sprite.events.onInputOver.add(function() {
+            this.game.add.tween(start_button_sprite.scale).to({x: 0.7, y: 0.7}, BUTTON_POP_TIME, Phaser.Easing.Default, true);
+        }, this);
+        start_button_sprite.events.onInputOut.add(function() {
+            this.game.add.tween(start_button_sprite.scale).to({x: 0.5, y: 0.5}, BUTTON_POP_TIME, Phaser.Easing.Default, true);
+        }, this);
+        start_button_sprite.events.onInputUp.add(this.returnToTitle, this);
 
-        back_to_title_text.inputEnabled = true;
-        back_to_title_text.events.onInputOver.add(function() {
-            this.game.add.tween(back_to_title_text.scale).to({x: 1.3, y: 1.3}, BUTTON_POP_TIME, Phaser.Easing.Default, true);
-        }, this);
-        back_to_title_text.events.onInputOut.add(function() {
-            this.game.add.tween(back_to_title_text.scale).to({x: 1.0, y: 1.0}, BUTTON_POP_TIME, Phaser.Easing.Default, true);
-        }, this);
-        back_to_title_text.events.onInputUp.add(this.returnToTitle, this);
+        var village_sprite = this.game.add.button(this.game.world.centerX, 120, 'village', function() {}, {}, 1, 1);
+        village_sprite.anchor.set(0.5);
+        village_sprite.scale.x = .6;
+        village_sprite.scale.y = .6;
+
+        for (var i = 0; i < 4; i++) {
+            var circle = this.game.add.sprite((this.game.world.width - 360)/2 +  120 * i, 250, PREVENTION_MEASURE_NAMES[i]+"_circle");
+            circle.anchor.set(0.5);
+            circle.scale.x = 0.3;
+            circle.scale.y = 0.3;
+        }
 	},
 
 	returnToTitle: function() {

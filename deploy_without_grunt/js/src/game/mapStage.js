@@ -317,7 +317,7 @@ MapStage.prototype = {
 		for (var i = 0; i < num_measures; i++) {
 			// Create a pie.
 			var pie = new PieProgress(this.game, left_column_center_x - 120, action_buttons_y_offset + i * action_spacing - h/2, 40, "rgba(0,0,0,0.6)", PREVENTION_MEASURE_VALUES[PREVENTION_MEASURE_NAMES[i]].color, this.game.cache.getImage(PREVENTION_MEASURE_NAMES[i]));
-			this.popup_sprite.addChild(pie);
+            this.popup_sprite.addChild(pie);
 			this.popup_pies.push(pie);
             pie.inputEnabled = true;
             pie.input.priorityID = 1;
